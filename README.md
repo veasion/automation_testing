@@ -57,17 +57,11 @@ function baiduSearch(str) {
 
 
 
-## 项目用途
-
-- **非商业性使用** — 不得将此项目及其衍生的项目的源代码和二进制产品用于任何商业和盈利用途
-
-
-
 ## 赞助
 
 项目的发展离不开你的支持，请作者喝杯咖啡吧！
 
 ps：辣条也行 ☕！
 
-<img src='https://veasion.oss-cn-shanghai.aliyuncs.com/alipay.png?x-oss-process=image/resize,m_lfit,h_360,w_360' align='left' />
+![支付宝](https://veasion.oss-cn-shanghai.aliyuncs.com/alipay.png?x-oss-process=image/resize,m_lfit,h_360,w_360)
 
