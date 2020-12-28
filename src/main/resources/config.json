@@ -1,0 +1,15 @@
+{
+  "COMMAND_INTERVAL": 125,
+  "TIMEOUT_PAGE_LOAD": 20,
+  "CHROME_DRIVER_PATH": "C:\\data\\auto\\chromedriver.exe",
+  // "FIREFOX_DRIVER_PATH": "C:\\data\\auto\\geckodriver.exe",
+  "JIRA_URL": "http://xxx.jira.com/",
+  "JIRA_USER": "luozhuowei",
+  "JIRA_PASS": "123456",
+  "JIRA_ISSUE_PROJECT": "xxx",
+  "JIRA_ISSUE_CATEGORY": "缺陷",
+  "JIRA_ISSUE_SEASON": "xxx",
+  "JIRA_ISSUE_STAGE": "MAT",
+  "JIRA_ISSUE_TYPE": "功能问题",
+  "JIRA_ISSUE_ASSIGNEE": "luozhuowei"
+}
