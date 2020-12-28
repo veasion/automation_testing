@@ -30,7 +30,7 @@ public class Development {
             Development.printInfo();
             JavaScriptCore.include(Objects.requireNonNull(files));
             JavaScriptCore.execute(driver, env, null);
-            // JavaScriptCore.execute(driver, env, new File(getFilePath("demo/demo.js")));
+            // JavaScriptCore.execute(driver, env, new File(getFilePath("script/crawler.js")));
         } finally {
             Debug.closeSocketServer();
             if (driver != null) {

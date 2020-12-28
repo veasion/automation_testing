@@ -154,8 +154,8 @@ screenshot('C:\\Users\\user\\Desktop\\temp.png');
 writeText('C:\\Users\\user\\Desktop\\test.txt', 'hello', false);
 // 读取本地文本文件
 readText('C:\\Users\\user\\Desktop\\test.txt', 'utf-8');
-// 读取resource/demo/demo.js目录文件
-readText(env.getSourcePath('/demo/demo.js'), 'utf-8');
+// 读取resource/script/baidu.js目录文件
+readText(env.getSourcePath('/script/baidu.js'), 'utf-8');
 // 读取网络文本
 readText('http://www.baidu.com', 'utf-8');
 
