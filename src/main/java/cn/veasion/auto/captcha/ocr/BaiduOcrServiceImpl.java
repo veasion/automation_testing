@@ -24,9 +24,8 @@ import java.util.Map;
  * @author luozhuowei
  * @date 2020/12/31
  */
-public class BaiduOcrServiceImpl implements CaptchaOcrService {
+public class BaiduOcrServiceImpl implements OcrService {
 
-    private static final String OCR = "ocr_baidu";
     private static final String APP_ID = "appId";
     private static final String API_KEY = "apiKey";
     private static final String SECRET_KEY = "secretKey";
@@ -42,6 +41,16 @@ public class BaiduOcrServiceImpl implements CaptchaOcrService {
     @Override
     public OcrResult ocr(Environment environment, String imgUrl) {
         return ocr(environment, null, imgUrl);
+    }
+
+    @Override
+    public boolean checkConfig(Environment environment) {
+        return getParams(environment) != null;
+    }
+
+    @Override
+    public String getKey() {
+        return "baidu";
     }
 
     @SuppressWarnings("unchecked")
@@ -106,20 +115,24 @@ public class BaiduOcrServiceImpl implements CaptchaOcrService {
         return jsonObject.getString("access_token");
     }
 
-    @SuppressWarnings("unchecked")
     private Map<String, Object> checkParams(Environment environment, byte[] imgData, String imgUrl) {
         if (imgData == null && imgUrl == null) {
             throw new AutomationException("参数不能为空");
         }
-        if (!environment.containsKey(OCR)) {
-            throw new AutomationException("百度OCR未配置: " + OCR);
+        Map<String, Object> params = getParams(environment);
+        if (params == null || params.isEmpty()) {
+            throw new AutomationException("百度OCR未配置: " + getKey());
         }
-        Map<String, Object> params = (Map<String, Object>) environment.get(OCR);
+        return params;
+    }
+
+    private Map<String, Object> getParams(Environment environment) {
+        Map<String, Object> params = getOcrConfig(environment);
         if (params == null
                 || StringUtils.isEmpty(params.get(APP_ID))
                 || StringUtils.isEmpty(params.get(API_KEY))
                 || StringUtils.isEmpty(params.get(SECRET_KEY))) {
-            throw new AutomationException("百度OCR参数未配置");
+            return null;
         }
         return params;
     }

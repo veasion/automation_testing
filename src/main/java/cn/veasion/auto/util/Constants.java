@@ -8,6 +8,9 @@ package cn.veasion.auto.util;
  */
 public class Constants {
 
+    private Constants() {
+    }
+
     /**
      * Web Socket Path
      */
@@ -42,5 +45,20 @@ public class Constants {
      * 图片旋转统计范围
      */
     public static final int HOUGH_RANGE_VALUE = 3;
+
+    /**
+     * ocr key
+     */
+    public static final String CONFIG_OCR = "OCR";
+
+    /**
+     * ocr default
+     */
+    public static final String OCR_DEFAULT = "default";
+
+    /**
+     * ocr captcha
+     */
+    public static final String OCR_CAPTCHA = "captcha";
 
 }

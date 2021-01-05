@@ -14,20 +14,24 @@
     "issueType": "功能问题",
     "issueAssignee": "luozhuowei"
   },
-  "ocr_baidu": {
-    "appId": null,
-    "apiKey": null,
-    "secretKey": null,
-    "params": {
-      "paragraph": false,
-      "detect_direction": true,
-      "recognize_granularity": "small"
-    }
-  },
-  "ocr_chaojiying": {
-    "user": null,
-    "pass": null,
-    "softid": null,
-    "codetype": "1902"
+  "OCR": {
+    "baidu": {
+      "appId": null,
+      "apiKey": null,
+      "secretKey": null,
+      "params": {
+        "paragraph": false,
+        "detect_direction": true,
+        "recognize_granularity": "small"
+      }
+    },
+    "chaojiying": {
+      "user": null,
+      "pass": null,
+      "softid": null,
+      "codetype": "1902"
+    },
+    "default": "baidu",
+    "captcha": "chaojiying"
   }
 }

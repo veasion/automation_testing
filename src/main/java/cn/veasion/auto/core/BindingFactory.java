@@ -2,6 +2,7 @@ package cn.veasion.auto.core;
 
 import cn.veasion.auto.bind.Binding;
 import cn.veasion.auto.bind.JavaScriptBinding;
+import cn.veasion.auto.bind.bean.AbstractInitializingBean;
 import cn.veasion.auto.util.AutomationException;
 import cn.veasion.auto.util.ClassSearcher;
 import cn.veasion.auto.util.JavaScriptUtils;
@@ -45,6 +46,8 @@ public class BindingFactory {
                     if (actualType != null && !"java.lang.Object".equals(actualType.getTypeName())) {
                         Class<?> bindingClass = Class.forName(actualType.getTypeName());
                         bindingMap.put(bindingClass, (Class<? extends JavaScriptBinding<Object>>) clazz);
+                    } else if (actualType == null && AbstractInitializingBean.class.isAssignableFrom(clazz)) {
+                        bindingMap.put(clazz, (Class<? extends JavaScriptBinding<Object>>) clazz);
                     }
                 }
             }

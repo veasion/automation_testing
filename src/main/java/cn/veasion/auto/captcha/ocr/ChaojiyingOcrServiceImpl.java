@@ -20,9 +20,8 @@ import java.util.Map;
  * @author luozhuowei
  * @date 2020/12/31
  */
-public class ChaojiyingOcrServiceImpl implements CaptchaOcrService {
+public class ChaojiyingOcrServiceImpl implements OcrService {
 
-    private static final String OCR = "ocr_chaojiying";
     private static final String USER = "user";
     private static final String PASS = "pass";
     private static final String SOFTID = "softid";
@@ -64,21 +63,35 @@ public class ChaojiyingOcrServiceImpl implements CaptchaOcrService {
         return ocr(environment, bytes);
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
+    public boolean checkConfig(Environment environment) {
+        return getParams(environment) != null;
+    }
+
+    @Override
+    public String getKey() {
+        return "chaojiying";
+    }
+
     private Map<String, String> checkParams(Environment environment, byte[] imgData) {
         if (imgData == null) {
             throw new AutomationException("参数不能为空");
         }
-        if (!environment.containsKey(OCR)) {
-            throw new AutomationException("超级鹰OCR未配置: " + OCR);
+        Map<String, String> params = getParams(environment);
+        if (params == null || params.isEmpty()) {
+            throw new AutomationException("超级鹰OCR未配置: " + getKey());
         }
-        Map<String, Object> params = (Map<String, Object>) environment.get(OCR);
+        return params;
+    }
+
+    private Map<String, String> getParams(Environment environment) {
+        Map<String, Object> params = getOcrConfig(environment);
         if (params == null
                 || StringUtils.isEmpty(params.get(USER))
                 || StringUtils.isEmpty(params.get(PASS))
                 || StringUtils.isEmpty(params.get(SOFTID))
                 || StringUtils.isEmpty(params.get(CODETYPE))) {
-            throw new AutomationException("超级鹰OCR参数未配置");
+            return null;
         }
         Map<String, String> apiParams = new HashMap<>();
         params.forEach((k, v) -> apiParams.put(k, String.valueOf(v)));
