@@ -1,16 +1,23 @@
 package cn.veasion.auto.bind;
 
+import cn.veasion.auto.bind.bean.Image;
 import cn.veasion.auto.core.BindingFactory;
 import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.util.Api;
 
+import cn.veasion.auto.util.AutomationException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.touch.TouchActions;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -202,6 +209,17 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
     public String xpath() {
         final String jsCode = "return (function(element){if(element.id!==''){return'//*[@id=\\\"'+element.id+'\\\"]'}if(element==document.body){return'/html/'+element.tagName.toLowerCase()}var ix=1,siblings=element.parentNode.childNodes;for(var i=0,l=siblings.length;i<l;i++){var sibling=siblings[i];if(sibling==element){return arguments.callee(element.parentNode)+'/'+element.tagName.toLowerCase()+'['+(ix)+']'}else if(sibling.nodeType==1&&sibling.tagName==element.tagName){ix++}}})(arguments[0]);";
         return (String) executeScriptByParams(jsCode, binding.getBean());
+    }
+
+    @Api("保存成图片")
+    @ResultProxy(log = false, value = false)
+    public void saveAsImage(String path) throws InterruptedException, IOException {
+        String imageBase64 = Image.getImageBase64(this);
+        if (imageBase64 == null) {
+            throw new AutomationException(String.format("%s 元素转换图片失败", tagName()));
+        }
+        byte[] imgData = Base64.getDecoder().decode(imageBase64);
+        Files.write(Paths.get(path), imgData, StandardOpenOption.CREATE);
     }
 
     @Api(value = "页面上突出显示", result = WebElement.class)

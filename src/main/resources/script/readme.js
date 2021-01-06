@@ -202,3 +202,6 @@ println(auto.dependency('demo', {name: 'xxx'}));
 println(image.ocrByElement(findOne('css=.ver-code-img img')).getContent());
 // ocr captcha
 println(image.captchaByElement(findOne('css=.ver-code-img img')).getContent());
+
+// 元素保存为图片
+findOne('id=div-test').saveAsImage('C:\\Users\\user\\Desktop\\abc.png');

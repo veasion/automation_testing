@@ -102,7 +102,7 @@ public abstract class SearchContextBinding<T extends SearchContext> implements J
     @ResultProxy(interval = true)
     public SearchContextBinding<T> click(String target) {
         By by = ElementBy.by(target);
-        onWait(binding, ExpectedConditions.elementToBeClickable(by));
+        onWait(ExpectedConditions.elementToBeClickable(by));
         WebElement element = findElement(by);
         try {
             element.click();
@@ -117,7 +117,7 @@ public abstract class SearchContextBinding<T extends SearchContext> implements J
     @ResultProxy(interval = true)
     public SearchContextBinding<T> tryClick(String target) {
         By by = ElementBy.by(target);
-        onWait(binding, ExpectedConditions.elementToBeClickable(by));
+        onWait(ExpectedConditions.elementToBeClickable(by));
         WebElement element = findElement(by);
         if (element == null) {
             return this;
@@ -160,7 +160,7 @@ public abstract class SearchContextBinding<T extends SearchContext> implements J
     @Api("向目标元素发送文字/模拟按键")
     public SearchContextBinding<T> sendKeys(String target, Object key) {
         By by = ElementBy.by(target);
-        onWait(binding, ExpectedConditions.visibilityOfElementLocated(by));
+        onWait(ExpectedConditions.visibilityOfElementLocated(by));
         if (key instanceof Number) {
             key = new BigDecimal(key.toString()).toPlainString();
         }
@@ -172,7 +172,7 @@ public abstract class SearchContextBinding<T extends SearchContext> implements J
     @ResultProxy(interval = true)
     public SearchContextBinding<T> mouseOver(String target) {
         By by = ElementBy.by(target);
-        onWait(binding, ExpectedConditions.presenceOfElementLocated(by));
+        onWait(ExpectedConditions.presenceOfElementLocated(by));
         new Actions(binding.getWebDriver()).moveToElement(findElement(by)).perform();
         return this;
     }
@@ -212,28 +212,28 @@ public abstract class SearchContextBinding<T extends SearchContext> implements J
     @Api("等待元素显示（可见）")
     @ResultProxy(interval = true)
     public SearchContextBinding<T> waitForElementDisplayed(String target, @Api.Param(allowNone = true) Integer seconds) {
-        onWait(binding, driver -> !CollectionUtils.isEmpty(findDisplayed(target)), seconds);
+        onWait(driver -> !CollectionUtils.isEmpty(findDisplayed(target)), seconds);
         return this;
     }
 
     @Api("等待元素隐藏（不可见）")
     @ResultProxy(interval = true)
     public SearchContextBinding<T> waitForElementNotDisplayed(String target, @Api.Param(allowNone = true) Integer seconds) {
-        onWait(binding, driver -> CollectionUtils.isEmpty(findDisplayed(target)), seconds);
+        onWait(driver -> CollectionUtils.isEmpty(findDisplayed(target)), seconds);
         return this;
     }
 
     @Api("等待元素出现")
     @ResultProxy(interval = true)
     public SearchContextBinding<T> waitForElementPresent(String target, @Api.Param(allowNone = true) Integer seconds) {
-        onWait(binding, driver -> !CollectionUtils.isEmpty(find(target)), seconds);
+        onWait(driver -> !CollectionUtils.isEmpty(find(target)), seconds);
         return this;
     }
 
     @Api("等待元素消失")
     @ResultProxy(interval = true)
     public SearchContextBinding<T> waitForElementNotPresent(String target, @Api.Param(allowNone = true) Integer seconds) {
-        onWait(binding, driver -> CollectionUtils.isEmpty(find(target)), seconds);
+        onWait(driver -> CollectionUtils.isEmpty(find(target)), seconds);
         return this;
     }
 

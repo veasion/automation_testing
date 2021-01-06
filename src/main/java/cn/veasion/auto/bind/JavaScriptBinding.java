@@ -28,17 +28,17 @@ public interface JavaScriptBinding<T> extends ApiDocumentGenerator.DocGenerator 
 
     @Api(generator = false)
     @ResultProxy(value = false, log = false)
-    default void onWait(Binding<?> binding, Function<WebDriver, ?> fun) {
-        onWait(binding, fun, null);
+    default void onWait(Function<WebDriver, ?> fun) {
+        onWait(fun, null);
     }
 
     @Api(generator = false)
     @ResultProxy(value = false, log = false)
-    default void onWait(Binding<?> binding, Function<WebDriver, ?> fun, Integer seconds) {
+    default void onWait(Function<WebDriver, ?> fun, Integer seconds) {
         if (JavaScriptUtils.isNull(seconds)) {
-            seconds = (Integer) binding.getEnv().readConfigVar(ConfigVars.ELEMENT_SOFT_WAIT);
+            seconds = (Integer) getBinding().getEnv().readConfigVar(ConfigVars.ELEMENT_SOFT_WAIT);
         }
-        WebDriverWait wait = new WebDriverWait(binding.getWebDriver(), Math.max(1, seconds));
+        WebDriverWait wait = new WebDriverWait(getBinding().getWebDriver(), Math.max(1, seconds));
         try {
             wait.until(fun);
         } catch (Exception e) {

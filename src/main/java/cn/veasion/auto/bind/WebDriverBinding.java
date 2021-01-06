@@ -114,7 +114,7 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
     @ResultProxy(interval = true)
     public void waitForPageLoaded(@Api.Param(allowNone = true) Integer seconds) {
         // 浏览器加载完成
-        onWait(binding, driver -> Objects.equals("complete", executeScript("return document.readyState")), seconds);
+        onWait(driver -> Objects.equals("complete", executeScript("return document.readyState")), seconds);
     }
 
     @ResultProxy

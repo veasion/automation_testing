@@ -3,6 +3,7 @@ package cn.veasion.auto.captcha.image;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
@@ -134,6 +135,15 @@ public class ImageUtil {
         }
         // System.out.println("旋转角度：" + (-angel));
         return rotate(source, Math.round(-angel));
+    }
+
+    /**
+     * 图片截取
+     */
+    public static byte[] subImage(File imgFile, int x, int y, int w, int h) throws IOException {
+        BufferedImage image = ImageIO.read(imgFile);
+        image = image.getSubimage(x, y, w, h);
+        return imageToBytes(image, null);
     }
 
 }
