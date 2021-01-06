@@ -1,6 +1,6 @@
 package cn.veasion.auto.util;
 
-import cn.veasion.auto.bind.JavaScriptBinding;
+import cn.veasion.auto.Development;
 import cn.veasion.auto.core.BindingFactory;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.util.StringUtils;
@@ -46,10 +46,10 @@ public class ApiDocumentGenerator {
     public static void main(String[] args) throws Exception {
         StringBuilder document = new StringBuilder();
         initDefaultDocument(document);
-        String packageName = JavaScriptBinding.class.getPackage().getName();
-        List<Class<?>> classes = new ClassSearcher().search(packageName, JavaScriptBinding.class);
+        String packageName = Development.class.getPackage().getName();
+        List<Class<?>> classes = new ClassSearcher().search(packageName, DocGenerator.class);
         for (Class<?> clazz : classes) {
-            if (JavaScriptBinding.class.isAssignableFrom(clazz) && (clazz.getModifiers() & Modifier.ABSTRACT) == 0) {
+            if ((clazz.getModifiers() & Modifier.ABSTRACT) == 0) {
                 generator(document, clazz);
             }
         }
@@ -74,6 +74,10 @@ public class ApiDocumentGenerator {
         Method[] methods = clazz.getMethods();
         StringBuilder sb = new StringBuilder();
         if (!global) {
+            Api.ClassInfo classInfo = clazz.getAnnotation(Api.ClassInfo.class);
+            if (classInfo != null && StringUtils.hasText(classInfo.desc())) {
+                sb.append("/**").append(LINE).append(" * ").append(classInfo.desc()).append(LINE).append(" */").append(LINE);
+            }
             sb.append("function ").append(clazz.getSimpleName()).append("() {").append(LINE);
         }
         for (int i = 0; i < methods.length; i++) {
@@ -174,7 +178,7 @@ public class ApiDocumentGenerator {
         }
         if (document != null) {
             Class<?> result = document.result();
-            if (JavaScriptBinding.class.isAssignableFrom(result)) {
+            if (DocGenerator.class.isAssignableFrom(result)) {
                 if (Collection.class.isAssignableFrom(returnTypeClass)) {
                     returnType = jsTypeArray(result);
                 } else {
@@ -267,7 +271,7 @@ public class ApiDocumentGenerator {
             return "{object}";
         } else if (Object[].class.equals(clazz)) {
             return "{array}";
-        } else if (JavaScriptBinding.class.isAssignableFrom(clazz)) {
+        } else if (DocGenerator.class.isAssignableFrom(clazz)) {
             return "{" + clazz.getSimpleName() + "}";
         }
         String name = clazz.getName();
@@ -289,4 +293,6 @@ public class ApiDocumentGenerator {
         document.append(lineSpace(true));
     }
 
+    public interface DocGenerator {
+    }
 }

@@ -197,3 +197,8 @@ h5Element.touch().singleTap().scrollByElement(100, 200).perform();
 
 // 依赖数据模块
 println(auto.dependency('demo', {name: 'xxx'}));
+
+// ocr
+println(image.ocrByElement(findOne('css=.ver-code-img img')).getContent());
+// ocr captcha
+println(image.captchaByElement(findOne('css=.ver-code-img img')).getContent());

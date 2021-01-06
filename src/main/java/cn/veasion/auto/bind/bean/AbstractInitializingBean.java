@@ -3,6 +3,8 @@ package cn.veasion.auto.bind.bean;
 import cn.veasion.auto.bind.Binding;
 import cn.veasion.auto.bind.InitializingBinding;
 import cn.veasion.auto.core.Environment;
+import cn.veasion.auto.core.ResultProxy;
+import cn.veasion.auto.util.Api;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -16,6 +18,8 @@ public abstract class AbstractInitializingBean implements InitializingBinding<Ab
     private Binding<AbstractInitializingBean> binding;
 
     @Override
+    @Api(generator = false)
+    @ResultProxy(value = false, log = false)
     public AbstractInitializingBean initBean(WebDriver webDriver, Environment env) {
         try {
             AbstractInitializingBean bean = getClass().newInstance();
@@ -27,11 +31,15 @@ public abstract class AbstractInitializingBean implements InitializingBinding<Ab
     }
 
     @Override
+    @Api(generator = false)
+    @ResultProxy(value = false, log = false)
     public void setBinding(Binding<AbstractInitializingBean> binding) {
         this.binding = binding;
     }
 
     @Override
+    @Api(generator = false)
+    @ResultProxy(value = false, log = false)
     public Binding<AbstractInitializingBean> getBinding() {
         return binding;
     }

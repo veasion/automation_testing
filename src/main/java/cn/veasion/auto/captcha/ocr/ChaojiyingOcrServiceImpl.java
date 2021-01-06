@@ -47,6 +47,8 @@ public class ChaojiyingOcrServiceImpl implements OcrService {
             OcrResult result = new OcrResult();
             result.setWordsList(Collections.singletonList(new OcrResult.Words(picStr)));
             return result;
+        } catch (AutomationException e) {
+            throw e;
         } catch (Exception e) {
             throw new AutomationException("超级鹰验证码异常", e);
         }

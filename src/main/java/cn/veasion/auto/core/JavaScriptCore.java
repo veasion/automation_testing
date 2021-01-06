@@ -2,6 +2,7 @@ package cn.veasion.auto.core;
 
 import cn.veasion.auto.bind.InitializingBinding;
 import cn.veasion.auto.bind.JavaScriptBinding;
+import cn.veasion.auto.bind.bean.AbstractInitializingBean;
 import cn.veasion.auto.debug.Debug;
 import cn.veasion.auto.util.Api;
 import cn.veasion.auto.util.AutomationException;
@@ -165,8 +166,13 @@ public class JavaScriptCore {
         Object binding;
         Class<? extends JavaScriptBinding<Object>> bindingClass;
         if (obj instanceof JavaScriptBinding) {
-            binding = obj;
             bindingClass = (Class<? extends JavaScriptBinding<Object>>) obj.getClass();
+            if (AbstractInitializingBean.class.isAssignableFrom(bindingClass)
+                    && !(obj instanceof org.springframework.cglib.proxy.Factory)) {
+                binding = BindingProxy.create(obj);
+            } else {
+                binding = obj;
+            }
         } else {
             binding = BindingFactory.convert(obj);
             bindingClass = BindingFactory.convertClass(obj.getClass());

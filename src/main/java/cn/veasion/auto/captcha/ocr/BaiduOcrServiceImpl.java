@@ -61,6 +61,8 @@ public class BaiduOcrServiceImpl implements OcrService {
             String apiUrl = OCR_API_URL.replace("${accessToken}", token);
             Map<String, Object> apiParams = (Map<String, Object>) params.get("params");
             return ocrRequest(apiUrl, apiParams, imgData, imgUrl);
+        } catch (AutomationException e) {
+            throw e;
         } catch (Exception e) {
             throw new AutomationException("调用百度OCR异常", e);
         }

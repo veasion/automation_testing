@@ -1,5 +1,8 @@
 package cn.veasion.auto.captcha.ocr;
 
+import cn.veasion.auto.util.Api;
+import cn.veasion.auto.util.ApiDocumentGenerator;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,16 +12,19 @@ import java.util.List;
  * @author luozhuowei
  * @date 2020/12/31
  */
-public class OcrResult implements Serializable {
+@Api.ClassInfo(desc = "识别结果")
+public class OcrResult implements Serializable, ApiDocumentGenerator.DocGenerator {
 
     private static final long serialVersionUID = 1L;
 
     private List<Words> wordsList;
 
+    @Api(result = Words.class)
     public List<Words> getWordsList() {
         return wordsList;
     }
 
+    @Api(generator = false)
     public void setWordsList(List<Words> wordsList) {
         this.wordsList = wordsList;
     }
@@ -38,6 +44,7 @@ public class OcrResult implements Serializable {
     }
 
     @Override
+    @Api(generator = false)
     public String toString() {
         final StringBuffer sb = new StringBuffer("OcrResult{");
         sb.append("wordsList=").append(wordsList);
@@ -45,7 +52,8 @@ public class OcrResult implements Serializable {
         return sb.toString();
     }
 
-    public static class Location implements Serializable {
+    @Api.ClassInfo(desc = "位置")
+    public static class Location implements Serializable, ApiDocumentGenerator.DocGenerator {
 
         private static final long serialVersionUID = 1L;
 
@@ -58,6 +66,7 @@ public class OcrResult implements Serializable {
             return top;
         }
 
+        @Api(generator = false)
         public void setTop(Integer top) {
             this.top = top;
         }
@@ -66,6 +75,7 @@ public class OcrResult implements Serializable {
             return left;
         }
 
+        @Api(generator = false)
         public void setLeft(Integer left) {
             this.left = left;
         }
@@ -74,6 +84,7 @@ public class OcrResult implements Serializable {
             return width;
         }
 
+        @Api(generator = false)
         public void setWidth(Integer width) {
             this.width = width;
         }
@@ -82,11 +93,13 @@ public class OcrResult implements Serializable {
             return height;
         }
 
+        @Api(generator = false)
         public void setHeight(Integer height) {
             this.height = height;
         }
 
         @Override
+        @Api(generator = false)
         public String toString() {
             final StringBuffer sb = new StringBuffer("Location{");
             sb.append("top=").append(top);
@@ -98,7 +111,8 @@ public class OcrResult implements Serializable {
         }
     }
 
-    public static class Words implements Serializable {
+    @Api.ClassInfo(desc = "单词")
+    public static class Words implements Serializable, ApiDocumentGenerator.DocGenerator {
 
         private static final long serialVersionUID = 1L;
 
@@ -116,6 +130,7 @@ public class OcrResult implements Serializable {
             return words;
         }
 
+        @Api(generator = false)
         public void setWords(String words) {
             this.words = words;
         }
@@ -124,11 +139,13 @@ public class OcrResult implements Serializable {
             return location;
         }
 
+        @Api(generator = false)
         public void setLocation(Location location) {
             this.location = location;
         }
 
         @Override
+        @Api(generator = false)
         public String toString() {
             final StringBuffer sb = new StringBuffer("Words{");
             sb.append("words='").append(words).append('\'');

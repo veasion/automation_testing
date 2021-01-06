@@ -2,6 +2,7 @@ package cn.veasion.auto.bind;
 
 import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.util.Api;
+import cn.veasion.auto.util.ApiDocumentGenerator;
 import cn.veasion.auto.util.JavaScriptUtils;
 import cn.veasion.auto.util.ConfigVars;
 import org.openqa.selenium.WebDriver;
@@ -17,7 +18,7 @@ import java.util.function.Function;
  * @author luozhuowei
  * @date 2020/6/10
  */
-public interface JavaScriptBinding<T> {
+public interface JavaScriptBinding<T> extends ApiDocumentGenerator.DocGenerator {
 
     Logger LOGGER = LoggerFactory.getLogger(JavaScriptBinding.class);
 
