@@ -133,7 +133,6 @@ public class ImageUtil {
         if (Math.round(Math.abs(avg - angel)) > Constants.HOUGH_RANGE_VALUE * 2) {
             angel = avg;
         }
-        // System.out.println("旋转角度：" + (-angel));
         return rotate(source, Math.round(-angel));
     }
 
@@ -144,6 +143,36 @@ public class ImageUtil {
         BufferedImage image = ImageIO.read(imgFile);
         image = image.getSubimage(x, y, w, h);
         return imageToBytes(image, null);
+    }
+
+    /**
+     * 图片克隆
+     */
+    public static BufferedImage cloneImage(BufferedImage bufferedImage) {
+        BufferedImage image = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage.getType());
+        Graphics2D g = image.createGraphics();
+        g.setComposite(AlphaComposite.Src);
+        g.drawImage(bufferedImage, 0, 0, null);
+        g.dispose();
+        return image;
+    }
+
+    /**
+     * 图片类型转换
+     */
+    public static BufferedImage toImageOfType(BufferedImage bufferedImage, int type) {
+        if (bufferedImage == null) {
+            throw new IllegalArgumentException("bufferedImage == null");
+        }
+        if (bufferedImage.getType() == type) {
+            return bufferedImage;
+        }
+        BufferedImage image = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), type);
+        Graphics2D g = image.createGraphics();
+        g.setComposite(AlphaComposite.Src);
+        g.drawImage(bufferedImage, 0, 0, null);
+        g.dispose();
+        return image;
     }
 
 }
