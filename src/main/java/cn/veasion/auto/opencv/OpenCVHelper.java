@@ -7,6 +7,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import javax.imageio.ImageIO;
@@ -30,18 +31,15 @@ public class OpenCVHelper {
     }
 
     public static BufferedImage matToImage(Mat matrix) {
-        // return (BufferedImage) org.opencv.highgui.HighGui.toBufferedImage(matrix);
-        MatOfByte mob = new MatOfByte();
-        Imgcodecs.imencode(".png", matrix, mob);
-        byte[] byteArray = mob.toArray();
-        BufferedImage bufImage;
+        // return (BufferedImage) HighGui.toBufferedImage(matrix);
         try {
-            InputStream in = new ByteArrayInputStream(byteArray);
-            bufImage = ImageIO.read(in);
+            MatOfByte mob = new MatOfByte();
+            Imgcodecs.imencode(".png", matrix, mob);
+            InputStream in = new ByteArrayInputStream(mob.toArray());
+            return ImageIO.read(in);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        return bufImage;
     }
 
     public static Mat imageToMat(BufferedImage bufferedImage) {
@@ -69,35 +67,36 @@ public class OpenCVHelper {
     }
 
     public static void release(MatOfPoint mat) {
-        if (mat == null)
+        if (mat == null) {
             return;
+        }
         mat.release();
     }
 
     public static void release(Mat mat) {
-        if (mat == null)
+        if (mat == null) {
             return;
+        }
         mat.release();
     }
 
     public static void main(String[] args) throws IOException {
-        ImageWrapper imageWrapper = ImageWrapper.ofImagePath("C:\\Users\\user\\Desktop\\test.jpg");
-        ImageWrapper templateWrapper = ImageWrapper.ofImagePath("C:\\Users\\user\\Desktop\\template.png");
+        ImageWrapper imageWrapper = ImageWrapper.ofImagePath("C:\\Users\\Veasion\\Desktop\\test.jpg");
+        ImageWrapper templateWrapper = ImageWrapper.ofImagePath("C:\\Users\\Veasion\\Desktop\\template.png");
         Point imagePoint = ImageFinder.findImage(imageWrapper, templateWrapper);
         System.out.println("image: " + imagePoint); // 255, 58
-        Point colorPoint = ColorFinder.findColor(imageWrapper, ColorUtils.parseColor("#ECC571"), 4);
-        System.out.println("color: " + colorPoint); // 278, 62
-        colorPoint = ColorFinder.findColor(imageWrapper, ColorUtils.parseColor("#E31716"), 4);
+        Point colorPoint = ColorFinder.findColor(imageWrapper, ColorUtils.parseColor("#E31716"), 4);
         System.out.println("color: " + colorPoint); // 233, 170
         colorPoint = ColorFinder.findColor(imageWrapper, ColorUtils.parseColor("#25E500"), 4);
         System.out.println("color: " + colorPoint); // 126, 225
-        // TODO bug
+        colorPoint = ColorFinder.findColor(imageWrapper, ColorUtils.parseColor("#620081"), 4, new Rect(0, 270, 300, 20));
+        System.out.println("color: " + colorPoint); // 124, 273
         colorPoint = ColorFinder.findMultiColors(imageWrapper, ColorUtils.parseColor("#E51B1B"), 4, null, new int[]{
                 // x, y, color
-                0, 4, ColorUtils.parseColor("#D62629"),
-                3, 4, ColorUtils.parseColor("#D62629")
+                0, 1, ColorUtils.parseColor("#E51B1B"),
+                1, 0, ColorUtils.parseColor("#E51B1B")
         });
-        System.out.println("multi color: " + colorPoint);
+        System.out.println("multi color: " + colorPoint); // 230, 171
     }
 
 }

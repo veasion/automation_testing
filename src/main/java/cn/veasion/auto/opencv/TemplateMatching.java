@@ -39,6 +39,17 @@ public class TemplateMatching {
         }
     }
 
+    /**
+     * 采用图像金字塔算法快速找图
+     *
+     * @param img             图片
+     * @param template        模板图片
+     * @param matchMethod     匹配算法
+     * @param weakThreshold   弱阈值。该值用于在每一轮模板匹配中检验是否继续匹配。如果相似度小于该值，则不再继续匹配。
+     * @param strictThreshold 强阈值。该值用于检验最终匹配结果，以及在每一轮匹配中如果相似度大于该值则直接返回匹配结果。
+     * @param maxLevel        图像金字塔的层数
+     * @return 坐标
+     */
     public static Point fastTemplateMatching(Mat img, Mat template, int matchMethod, float weakThreshold, float strictThreshold, int maxLevel) {
         List<Match> result = fastTemplateMatching(img, template, matchMethod, weakThreshold, strictThreshold, maxLevel, 1);
         if (result.isEmpty()) {
@@ -56,13 +67,14 @@ public class TemplateMatching {
      * @param weakThreshold   弱阈值。该值用于在每一轮模板匹配中检验是否继续匹配。如果相似度小于该值，则不再继续匹配。
      * @param strictThreshold 强阈值。该值用于检验最终匹配结果，以及在每一轮匹配中如果相似度大于该值则直接返回匹配结果。
      * @param maxLevel        图像金字塔的层数
+     * @return 匹配结果
      */
     public static List<Match> fastTemplateMatching(Mat img, Mat template, int matchMethod, float weakThreshold, float strictThreshold, int maxLevel, int limit) {
         if (maxLevel == MAX_LEVEL_AUTO) {
-            //自动选取金字塔层数
+            // 自动选取金字塔层数
             maxLevel = selectPyramidLevel(img, template);
         }
-        //保存每一轮匹配到模板图片在原图片的位置
+        // 保存每一轮匹配到模板图片在原图片的位置
         List<Match> finalMatchResult = new ArrayList<>();
         List<Match> previousMatchResult = Collections.emptyList();
         boolean isFirstMatching = true;
@@ -170,12 +182,12 @@ public class TemplateMatching {
 
     private static int selectPyramidLevel(Mat img, Mat template) {
         int minDim = min(img.rows(), img.cols(), template.rows(), template.cols());
-        //这里选取16为图像缩小后的最小宽高，从而用log(2, minDim / 16)得到最多可以经过几次缩小。
+        // 这里选取16为图像缩小后的最小宽高，从而用log(2, minDim / 16)得到最多可以经过几次缩小。
         int maxLevel = (int) (Math.log(minDim / 16) / Math.log(2));
         if (maxLevel < 0) {
             return 0;
         }
-        //上限为6
+        // 上限为6
         return Math.min(6, maxLevel);
     }
 

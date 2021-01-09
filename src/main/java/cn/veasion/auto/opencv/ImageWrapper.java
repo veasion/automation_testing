@@ -104,14 +104,14 @@ public class ImageWrapper {
         }
     }
 
-    public int pixel(int x, int y) {
+    public int getRGB(int x, int y) {
         ensureNotRecycled();
         if (mImage != null) {
             return mImage.getRGB(x, y);
         }
         // return getImage().getRGB(x, y);
         double[] channels = mMat.get(x, y);
-        return ColorUtils.argb((int) channels[3], (int) channels[0], (int) channels[1], (int) channels[2]);
+        return ColorUtils.rgb((int) channels[2], (int) channels[1], (int) channels[0]);
     }
 
     public BufferedImage getImage() {
