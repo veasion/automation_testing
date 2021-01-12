@@ -204,4 +204,20 @@ println(image.ocrByElement(findOne('css=.ver-code-img img')).getContent());
 println(image.captchaByElement(findOne('css=.ver-code-img img')).getContent());
 
 // 元素保存为图片
-findOne('id=div-test').saveAsImage('C:\\Users\\user\\Desktop\\abc.png');
+findOne('id=div-test').saveAsImage('C:\\Users\\user\\Desktop\\test.jpg');
+
+// 加载图片
+image.loadByUrl('http://xxx.png');
+
+// 查找颜色
+image.findColor(image.load('C:\\Users\\user\\Desktop\\test.jpg'), '#E31716', 4);
+image.findColor(image.load('C:\\Users\\user\\Desktop\\test.jpg'), '#620081', 4, [0, 270, 300, 20]);
+
+// 查找多个颜色
+image.findMultiColors(image.load('C:\\Users\\user\\Desktop\\test.jpg'), '#E51B1B', 4, [
+    [0, 1, '#E51B1B'],
+    [1, 0, '#E51B1B']
+]);
+
+// 查找图片
+image.findImage(image.load('C:\\Users\\user\\Desktop\\test.jpg'), image.load('C:\\Users\\user\\Desktop\\template.png'), 0.9);

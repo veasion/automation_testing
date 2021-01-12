@@ -81,8 +81,8 @@ public class OpenCVHelper {
     }
 
     public static void main(String[] args) throws IOException {
-        ImageWrapper imageWrapper = ImageWrapper.ofImagePath("C:\\Users\\Veasion\\Desktop\\test.jpg");
-        ImageWrapper templateWrapper = ImageWrapper.ofImagePath("C:\\Users\\Veasion\\Desktop\\template.png");
+        ImageWrapper imageWrapper = ImageWrapper.ofImagePath("C:\\Users\\user\\Desktop\\test.jpg");
+        ImageWrapper templateWrapper = ImageWrapper.ofImagePath("C:\\Users\\user\\Desktop\\template.png");
         Point imagePoint = ImageFinder.findImage(imageWrapper, templateWrapper);
         System.out.println("image: " + imagePoint); // 255, 58
         Point colorPoint = ColorFinder.findColor(imageWrapper, ColorUtils.parseColor("#E31716"), 4);

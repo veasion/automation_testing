@@ -29,7 +29,6 @@ public class ColorFinder {
         return findColor(image, color, null);
     }
 
-
     /**
      * 查找颜色
      *

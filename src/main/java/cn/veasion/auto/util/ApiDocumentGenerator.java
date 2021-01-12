@@ -275,16 +275,19 @@ public class ApiDocumentGenerator {
             return "{" + clazz.getSimpleName() + "}";
         }
         String name = clazz.getName();
+        String simpleName = clazz.getSimpleName();
         if ("void".equals(name)) {
             return name;
+        } else if ("long".equals(name) || "int".equals(name) || "double".equals(name) || "float".equals(name)) {
+            return "{number}";
+        } else if ("long[]".equals(simpleName) || "int[]".equals(simpleName) || "double[]".equals(simpleName) || "float[]".equals(simpleName)) {
+            return "{number[]}";
         } else if ("[Ljava.lang.String;".equals(name)) {
             return "{string[]}";
         } else if ("[Ljava.lang.Object;".equals(name)) {
             return "{object[]}";
-        } else if ("long".equals(name) || "int".equals(name) || "double".equals(name) || "float".equals(name)) {
-            return "{number}";
         } else {
-            return "{" + clazz.getSimpleName() + "}";
+            return "{" + simpleName + "}";
         }
     }
 

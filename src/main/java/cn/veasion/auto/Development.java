@@ -5,6 +5,7 @@ import cn.veasion.auto.core.WebDriverUtils;
 import cn.veasion.auto.debug.Debug;
 import cn.veasion.auto.core.JavaScriptCore;
 import cn.veasion.auto.util.JavaScriptUtils;
+import org.opencv.core.Core;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
@@ -17,6 +18,10 @@ import java.util.Objects;
  * @date 2020/6/12
  */
 public class Development {
+
+    static {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
 
     public static void main(String[] args) throws Exception {
         WebDriver driver = null;

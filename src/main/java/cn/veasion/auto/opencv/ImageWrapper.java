@@ -1,6 +1,8 @@
 package cn.veasion.auto.opencv;
 
 import cn.veasion.auto.captcha.image.ImageUtil;
+import cn.veasion.auto.util.Api;
+import cn.veasion.auto.util.ApiDocumentGenerator;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
@@ -17,7 +19,8 @@ import java.io.UncheckedIOException;
  * @author luozhuowei
  * @date 2021/1/8
  */
-public class ImageWrapper {
+@Api.ClassInfo(desc = "图片")
+public class ImageWrapper implements ApiDocumentGenerator.DocGenerator {
 
     private Mat mMat;
     private int mWidth;
@@ -47,10 +50,12 @@ public class ImageWrapper {
         this(new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR));
     }
 
+    @Api(generator = false)
     public static ImageWrapper ofImagePath(String path) throws IOException {
         return ofImage(ImageIO.read(new File(path)));
     }
 
+    @Api(generator = false)
     public static ImageWrapper ofImage(BufferedImage image) {
         if (image == null) {
             return null;
@@ -58,6 +63,7 @@ public class ImageWrapper {
         return new ImageWrapper(image);
     }
 
+    @Api(generator = false)
     public static ImageWrapper ofMat(Mat mat) {
         if (mat == null) {
             return null;
@@ -65,16 +71,19 @@ public class ImageWrapper {
         return new ImageWrapper(mat);
     }
 
+    @Api("宽度")
     public int getWidth() {
         ensureNotRecycled();
         return mWidth;
     }
 
+    @Api("高度")
     public int getHeight() {
         ensureNotRecycled();
         return mHeight;
     }
 
+    @Api(generator = false)
     public Mat getMat() {
         ensureNotRecycled();
         if (mMat == null && mImage != null) {
@@ -83,6 +92,7 @@ public class ImageWrapper {
         return mMat;
     }
 
+    @Api(generator = false)
     public Mat getMat(int imageType, int matType) {
         ensureNotRecycled();
         if (mMat == null && mImage != null) {
@@ -91,6 +101,7 @@ public class ImageWrapper {
         return mMat;
     }
 
+    @Api("保存")
     public void saveTo(String path) {
         ensureNotRecycled();
         if (mImage != null) {
@@ -104,6 +115,7 @@ public class ImageWrapper {
         }
     }
 
+    @Api("获取RGB值")
     public int getRGB(int x, int y) {
         ensureNotRecycled();
         if (mImage != null) {
@@ -114,6 +126,7 @@ public class ImageWrapper {
         return ColorUtils.rgb((int) channels[2], (int) channels[1], (int) channels[0]);
     }
 
+    @Api(generator = false)
     public BufferedImage getImage() {
         ensureNotRecycled();
         if (mImage == null && mMat != null) {
@@ -122,6 +135,7 @@ public class ImageWrapper {
         return mImage;
     }
 
+    @Api(generator = false)
     public void recycle() {
         if (mImage != null) {
             mImage = null;
@@ -132,11 +146,13 @@ public class ImageWrapper {
         }
     }
 
+    @Api(generator = false)
     public void ensureNotRecycled() {
         if (mImage == null && mMat == null)
             throw new IllegalStateException("image has been recycled");
     }
 
+    @Api("克隆")
     public ImageWrapper clone() {
         ensureNotRecycled();
         if (mImage == null) {
