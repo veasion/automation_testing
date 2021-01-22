@@ -271,8 +271,11 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
 
     @Api("截图")
     @ResultProxy(value = false, log = false)
-    public boolean screenshot(String path) {
+    public boolean screenshot(@Api.Param(allowNull = true) String path) {
         try {
+            if (JavaScriptUtils.isNull(path)) {
+                path = String.format("%s\\screenshot_%d.png", binding.getEnv().get(Constants.DESKTOP_DIR), System.currentTimeMillis());
+            }
             File image = ((TakesScreenshot) binding.getWebDriver()).getScreenshotAs(OutputType.FILE);
             if (image != null) {
                 try (FileInputStream is = new FileInputStream(image)) {

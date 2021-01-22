@@ -31,7 +31,15 @@ public class WebDriverUtils {
     private WebDriverUtils() {
     }
 
-    public static WebDriver getWebDriver(Environment env, String configPath, boolean h5) throws Exception {
+    /**
+     * 浏览器驱动
+     *
+     * @param env        env
+     * @param configPath config.json 路径
+     * @param headless   是否后台隐身模式
+     * @param h5         是否手机H5模式
+     */
+    public static WebDriver getWebDriver(Environment env, String configPath, boolean headless, boolean h5) throws Exception {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configPath), StandardCharsets.UTF_8))) {
             String config = br.lines().filter(l -> !l.trim().startsWith("//")).collect(Collectors.joining("\n"));
             env.loadGlobal(config);
@@ -44,9 +52,14 @@ public class WebDriverUtils {
             }
             System.setProperty("webdriver.chrome.driver", driverPath);
             ChromeOptions options = new ChromeOptions();
-            options.addArguments("--start-maximized");
-            if (JavaScriptCore.isDebug()) {
-                options.addExtensions(new File(JavaScriptUtils.getFilePath("devScriptCoding.crx")));
+            if (headless) {
+                options.setHeadless(true);
+                options.addArguments("--window-size=1920,1080");
+            } else {
+                options.addArguments("--start-maximized");
+                if (JavaScriptCore.isDebug()) {
+                    options.addExtensions(new File(JavaScriptUtils.getFilePath("devScriptCoding.crx")));
+                }
             }
             if (h5) {
                 String deviceName = "iPhone X"; // iPhone X / Galaxy S5
@@ -54,6 +67,8 @@ public class WebDriverUtils {
                 mobileEmulation.put("deviceName", deviceName);
                 options.setExperimentalOption("mobileEmulation", mobileEmulation);
             }
+            options.addArguments("no-sandbox");
+            options.addArguments("--disable-popup-blocking");
             ChromeDriver chromeDriver = new ChromeDriver(options);
             if (JavaScriptCore.isDebug()) {
                 Debug.initSocketServer(chromeDriver, env);
@@ -74,6 +89,10 @@ public class WebDriverUtils {
                 FirefoxProfile firefoxProfile = new FirefoxProfile();
                 firefoxProfile.setPreference("general.useragent.override", useragent);
                 options.setProfile(firefoxProfile);
+            }
+            if (headless) {
+                options.setHeadless(true);
+                options.addArguments("--window-size=1920,1080");
             }
             FirefoxDriver firefoxDriver = new FirefoxDriver(options);
             if (h5) {

@@ -28,6 +28,15 @@ public class Environment extends HashMap<String, Object> {
         put(Constants.DESKTOP_DIR, javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath());
     }
 
+    public String getString(Object key) {
+        Object value = super.get(key);
+        if (value == null || value instanceof String) {
+            return (String) value;
+        } else {
+            return String.valueOf(value);
+        }
+    }
+
     public void loadGlobal(String configJson) {
         putAll(JSON.parseObject(configJson));
     }

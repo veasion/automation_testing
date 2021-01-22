@@ -6,6 +6,8 @@ import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.util.Api;
 
 import cn.veasion.auto.util.AutomationException;
+import cn.veasion.auto.util.Constants;
+import cn.veasion.auto.util.JavaScriptUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
@@ -213,7 +215,10 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
 
     @Api("保存成图片")
     @ResultProxy(log = false, value = false)
-    public void saveAsImage(String path) throws InterruptedException, IOException {
+    public void saveAsImage(@Api.Param(allowNull = true) String path) throws InterruptedException, IOException {
+        if (JavaScriptUtils.isNull(path)) {
+            path = String.format("%s\\%s_%d.png", binding.getEnv().get(Constants.DESKTOP_DIR), tagName(), System.currentTimeMillis());
+        }
         String imageBase64 = Image.getImageBase64(this);
         if (imageBase64 == null) {
             throw new AutomationException(String.format("%s 元素转换图片失败", tagName()));
