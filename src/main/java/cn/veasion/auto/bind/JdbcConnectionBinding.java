@@ -48,7 +48,7 @@ public class JdbcConnectionBinding implements JavaScriptBinding<Connection> {
     @ResultProxy(value = false)
     @Api(value = "执行DDL")
     public int executeDDL(String sql) throws SQLException {
-        return JdbcDao.executeDDL(binding.getBean(), sql);
+        return JdbcDao.executeUpdate(binding.getBean(), sql);
     }
 
     @ResultProxy(value = false, log = false)

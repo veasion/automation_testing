@@ -93,6 +93,15 @@ http.getCurrentUrl = function () {
 };
 
 /**
+ * 获取当前浏览器URL域名
+ *
+ * @return {string}
+ */
+http.getCurrentDomainUrl = function () {
+    return executeScript('return location.origin') + '/';
+};
+
+/**
  * 获取Trace数据
  *
  * @param {string} trace

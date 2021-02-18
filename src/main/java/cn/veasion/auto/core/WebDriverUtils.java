@@ -40,6 +40,7 @@ public class WebDriverUtils {
      * @param h5         是否手机H5模式
      */
     public static WebDriver getWebDriver(Environment env, String configPath, boolean headless, boolean h5) throws Exception {
+        env.put("debug", JavaScriptCore.isDebug());
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configPath), StandardCharsets.UTF_8))) {
             String config = br.lines().filter(l -> !l.trim().startsWith("//")).collect(Collectors.joining("\n"));
             env.loadGlobal(config);

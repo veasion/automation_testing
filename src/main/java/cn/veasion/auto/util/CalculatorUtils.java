@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,8 +16,9 @@ import java.util.regex.Pattern;
  */
 public class CalculatorUtils {
 
+    private static final int SCALE = 4;
+    private static final int ROUNDING_MODE = BigDecimal.ROUND_HALF_UP;
     private static final Pattern OPERATOR = Pattern.compile("[+\\-*/×÷%√^]");
-    private static final int SCALE = 4, ROUNDING_MODE = BigDecimal.ROUND_HALF_UP;
 
     public static void main(String[] args) {
         testCalculate("-2");
@@ -31,7 +32,7 @@ public class CalculatorUtils {
         testCalculate("2+5*2-6/3");
         testCalculate("(1+2+3)^2+4");
         testCalculate("2+5*(2-6*(3+1))/3");
-        testCalculate("4.99+(5.99+6.99)*1.06^2");
+        testCalculate("4.99+(5.99+6.99)*1.06^2+√4");
     }
 
     private static BigDecimal testCalculate(String str) {
@@ -77,11 +78,8 @@ public class CalculatorUtils {
             return null;
         }
         String pattern = n > 0 ? "#." : "#";
-        if (n > 10) {
-            n = 10;
-        }
-        for (int i = 0; i < n; i++) {
-            pattern += "#";
+        for (int i = 0; i < n && n <= 10; i++) {
+            pattern = pattern.concat("#");
         }
         return new DecimalFormat(pattern).format(value);
     }
@@ -93,16 +91,16 @@ public class CalculatorUtils {
                 if (group.getChildren() != null) {
                     sb.append(calcGroups(group.getChildren()));
                 } else {
-                    sb.append(flatCalc(group.getContext()));
+                    sb.append(flatCalculate(group.getContext()));
                 }
             } else {
                 sb.append(group.getContext());
             }
         }
-        return flatCalc(sb.toString());
+        return flatCalculate(sb.toString());
     }
 
-    private static BigDecimal flatCalc(final String eval) {
+    private static BigDecimal flatCalculate(final String eval) {
         String str = eval;
         if (str == null || "".equals(str = str.trim())) {
             return null;
@@ -151,10 +149,10 @@ public class CalculatorUtils {
             }
             pre = pre.pre;
         }
-        return calculate(pre, maxLevel);
+        return simpleCalculate(pre, maxLevel);
     }
 
-    private static BigDecimal calculate(ValueLink link, int maxLevel) {
+    private static BigDecimal simpleCalculate(ValueLink link, int maxLevel) {
         while (true) {
             while (link.pre != null) {
                 link = link.pre;
@@ -195,41 +193,41 @@ public class CalculatorUtils {
         MULTIPLY("*", "×", 2, false, BigDecimal::multiply),
         DIVIDE("/", "÷", 2, false, (a, b) -> a.divide(b, SCALE, ROUNDING_MODE)),
         DIVIDE_REMAINDER("%", 2, false, (a, b) -> a.divideAndRemainder(b)[1]),
-        POW("^", 3, false, (a, b) -> new BigDecimal(Math.pow(a.doubleValue(), b.doubleValue()))),
+        POW("^", 3, false, (a, b) -> BigDecimal.valueOf(Math.pow(a.doubleValue(), b.doubleValue()))),
         SQRT("√", 3, true, (a, b) -> {
             if (a != null) {
                 // 开N次方
-                return new BigDecimal(Math.pow(b.doubleValue(), BigDecimal.ONE.divide(a, SCALE, ROUNDING_MODE).doubleValue()));
+                return BigDecimal.valueOf(Math.pow(b.doubleValue(), BigDecimal.ONE.divide(a, SCALE, ROUNDING_MODE).doubleValue()));
             } else {
                 // 开平方
-                return new BigDecimal(Math.sqrt(b.doubleValue()));
+                return BigDecimal.valueOf(Math.sqrt(b.doubleValue()));
             }
         });
 
         private int level;
-        private String operator;
-        private String operator2;
+        private String op1;
+        private String op2;
         private boolean leftNullable;
-        private BiFunction<BigDecimal, BigDecimal, BigDecimal> function;
+        private BinaryOperator<BigDecimal> function;
 
-        Operator(String operator, int level, boolean leftNullable, BiFunction<BigDecimal, BigDecimal, BigDecimal> function) {
-            this(operator, null, level, leftNullable, function);
+        Operator(String op1, int level, boolean leftNullable, BinaryOperator<BigDecimal> function) {
+            this(op1, null, level, leftNullable, function);
         }
 
-        Operator(String operator, String operator2, int level, boolean leftNullable, BiFunction<BigDecimal, BigDecimal, BigDecimal> function) {
+        Operator(String op1, String op2, int level, boolean leftNullable, BinaryOperator<BigDecimal> function) {
             this.level = level;
-            this.operator2 = operator2;
+            this.op2 = op2;
             this.leftNullable = leftNullable;
-            this.operator = Objects.requireNonNull(operator);
+            this.op1 = Objects.requireNonNull(op1);
             this.function = Objects.requireNonNull(function);
         }
 
         public BigDecimal apply(BigDecimal a, BigDecimal b) {
             if (b == null) {
-                throw new AutomationException(String.format("%s 后面必须位数字", operator));
+                throw new AutomationException(String.format("%s 后面必须位数字", op1));
             }
             if (a == null && !leftNullable) {
-                throw new AutomationException(String.format("格式错误：%s %s", operator, String.valueOf(b)));
+                throw new AutomationException(String.format("格式错误：%s %s", op1, String.valueOf(b)));
             }
             return function.apply(a, b);
         }
@@ -239,7 +237,7 @@ public class CalculatorUtils {
                 return null;
             }
             for (Operator value : values()) {
-                if (operator.equals(value.operator) || operator.equals(value.operator2)) {
+                if (operator.equals(value.op1) || operator.equals(value.op2)) {
                     return value;
                 }
             }
