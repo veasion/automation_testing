@@ -119,26 +119,34 @@ public class Debug {
         return returnObj.toJSONString();
     }
 
+    public static String input(String title, Scanner scanner) {
+        if (scanner == null) {
+            scanner = new Scanner(System.in);
+        }
+        JavaScriptUtils.println(title);
+        String input = scanner.nextLine().trim();
+        if (input.startsWith("<<<") || input.startsWith(">>>")) {
+            // 读多行 <<<input>>>
+            StringBuilder lines = new StringBuilder(input.substring(3));
+            while (scanner.hasNextLine()) {
+                input = scanner.nextLine().trim();
+                lines.append("\r\n").append(input);
+                if (input.startsWith("<<<") || input.endsWith(">>>")) {
+                    lines.setLength(lines.length() - 3);
+                    break;
+                }
+            }
+            input = lines.toString();
+        }
+        return input;
+    }
+
     public static void console(ScriptEngine scriptEngine, Consumer<ScriptEngine> resetScriptEngine) {
         LOGGER.info("debug模式开启！");
         Scanner scanner = new Scanner(System.in);
         try {
             do {
-                JavaScriptUtils.println("请输入js代码: ");
-                String jsCode = scanner.nextLine().trim();
-                if (jsCode.startsWith("<<<") || jsCode.startsWith(">>>")) {
-                    // 读多行 <<<input>>>
-                    StringBuilder lines = new StringBuilder(jsCode.substring(3));
-                    while (scanner.hasNextLine()) {
-                        jsCode = scanner.nextLine().trim();
-                        lines.append("\r\n").append(jsCode);
-                        if (jsCode.startsWith("<<<") || jsCode.endsWith(">>>")) {
-                            lines.setLength(lines.length() - 3);
-                            break;
-                        }
-                    }
-                    jsCode = lines.toString();
-                }
+                String jsCode = input("请输入js代码: ", scanner);
                 if ("exit".equals(jsCode)) {
                     try {
                         Runtime.getRuntime().exec("taskkill /IM chromedriver.exe /F");

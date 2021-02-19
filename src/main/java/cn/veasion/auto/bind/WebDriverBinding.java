@@ -2,6 +2,7 @@ package cn.veasion.auto.bind;
 
 import cn.veasion.auto.core.Environment;
 import cn.veasion.auto.core.ResultProxy;
+import cn.veasion.auto.debug.Debug;
 import cn.veasion.auto.util.*;
 import cn.veasion.auto.core.JavaScriptCore;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
@@ -351,6 +352,12 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
     @Api(value = "Mysql数据库连接", result = java.sql.Connection.class)
     public Object createMysqlConnection(String ip, int port, String database, String user, String password) throws SQLException {
         return JdbcDao.createConnection(JdbcDao.MYSQL_EVAL_URL, ip, port, database, user, password);
+    }
+
+    @ResultProxy(value = false, log = false)
+    @Api(value = "输入")
+    public String input(String title) {
+        return Debug.input(title, null);
     }
 
     @Api("HTTP 请求")

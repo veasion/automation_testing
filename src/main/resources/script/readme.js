@@ -27,9 +27,12 @@ text('css=span');
 findOne('css=span').text();
 findOne('css=input').value();
 
-// 输入
+// 元素输入
 type('css=input', '123456');
 sendKeys('css=input', '123456');
+
+// 系统输入
+println(input('请输入姓名: '));
 
 // 随机8位数
 randCode(8);
