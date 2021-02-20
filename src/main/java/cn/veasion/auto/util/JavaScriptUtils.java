@@ -1,5 +1,6 @@
 package cn.veasion.auto.util;
 
+import cn.veasion.auto.core.JavaScriptCore;
 import com.alibaba.fastjson.JSONObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import jdk.nashorn.internal.objects.NativeArray;
@@ -7,12 +8,15 @@ import jdk.nashorn.internal.runtime.Property;
 import jdk.nashorn.internal.runtime.ScriptFunction;
 import jdk.nashorn.internal.runtime.ScriptObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +35,6 @@ public class JavaScriptUtils {
     private static PrintStream systemOutput = System.out;
 
     public static void setLogPrintStream(PrintStream ps) {
-        // JavaScriptUtils.logPrintStream = ps;
         System.setOut(ps != null ? new PrintStream(new MultipleStream(ps, systemOutput)) : systemOutput);
     }
 
@@ -93,8 +96,65 @@ public class JavaScriptUtils {
         return null;
     }
 
+    public static boolean isJarRun() {
+        String protocol = ClassSearcher.class.getResource("").getProtocol();
+        return "rsrc".equals(protocol) || "jar".equals(protocol);
+    }
+
     public static String getFilePath(String path) {
-        return JavaScriptUtils.class.getResource("/").getPath() + path;
+        try {
+            if (JavaScriptCore.isDebug()) {
+                // debug 时走 resource, 支持reset命令热加载脚本
+                return getSourcePath(path);
+            } else {
+                // classes
+                path = convertPath(path);
+                if (path == null) {
+                    return null;
+                }
+                return URLDecoder.decode(path, "UTF-8");
+            }
+        } catch (Exception e) {
+            throw new AutomationException("路径异常: " + path, e);
+        }
+    }
+
+    public static String getSourcePath(String path) {
+        try {
+            path = convertPath(path);
+            if (path == null) {
+                return null;
+            }
+            if (isJarRun()) {
+                return path;
+            }
+            String resourceUri = "src\\main\\resources";
+            if (path.contains("target\\classes") || path.contains("target/classes")) {
+                path = path.replace("target\\classes", resourceUri).replace("target/classes", "src/main/resources");
+            } else if (new File(path + resourceUri).exists()) {
+                path = path + resourceUri;
+            }
+            return URLDecoder.decode(path, "UTF-8");
+        } catch (Exception e) {
+            throw new AutomationException("路径异常: " + path, e);
+        }
+    }
+
+    private static String convertPath(String path) throws IOException {
+        if (path == null || "".equals(path.trim())) {
+            path = "/";
+        } else if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
+        if (isJarRun()) {
+            return new File(System.getProperty("user.dir") + path).getCanonicalPath() + (path.endsWith("/") ? File.separator : "");
+        } else {
+            URL resource = JavaScriptUtils.class.getResource(path);
+            if (resource == null) {
+                return null;
+            }
+            return new File(resource.getPath()).getCanonicalPath() + (path.endsWith("/") ? File.separator : "");
+        }
     }
 
     public static JavascriptException getJavaScriptException(Exception e) {

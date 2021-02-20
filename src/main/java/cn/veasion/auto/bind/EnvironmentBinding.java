@@ -8,10 +8,6 @@ import cn.veasion.auto.util.Api;
 import cn.veasion.auto.util.JavaScriptUtils;
 import org.openqa.selenium.WebDriver;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -93,39 +89,14 @@ public class EnvironmentBinding implements InitializingBinding<Environment> {
 
     @Api("获取class决定路径")
     @ResultProxy(value = false, log = false)
-    public String getPath(String path) throws IOException {
-        path = convertPath(path);
-        if (path == null) {
-            return null;
-        }
-        return URLDecoder.decode(path, "UTF-8");
+    public String getPath(String path) {
+        return JavaScriptUtils.getFilePath(path);
     }
 
     @Api("获取源文件绝对路径")
     @ResultProxy(value = false, log = false)
-    public String getSourcePath(String path) throws IOException {
-        path = convertPath(path);
-        if (path == null) {
-            return null;
-        }
-        String resourceUri = "src\\main\\resources";
-        if (path.contains("target\\classes") || path.contains("target/classes")) {
-            path = path.replace("target\\classes", resourceUri).replace("target/classes", "src/main/resources");
-        } else if (new File(path + resourceUri).exists()) {
-            path = path + resourceUri;
-        }
-        return URLDecoder.decode(path, "UTF-8");
-    }
-
-    private String convertPath(String path) throws IOException {
-        if (path == null || "".equals(path.trim())) {
-            path = "/";
-        }
-        URL resource = getClass().getResource(path);
-        if (resource == null) {
-            return null;
-        }
-        return new File(resource.getPath()).getCanonicalPath() + (path.endsWith("/") ? File.separator : "");
+    public String getSourcePath(String path) {
+        return JavaScriptUtils.getSourcePath(path);
     }
 
     @Override

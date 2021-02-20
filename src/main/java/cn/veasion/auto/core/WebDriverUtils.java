@@ -10,6 +10,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
  * @date 2020/12/25
  */
 public class WebDriverUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverUtils.class);
 
     private WebDriverUtils() {
     }
@@ -70,7 +74,13 @@ public class WebDriverUtils {
             }
             options.addArguments("no-sandbox");
             options.addArguments("--disable-popup-blocking");
-            ChromeDriver chromeDriver = new ChromeDriver(options);
+            ChromeDriver chromeDriver;
+            try {
+                chromeDriver = new ChromeDriver(options);
+            } catch (Exception e) {
+                LOGGER.error("chrome浏览器驱动有问题或版本不匹配，chromedriver路径: {}\n下载驱动地址见: {}", driverPath, "http://npm.taobao.org/mirrors/chromedriver/");
+                throw e;
+            }
             if (JavaScriptCore.isDebug()) {
                 Debug.initSocketServer(chromeDriver, env);
             }

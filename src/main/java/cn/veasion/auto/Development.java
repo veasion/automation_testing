@@ -20,7 +20,7 @@ import java.util.Objects;
 public class Development {
 
     static {
-        // -Djava.library.path=$PROJECT_DIR$/opencv/x64
+        // -Djava.library.path=$PROJECT_DIR$/opencv/dll/x64
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
@@ -32,11 +32,11 @@ public class Development {
             String configPath = JavaScriptUtils.getFilePath("config.json");
             String includePath = JavaScriptUtils.getFilePath("include");
             driver = WebDriverUtils.getWebDriver(env, configPath, false, false);
-            File[] files = new File(includePath).listFiles(name -> name.getName().endsWith(".js"));
+            File[] files = new File(Objects.requireNonNull(includePath)).listFiles(name -> name.getName().endsWith(".js"));
             Development.printInfo();
             JavaScriptCore.include(Objects.requireNonNull(files));
             JavaScriptCore.execute(driver, env, null);
-            // JavaScriptCore.execute(driver, env, new File(getFilePath("script/crawler.js")));
+            // JavaScriptCore.execute(driver, env, new File(JavaScriptUtils.getFilePath("script/crawler.js")));
         } finally {
             Debug.closeSocketServer();
             if (driver != null) {

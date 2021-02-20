@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class ScriptHttpUtils {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ScriptHttpUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScriptHttpUtils.class);
 
     /**
      * 脚本请求
