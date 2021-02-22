@@ -55,7 +55,12 @@ function baiduSearch(str) {
 }
 ```
 
-
+项目打包命令: mvn clean install
+<br>
+运行可执行jar文件路径: <br>
+ win: ${basedir}/target/automation/run.bat
+ <br>
+ mac: ${basedir}/target/automation/run.sh
 
 ## 赞助
 

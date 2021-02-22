@@ -4,6 +4,7 @@ import cn.veasion.auto.core.Environment;
 import cn.veasion.auto.core.WebDriverUtils;
 import cn.veasion.auto.debug.Debug;
 import cn.veasion.auto.core.JavaScriptCore;
+import cn.veasion.auto.util.ArgsCommandOption;
 import cn.veasion.auto.util.JavaScriptUtils;
 import org.opencv.core.Core;
 import org.openqa.selenium.WebDriver;
@@ -25,18 +26,18 @@ public class Development {
     }
 
     public static void main(String[] args) throws Exception {
+        ArgsCommandOption option = ArgsCommandOption.parse(args);
         WebDriver driver = null;
         try {
             JavaScriptCore.setDebug(true);
             Environment env = new Environment();
             String configPath = JavaScriptUtils.getFilePath("config.json");
             String includePath = JavaScriptUtils.getFilePath("include");
-            driver = WebDriverUtils.getWebDriver(env, configPath, false, false);
+            driver = WebDriverUtils.getWebDriver(env, configPath, option.hasOption("headless"), option.hasOption("h5"));
             File[] files = new File(Objects.requireNonNull(includePath)).listFiles(name -> name.getName().endsWith(".js"));
             Development.printInfo();
             JavaScriptCore.include(Objects.requireNonNull(files));
-            JavaScriptCore.execute(driver, env, null);
-            // JavaScriptCore.execute(driver, env, new File(JavaScriptUtils.getFilePath("script/crawler.js")));
+            JavaScriptCore.execute(driver, env, option.hasOption("file") ? new File(option.getOneOption("file")) : null);
         } finally {
             Debug.closeSocketServer();
             if (driver != null) {

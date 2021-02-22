@@ -145,6 +145,7 @@
                         <exclude>script/</exclude>
                         <exclude>*.js</exclude>
                         <exclude>*.bat</exclude>
+                        <exclude>*.sh</exclude>
                         <exclude>*.json</exclude>
                         <exclude>*.crx</exclude>
                     </excludes>
@@ -157,12 +158,9 @@
                 <configuration>
                     <finalName>automation</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <!--<descriptors>
+                    <descriptors>
                         <descriptor>${basedir}/assembly.xml</descriptor>
-                    </descriptors>-->
+                    </descriptors>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
@@ -181,6 +179,68 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>automation</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>cn.veasion.auto.Development</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+            <!-- 复制可执行文件到 target/automation/ 目录 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy todir="${basedir}/target/automation/">
+                                    <fileset dir="${basedir}/src/main/resources">
+                                        <include name="**/*"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="${basedir}/target/automation/opencv/dll">
+                                    <fileset dir="${basedir}/opencv/dll">
+                                        <include name="**/*"/>
+                                    </fileset>
+                                </copy>
+                                <copy file="${basedir}/target/automation.jar" todir="${basedir}/target/automation/"/>
+                                <echo message="可执行文件所在路径: ${basedir}/target/automation/"/>
+                                <echo message="运行 ${basedir}/target/automation/ 目录下 run.bat 或者 run.sh 可以直接启动程序！"/>
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
