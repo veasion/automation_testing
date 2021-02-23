@@ -97,11 +97,14 @@ public class JavaScriptUtils {
     }
 
     public static boolean isJarRun() {
-        String protocol = ClassSearcher.class.getResource("").getProtocol();
+        String protocol = JavaScriptUtils.class.getResource("").getProtocol();
         return "rsrc".equals(protocol) || "jar".equals(protocol);
     }
 
     public static String getFilePath(String path) {
+        if (isEmpty(path)) {
+            return null;
+        }
         try {
             if (JavaScriptCore.isDebug()) {
                 // debug 时走 resource, 支持reset命令热加载脚本
@@ -141,6 +144,13 @@ public class JavaScriptUtils {
     }
 
     private static String convertPath(String path) throws IOException {
+        try {
+            if (path != null && new File(path).exists()) {
+                return new File(path).getCanonicalPath() + (path.endsWith("/") ? File.separator : "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (path == null || "".equals(path.trim())) {
             path = "/";
         } else if (!path.startsWith("/")) {

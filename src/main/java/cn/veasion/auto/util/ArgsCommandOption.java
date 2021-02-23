@@ -27,6 +27,13 @@ public class ArgsCommandOption {
         return list.get(0);
     }
 
+    public boolean getBoolean(String option, boolean defaultValue) {
+        if (!hasOption(option)) {
+            return defaultValue;
+        }
+        return !"false".equalsIgnoreCase(getOption(option));
+    }
+
     public String getOption(String option) {
         List<String> list = optionMap.get(option);
         if (list == null || list.isEmpty()) {

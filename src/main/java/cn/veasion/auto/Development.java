@@ -29,15 +29,15 @@ public class Development {
         ArgsCommandOption option = ArgsCommandOption.parse(args);
         WebDriver driver = null;
         try {
-            JavaScriptCore.setDebug(true);
             Environment env = new Environment();
             String configPath = JavaScriptUtils.getFilePath("config.json");
             String includePath = JavaScriptUtils.getFilePath("include");
+            JavaScriptCore.setDebug(option.getBoolean("debug", true));
             driver = WebDriverUtils.getWebDriver(env, configPath, option.hasOption("headless"), option.hasOption("h5"));
             File[] files = new File(Objects.requireNonNull(includePath)).listFiles(name -> name.getName().endsWith(".js"));
             Development.printInfo();
             JavaScriptCore.include(Objects.requireNonNull(files));
-            JavaScriptCore.execute(driver, env, option.hasOption("file") ? new File(option.getOneOption("file")) : null);
+            JavaScriptCore.execute(driver, env, option.getOneOption("file"));
         } finally {
             Debug.closeSocketServer();
             if (driver != null) {

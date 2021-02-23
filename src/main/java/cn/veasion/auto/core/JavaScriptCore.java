@@ -68,6 +68,21 @@ public class JavaScriptCore {
         }
     }
 
+    public static Object execute(WebDriver driver, Environment env, String filePath) {
+        if (StringUtils.isEmpty(filePath)) {
+            return execute(driver, env, (File) null);
+        }
+        File file = new File(filePath);
+        if (!file.exists()) {
+            String path = JavaScriptUtils.getFilePath(filePath);
+            if (path == null) {
+                throw new AutomationException("脚本文件不存在!");
+            }
+            file = new File(path);
+        }
+        return execute(driver, env, file);
+    }
+
     public static Object execute(WebDriver driver, Environment env, File jsFile) {
         ScriptEngine scriptEngine = getScriptEngine(driver, env);
         if (jsFile != null) {
@@ -91,7 +106,7 @@ public class JavaScriptCore {
             Debug.console(scriptEngine, engine -> initScriptEngine(engine, driver, env));
             return null;
         } else {
-            throw new AutomationException("jsFile is null !");
+            throw new AutomationException("脚本文件不能为空!");
         }
     }
 
