@@ -118,7 +118,7 @@ auto.dependency = function (name, args, argsVar) {
         } else {
             path = env.getSourcePath(path + ".js");
         }
-        runNewJs(path);
+        runNewScript(path);
         result = env.get(auto.result);
         env.putGlobal(auto.args, null);
     });

@@ -83,7 +83,25 @@ public class JavaScriptCore {
         return execute(driver, env, file);
     }
 
-    public static Object execute(WebDriver driver, Environment env, File jsFile) {
+    public static Object execute(WebDriver driver, Environment env, File file) {
+        if (file == null) {
+            return executeScriptFile(driver, env, null);
+        } else if (file.isFile()) {
+            return executeScriptFile(driver, env, file);
+        } else if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null && files.length > 0) {
+                for (File f : files) {
+                    execute(driver, env, f);
+                }
+            }
+            return null;
+        } else {
+            throw new AutomationException("脚本文件错误: " + file.getPath());
+        }
+    }
+
+    private static Object executeScriptFile(WebDriver driver, Environment env, File jsFile) {
         ScriptEngine scriptEngine = getScriptEngine(driver, env);
         if (jsFile != null) {
             String fileName = jsFile.getName();

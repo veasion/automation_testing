@@ -12,6 +12,11 @@ public class Constants {
     }
 
     /**
+     * 默认debug
+     */
+    public static final boolean DEFAULT_DEBUG = true;
+
+    /**
      * Web Socket Path
      */
     public static final String WEBSOCKET_PATH = "/js";

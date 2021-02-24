@@ -202,17 +202,17 @@ public class Debug {
             history.add(jsCode);
         }
         if ("reload".equals(jsCode)) {
-            jsCode = "runNewJs(env.getString('filePath'));";
+            jsCode = "runNewScript(env.getString('filePath'));";
         } else if (jsCode.startsWith("run ")) {
             jsCode = jsCode.substring(3).trim().replace("\\", "/");
-            jsCode = "runNewJs(env.getSourcePath('/" + jsCode + "'));";
+            jsCode = "runNewScript(env.getSourcePath('/" + jsCode + "'));";
         } else if (jsCode.startsWith("> ")) {
             jsCode = jsCode.substring(1).trim();
             try {
                 String scriptDir = (String) scriptEngine.eval("env.getSourcePath('/script');");
                 File file = findFile(new File(scriptDir), jsCode);
                 if (file != null) {
-                    jsCode = "runNewJs('" + file.getPath().replace("\\", "/") + "');";
+                    jsCode = "runNewScript('" + file.getPath().replace("\\", "/") + "');";
                 } else {
                     throw new AutomationException("文件未找到：" + jsCode);
                 }

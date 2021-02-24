@@ -71,7 +71,7 @@ public class DevRunUtils {
             ps = new PrintStream(logPath, "UTF-8");
             System.out.println(file.getPath());
             JavaScriptUtils.setLogPrintStream(ps);
-            scriptEngine.eval("runNewJs('" + file.getPath().replace("\\", "/") + "');");
+            scriptEngine.eval("runNewScript('" + file.getPath().replace("\\", "/") + "');");
         } catch (Exception e) {
             // 执行异常
             runError = true;

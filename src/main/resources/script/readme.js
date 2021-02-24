@@ -145,10 +145,10 @@ array.forEach(function(item) {
 });
 
 // 运行新的js文件，命令 > run script/baidu.js
-runNewJs(env.getSourcePath('/script/baidu.js'));
+runNewScript(env.getSourcePath('/script/baidu.js'));
 
 // 重新加载并运行当前js文件，命令 > reload
-runNewJs(env.getString('filePath'));
+runNewScript(env.getString('filePath'));
 
 // 浏览器截图
 screenshot('C:\\Users\\user\\Desktop\\temp.png');

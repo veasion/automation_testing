@@ -238,15 +238,31 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
     }
 
     @ResultProxy
-    @Api("运行新的js")
-    public void runNewJs(String path) throws ExecutionException, InterruptedException {
+    @Api("运行新的脚本")
+    public void runNewScript(String path) throws ExecutionException, InterruptedException {
         if (path == null || "".equals(path)) {
             path = (String) binding.getEnv().get(Constants.ENV_GLOBAL_FILE_PATH);
         }
         File file = new File(path);
-        if (file.exists() && file.isFile()) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null && files.length > 0) {
+                for (File f : files) {
+                    runNewScript(f.getPath());
+                }
+            }
+        } else {
+            runNewScriptFile(file);
+        }
+    }
+
+    private void runNewScriptFile(File file) throws ExecutionException, InterruptedException {
+        if (!file.exists()) {
+            throw new AutomationException("脚本文件不存在：" + file.getPath());
+        }
+        if (file.isFile()) {
             if (binding.getEnv().get(Constants.ENV_GLOBAL_FILE_PATH) == null) {
-                binding.getEnv().put(Constants.ENV_GLOBAL_FILE_PATH, path);
+                binding.getEnv().put(Constants.ENV_GLOBAL_FILE_PATH, file.getPath());
                 binding.getEnv().put(Constants.ENV_GLOBAL_FILE_NAME, file.getName());
             }
             FutureTask<Boolean> task = new FutureTask<>(() -> {
@@ -266,7 +282,7 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
                 throw new AutomationException("运行 js 文件失败：" + file.getPath());
             }
         } else {
-            throw new AutomationException("运行 js 文件不存：" + file.getPath());
+            throw new AutomationException("脚本文件错误: " + file.getPath());
         }
     }
 

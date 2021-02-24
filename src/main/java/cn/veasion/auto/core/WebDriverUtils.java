@@ -1,7 +1,9 @@
 package cn.veasion.auto.core;
 
 import cn.veasion.auto.debug.Debug;
+import cn.veasion.auto.util.ArgsCommandOption;
 import cn.veasion.auto.util.AutomationException;
+import cn.veasion.auto.util.Constants;
 import cn.veasion.auto.util.JavaScriptUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -40,11 +42,15 @@ public class WebDriverUtils {
      *
      * @param env        env
      * @param configPath config.json 路径
-     * @param headless   是否后台隐身模式
-     * @param h5         是否手机H5模式
+     * @param option     命令参数
      */
-    public static WebDriver getWebDriver(Environment env, String configPath, boolean headless, boolean h5) throws Exception {
-        env.put("debug", JavaScriptCore.isDebug());
+    public static WebDriver getWebDriver(Environment env, String configPath, ArgsCommandOption option) throws Exception {
+        boolean h5 = option.hasOption("h5");
+        boolean headless = option.hasOption("headless");
+        boolean debug = option.getBoolean("debug", Constants.DEFAULT_DEBUG);
+        boolean gpuDisable = option.getBoolean("disable-gpu", false);
+        env.put("debug", debug);
+        JavaScriptCore.setDebug(debug);
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configPath), StandardCharsets.UTF_8))) {
             String config = br.lines().filter(l -> !l.trim().startsWith("//")).collect(Collectors.joining("\n"));
             env.loadGlobal(config);
@@ -62,8 +68,9 @@ public class WebDriverUtils {
                 options.addArguments("--window-size=1920,1080");
             } else {
                 options.addArguments("--start-maximized");
-                if (JavaScriptCore.isDebug()) {
-                    options.addExtensions(new File(JavaScriptUtils.getFilePath("devScriptCoding.crx")));
+                String devCrx = JavaScriptUtils.getFilePath("devScriptCoding.crx");
+                if (devCrx != null && JavaScriptCore.isDebug()) {
+                    options.addExtensions(new File(devCrx));
                 }
             }
             if (h5) {
@@ -71,6 +78,9 @@ public class WebDriverUtils {
                 Map<String, String> mobileEmulation = new HashMap<>();
                 mobileEmulation.put("deviceName", deviceName);
                 options.setExperimentalOption("mobileEmulation", mobileEmulation);
+            }
+            if (gpuDisable) {
+                options.addArguments("--disable-gpu");
             }
             options.addArguments("no-sandbox");
             options.addArguments("--disable-popup-blocking");
@@ -104,6 +114,9 @@ public class WebDriverUtils {
             if (headless) {
                 options.setHeadless(true);
                 options.addArguments("--window-size=1920,1080");
+            }
+            if (gpuDisable) {
+                options.addArguments("--disable-gpu");
             }
             FirefoxDriver firefoxDriver = new FirefoxDriver(options);
             if (h5) {

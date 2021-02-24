@@ -30,10 +30,9 @@ public class Development {
         WebDriver driver = null;
         try {
             Environment env = new Environment();
-            String configPath = JavaScriptUtils.getFilePath("config.json");
             String includePath = JavaScriptUtils.getFilePath("include");
-            JavaScriptCore.setDebug(option.getBoolean("debug", true));
-            driver = WebDriverUtils.getWebDriver(env, configPath, option.hasOption("headless"), option.hasOption("h5"));
+            String configPath = JavaScriptUtils.getFilePath("config.json");
+            driver = WebDriverUtils.getWebDriver(env, configPath, option);
             File[] files = new File(Objects.requireNonNull(includePath)).listFiles(name -> name.getName().endsWith(".js"));
             Development.printInfo();
             JavaScriptCore.include(Objects.requireNonNull(files));
