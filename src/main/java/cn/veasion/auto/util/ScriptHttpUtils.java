@@ -1,14 +1,14 @@
 package cn.veasion.auto.util;
 
+import org.openqa.selenium.remote.http.ClientConfig;
+import org.openqa.selenium.remote.http.Contents;
 import org.openqa.selenium.remote.http.HttpClient;
 import org.openqa.selenium.remote.http.HttpMethod;
 import org.openqa.selenium.remote.http.HttpRequest;
 import org.openqa.selenium.remote.http.HttpResponse;
-import org.openqa.selenium.remote.internal.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -28,14 +28,19 @@ public class ScriptHttpUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScriptHttpUtils.class);
 
+    private static final ClientConfig DEFAULT_CLIENT_CONFIG = ClientConfig.defaultConfig();
+    private static final HttpClient.Factory DEFAULT_CLIENT_FACTORY = HttpClient.Factory.createDefault();
+
     /**
      * 脚本请求
      */
     @SuppressWarnings("unchecked")
     public static Object request(String url, String uri, String method, Object content, Object headers, Integer timeout) throws IOException {
         LOGGER.info("HTTP {} {}{}", method, url, uri);
-        HttpClient client = new OkHttpClient.Factory().builder().connectionTimeout(Duration.ofSeconds(timeout))
-                .readTimeout(Duration.ofSeconds(timeout)).createClient(new URL(url));
+        ClientConfig clientConfig = DEFAULT_CLIENT_CONFIG.baseUrl(new URL(url));
+        clientConfig = clientConfig.readTimeout(Duration.ofSeconds(timeout));
+        clientConfig = clientConfig.connectionTimeout(Duration.ofSeconds(timeout));
+        HttpClient client = DEFAULT_CLIENT_FACTORY.createClient(clientConfig);
         HttpMethod httpMethod = HttpMethod.valueOf(method);
         HttpRequest request = new HttpRequest(httpMethod, uri);
         if (!JavaScriptUtils.isNull(headers)) {
@@ -53,17 +58,17 @@ public class ScriptHttpUtils {
             if (JavaScriptUtils.isEmpty(request.getHeader("Content-Type"))) {
                 request.addHeader("Content-Type", "application/json;charset=UTF-8");
             }
-            request.setContent(new ByteArrayInputStream(content.toString().getBytes(StandardCharsets.UTF_8)));
+            request.setContent(Contents.bytes(content.toString().getBytes(StandardCharsets.UTF_8)));
         }
         HttpResponse response = client.execute(request);
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> respHeaders = new HashMap<>();
         result.put("status", response.getStatus());
         result.put("success", response.getStatus() == 200);
-        result.put("data", response.getContentString());
+        result.put("data", Contents.string(response.getContent(), response.getContentEncoding()));
         result.put("headers", respHeaders);
         result.put("targetHost", response.getTargetHost());
-        response.getHeaderNames().forEach((name) -> {
+        response.getHeaderNames().forEach(name -> {
             Iterable<String> iterable = response.getHeaders(name);
             if (iterable == null) {
                 respHeaders.put(name, null);

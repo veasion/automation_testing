@@ -149,7 +149,7 @@ public class Debug {
                 String jsCode = input("请输入js代码: ", scanner);
                 if ("exit".equals(jsCode)) {
                     try {
-                        Runtime.getRuntime().exec("taskkill /IM chromedriver.exe /F");
+                        Runtime.getRuntime().exec(System.getProperty("os.name").contains("Windows") ? "tskill chromedriver" : "killall -9 chromedriver");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

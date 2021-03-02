@@ -5,6 +5,7 @@ import cn.veasion.auto.util.ArgsCommandOption;
 import cn.veasion.auto.util.AutomationException;
 import cn.veasion.auto.util.Constants;
 import cn.veasion.auto.util.JavaScriptUtils;
+import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,6 +15,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -93,6 +95,10 @@ public class WebDriverUtils {
             }
             if (JavaScriptCore.isDebug()) {
                 Debug.initSocketServer(chromeDriver, env);
+            }
+            String userAgent = System.getProperty("userAgent");
+            if (!StringUtils.isEmpty(userAgent)) {
+                chromeDriver.executeCdpCommand("Network.setUserAgentOverride", ImmutableMap.of("userAgent", userAgent));
             }
             return chromeDriver;
         } else if (firefoxDriverPath != null) {
