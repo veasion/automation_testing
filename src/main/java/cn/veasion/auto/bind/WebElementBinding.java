@@ -1,8 +1,8 @@
 package cn.veasion.auto.bind;
 
 import cn.veasion.auto.bind.bean.ImageBean;
-import cn.veasion.auto.core.BindingFactory;
 import cn.veasion.auto.core.ResultProxy;
+import cn.veasion.auto.opencv.ImageWrapper;
 import cn.veasion.auto.util.Api;
 
 import cn.veasion.auto.util.AutomationException;
@@ -11,9 +11,10 @@ import cn.veasion.auto.util.JavaScriptUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.touch.TouchActions;
 import org.springframework.util.StringUtils;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,6 +22,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * WebElementBinding
@@ -210,14 +212,6 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
         return binding.getBean().isDisplayed();
     }
 
-    @Api("触摸操作")
-    @ResultProxy(log = false)
-    public TouchActionsBinding touch() {
-        TouchActionsBinding touchActionsBinding = new TouchActionsBinding(binding.getBean());
-        touchActionsBinding.setBinding(new Binding<>(binding.getWebDriver(), binding.getEnv(), new TouchActions(binding.getWebDriver())));
-        return touchActionsBinding;
-    }
-
     @Api("xpath")
     @ResultProxy(log = false, value = false)
     public String xpath() {
@@ -227,7 +221,7 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
 
     @Api("保存成图片")
     @ResultProxy(log = false, value = false)
-    public void saveAsImage(@Api.Param(allowNull = true) String path) throws InterruptedException, IOException {
+    public void saveAsImage(@Api.Param(allowNull = true) String path) throws IOException {
         if (JavaScriptUtils.isNull(path)) {
             path = String.format("%s\\%s_%d.png", binding.getEnv().get(Constants.DESKTOP_DIR), tagName(), System.currentTimeMillis());
         }
@@ -239,40 +233,11 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
         Files.write(Paths.get(path), imgData, StandardOpenOption.CREATE);
     }
 
-    @Api(value = "页面上突出显示", result = WebElement.class)
+    @Api
     @ResultProxy(log = false)
-    public Object show() {
-        WebElementBinding binding = this;
-        show(binding.getBinding().getBean());
-        while (!binding.isDisplayed() || "input|textarea".contains(binding.tagName())) {
-            Object parent = binding.parent();
-            if (parent == null) {
-                break;
-            }
-            if (parent instanceof WebElementBinding) {
-                binding = (WebElementBinding) parent;
-            } else {
-                binding = BindingFactory.of((WebElement) parent, WebElementBinding.class);
-            }
-            show(binding.getBinding().getBean());
-        }
-        return this;
-    }
-
-    private void show(WebElement element) {
-        final long millis = 1500;
-        final String[] styles = new String[]{"element_show_style_1", "element_show_style_2", "element_show_style_3", "element_show_style_4"};
-        final String jsCode = "(function(element){element.classList.add('{style}');setTimeout(function(){element.classList.remove('{style}');}, {millis});})(arguments[0]);";
-        new Thread(() -> {
-            for (String style : styles) {
-                try {
-                    executeScriptByParams(jsCode.replace("{style}", style).replace("{millis}", String.valueOf(millis)), element);
-                    Thread.sleep(millis + 10);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+    public void show() throws IOException {
+        String base64 = Objects.requireNonNull(ImageBean.getImageBase64(this));
+        ImageWrapper.ofImage(ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64)))).show();
     }
 
     @Override

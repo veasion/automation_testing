@@ -25,15 +25,16 @@ if (slider && slider.isDisplayed()) {
     // 滑块
     iframe('id=baxia-dialog-content', function () {
         let rect = findOne('id=nocaptcha').getRect();
-        let source = findOne('id=nc_1_n1z').touch();
-        // source.clickAndHold().moveByOffset(rect.width, 0).release().perform();
-        let split = 5;
-        source.clickAndHold();
+        let source = findOne('id=nc_1_n1z');
+        // newTouchActions().clickAndHold(source).moveByOffset(rect.width, 0).release().perform();
+        let touch = newTouchActions();
+        let split = 3;
+        touch.clickAndHold(source);
         for (let i = 0; i < split; i++) {
-            source.moveByOffset(rect.width / split, 0);
-            sleep(100);
+            touch.moveByOffset(rect.width / split, 0);
+            sleep(20);
         }
-        source.release().perform();
+        touch.release().perform();
     });
     sleep(1000);
 }

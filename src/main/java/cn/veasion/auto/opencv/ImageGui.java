@@ -1,6 +1,7 @@
 package cn.veasion.auto.opencv;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 /**
@@ -11,27 +12,28 @@ import javax.swing.*;
  */
 public class ImageGui extends JPanel {
 
-    private ImageWrapper imageWrapper;
+    private BufferedImage image;
     private JFrame jframe = new JFrame();
 
-    private ImageGui(String window, ImageWrapper imageWrapper) {
+    private ImageGui(String window, BufferedImage image) {
         super();
         jframe.add(this);
         jframe.setTitle(window);
-        this.imageWrapper = imageWrapper;
-        jframe.setSize(imageWrapper.getWidth(), imageWrapper.getHeight());
+        this.image = image;
+        jframe.setSize(image.getWidth(), image.getHeight());
         jframe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.repaint();
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        g.drawImage(imageWrapper.getImage(), 0, 0, null);
+        g.drawImage(image, 0, 0, null);
     }
 
-    public static ImageGui show(String window, ImageWrapper imageWrapper) {
-        ImageGui imageGui = new ImageGui(window, imageWrapper);
+    public static ImageGui show(String window, BufferedImage image) {
+        ImageGui imageGui = new ImageGui(window, image);
         imageGui.jframe.setVisible(true);
+        imageGui.jframe.setLocationRelativeTo(null);
         return imageGui;
     }
 

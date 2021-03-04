@@ -24,10 +24,12 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.touch.TouchActions;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -75,6 +77,20 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
             LOGGER.error("sleep", e);
             Thread.currentThread().interrupt();
         }
+    }
+
+    @Api(value = "鼠标动作", result = TouchActions.class)
+    @ResultProxy(log = false)
+    public Object newTouchActions() {
+        return new TouchActions(binding.getWebDriver());
+    }
+
+    @Api("点击坐标")
+    @ResultProxy(interval = true)
+    public void clickPoint(@Api.Param(jsType = "number") Object x, @Api.Param(jsType = "number") Object y) {
+        int pointX = new BigDecimal(x.toString()).intValue();
+        int pointY = new BigDecimal(y.toString()).intValue();
+        new TouchActions(binding.getWebDriver()).moveByOffset(pointX, pointY).click().perform();
     }
 
     @ResultProxy

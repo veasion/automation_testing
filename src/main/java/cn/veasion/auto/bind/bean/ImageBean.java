@@ -12,7 +12,6 @@ import cn.veasion.auto.opencv.PointWrapper;
 import cn.veasion.auto.util.Api;
 import cn.veasion.auto.util.AutomationException;
 import cn.veasion.auto.util.HttpClientUtils;
-import cn.veasion.auto.util.JavaScriptUtils;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.openqa.selenium.JavascriptExecutor;
@@ -24,12 +23,10 @@ import org.openqa.selenium.WebElement;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -59,8 +56,7 @@ public class ImageBean extends AbstractInitializingBean {
     }
 
     @Api("元素渲染成图片")
-    public ImageWrapper loadByElement(WebElementBinding element) throws IOException, InterruptedException {
-        // element.getBinding().getBean().getScreenshotAs(OutputType.BYTES)
+    public ImageWrapper loadByElement(WebElementBinding element) throws IOException {
         String imageBase64 = getImageBase64(element);
         if (imageBase64 == null) {
             throw new AutomationException(String.format("%s 元素转换图片失败", element.tagName()));
@@ -80,7 +76,7 @@ public class ImageBean extends AbstractInitializingBean {
     }
 
     @Api("根据元素OCR识别")
-    public OcrResult ocrByElement(WebElementBinding element) throws InterruptedException, IOException {
+    public OcrResult ocrByElement(WebElementBinding element) {
         String imageBase64 = getImageBase64(element);
         if (imageBase64 == null) {
             throw new AutomationException(String.format("%s 元素转换图片失败", element.tagName()));
@@ -97,7 +93,7 @@ public class ImageBean extends AbstractInitializingBean {
     }
 
     @Api("根据元素OCR识别验证码")
-    public OcrResult captchaByElement(WebElementBinding element) throws InterruptedException, IOException {
+    public OcrResult captchaByElement(WebElementBinding element){
         String imageBase64 = getImageBase64(element);
         if (imageBase64 == null) {
             throw new AutomationException(String.format("%s 元素转换图片失败", element.tagName()));
@@ -212,8 +208,7 @@ public class ImageBean extends AbstractInitializingBean {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static String getImageBase64(WebElementBinding element) throws InterruptedException, IOException {
+    public static String getImageBase64(WebElementBinding element) {
         WebElement bean = element.getBinding().getBean();
         WebDriver webDriver = element.getBinding().getWebDriver();
         String base64;
@@ -227,24 +222,9 @@ public class ImageBean extends AbstractInitializingBean {
             base64 = (String) executeScript(webDriver, jsCode, bean);
         } else {
             // 元素
-            String jsCode = "return window.innerWidth > arguments[0].getBoundingClientRect().width && window.innerHeight > arguments[0].getBoundingClientRect().height";
-            if ("true".equalsIgnoreCase(String.valueOf(executeScript(webDriver, jsCode, bean)))) {
-                // 元素小于屏幕宽度高度
-                element.scrollToCenter(null);
-                jsCode = "let rect=arguments[0].getBoundingClientRect();return {left:rect.left,top:rect.top,width:rect.width,height:rect.height,innerWidth:window.innerWidth,innerHeight:window.innerHeight}";
-                Map<String, Number> rect = (Map<String, Number>) executeScript(webDriver, jsCode, bean);
-                File img = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
-                byte[] bytes = ImageUtil.subImage(img, rect.get("left").intValue(), rect.get("top").intValue(), rect.get("width").intValue(), rect.get("height").intValue());
-                base64 = Base64.getEncoder().encodeToString(bytes);
-            } else {
-                // 元素超过屏幕宽度高度
-                jsCode = "if(!window.html2canvas){let script=document.createElement('script');script.setAttribute('type','text/javascript');script.setAttribute('src','https://html2canvas.hertzen.com/dist/html2canvas.js');document.body.insertBefore(script,document.body.lastChild);}";
-                executeScript(webDriver, jsCode);
-                Thread.sleep(200);
-                element.onWait(driver -> !JavaScriptUtils.isNull(executeScript(webDriver, "return window.html2canvas")), 10);
-                jsCode = "return (await html2canvas(arguments[0])).toDataURL('image/png');";
-                base64 = (String) executeScript(webDriver, jsCode, bean);
-            }
+            element.scrollToCenter(null);
+            byte[] bytes = element.getBinding().getBean().getScreenshotAs(OutputType.BYTES);
+            base64 = Base64.getEncoder().encodeToString(bytes);
         }
         if (base64 == null) {
             return null;

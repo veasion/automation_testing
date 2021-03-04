@@ -7,11 +7,13 @@ import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.math.BigDecimal;
 
 /**
  * ImageWrapper
@@ -167,7 +169,38 @@ public class ImageWrapper implements ApiDocumentGenerator.DocGenerator {
 
     @Api("查看图片")
     public void show() {
-        ImageGui.show("查看图片", this);
+        ImageGui.show("查看图片", getImage());
+    }
+
+    @Api("查看图片")
+    public void show(@Api.Param(jsType = "number") Object x, @Api.Param(jsType = "number") Object y) {
+        show(x, y, null, null);
+    }
+
+    @Api("查看图片")
+    public void show(@Api.Param(jsType = "number") Object x, @Api.Param(jsType = "number") Object y, @Api.Param(jsType = "number") Object width, @Api.Param(jsType = "number") Object height) {
+        BufferedImage image = getImage();
+        BufferedImage res = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+        if (x != null && y != null) {
+            Graphics2D graphics = res.createGraphics();
+            graphics.drawImage(image, null, null);
+            graphics.setColor(Color.RED);
+            graphics.setStroke(new BasicStroke(3.0f));
+            int pointX = parseInt(x);
+            int pointY = parseInt(y);
+            graphics.drawLine(Math.max(pointX - 100, 0), Math.max(pointY - 100, 0), pointX, pointY);
+            graphics.drawLine(pointX, pointY - 20, pointX, pointY);
+            graphics.drawLine(pointX - 20, pointY, pointX, pointY);
+            if (width != null && height != null) {
+                graphics.drawRect(pointX, pointY, parseInt(width), parseInt(height));
+            }
+            graphics.dispose();
+        }
+        ImageGui.show("查看图片", res);
+    }
+
+    private int parseInt(Object object) {
+        return new BigDecimal(object.toString()).intValue();
     }
 
 }

@@ -213,9 +213,8 @@ db.insert('insert into t_user(user_name, sex) values (?, ?)', ['veasion', '男']
 db.update('update t_user set user_name = ? where id = ?', ['xxx', 1]);
 db.close();
 
-// 手机端触摸操作
-let h5Element = findOne('css=li');
-h5Element.clickAndHold().moveByOffset(300, 0).release().perform();
+// 鼠标触摸操作
+newTouchActions().clickAndHold(findOne('id=slider')).moveByOffset(300, 0).release().perform();
 
 // 依赖数据模块
 println(auto.dependency('demo', {name: 'xxx'}));
@@ -243,3 +242,13 @@ image.findMultiColors(image.load('C:\\Users\\user\\Desktop\\test.jpg'), '#E51B1B
 
 // 查找图片
 image.findImage(image.load('C:\\Users\\user\\Desktop\\test.jpg'), image.load('C:\\Users\\user\\Desktop\\template.png'), 0.9);
+
+// 截图找图并点击
+let img1 = image.loadByScreenshot();
+let img2 = image.loadByElement(findOne('id=sl-player-el-video'));
+let point = image.findImage(img1, img2);
+clickPoint(point.getX(), point.getY());
+img1.show();
+img1.show(point.getX(), point.getY());
+img1.show(point.getX(), point.getY(), img2.getWidth(), img2.getHeight());
+
