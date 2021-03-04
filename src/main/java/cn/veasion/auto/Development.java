@@ -29,10 +29,10 @@ public class Development {
         ArgsCommandOption option = ArgsCommandOption.parse(args);
         WebDriver driver = null;
         try {
-            Environment env = new Environment();
             String includePath = JavaScriptUtils.getFilePath("include");
             String configPath = JavaScriptUtils.getFilePath("config.json");
-            driver = WebDriverUtils.getWebDriver(env, configPath, option);
+            Environment env = new Environment(option, configPath);
+            driver = WebDriverUtils.getWebDriver(env);
             File[] files = new File(Objects.requireNonNull(includePath)).listFiles(name -> name.getName().endsWith(".js"));
             Development.printInfo();
             JavaScriptCore.include(Objects.requireNonNull(files));

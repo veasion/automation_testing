@@ -42,7 +42,6 @@ public class JavaScriptCore {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaScriptCore.class);
 
-    private static boolean debug = false;
     public static final String ENV = "env";
     public static final String DRIVER = "driver";
     private static final NashornScriptEngineFactory SCRIPT_ENGINE_FACTORY;
@@ -116,11 +115,11 @@ public class JavaScriptCore {
                 LOGGER.error(message, e);
                 throw jsException;
             } finally {
-                if (debug) {
+                if (isDebug()) {
                     Debug.console(scriptEngine, engine -> initScriptEngine(engine, driver, env));
                 }
             }
-        } else if (debug) {
+        } else if (isDebug()) {
             Debug.console(scriptEngine, engine -> initScriptEngine(engine, driver, env));
             return null;
         } else {
@@ -131,7 +130,7 @@ public class JavaScriptCore {
     private static ScriptEngine getScriptEngine(WebDriver driver, Environment env) {
         synchronized (scriptEngineThreadLocal) {
             String[] options = new String[]{"--language=es6", "--no-java"};
-            if (debug) {
+            if (isDebug()) {
                 // --log=source:info,apply2call:info,lower:info,compiler:info,methodhandles:info,scopedepths:info
                 options = new String[]{"--language=es6", "--no-java", "--debug-locals", "-dump-on-error"};
             }
@@ -168,7 +167,7 @@ public class JavaScriptCore {
     }
 
     private static Object evalJsFile(ScriptEngine scriptEngine, File jsFile) throws ScriptException, FileNotFoundException {
-        if (debug) {
+        if (isDebug()) {
             return scriptEngine.eval("load('" + jsFile.getPath().replace("\\", "/") + "');");
         } else {
             return scriptEngine.eval(new InputStreamReader(new FileInputStream(jsFile), StandardCharsets.UTF_8));
@@ -287,11 +286,7 @@ public class JavaScriptCore {
     }
 
     public static boolean isDebug() {
-        return debug;
-    }
-
-    public static void setDebug(boolean debug) {
-        JavaScriptCore.debug = debug;
+        return environment.get() != null && environment.get().isDebug();
     }
 
     public static final class JavaScriptContext {
@@ -344,6 +339,7 @@ public class JavaScriptCore {
             JavaScriptCore.webDriver.remove();
             JavaScriptCore.environment.remove();
             JavaScriptCore.scriptEngineThreadLocal.remove();
+            BindingFactory.delCache();
         }
     }
 

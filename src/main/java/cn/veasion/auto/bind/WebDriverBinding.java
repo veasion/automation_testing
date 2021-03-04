@@ -1,34 +1,42 @@
 package cn.veasion.auto.bind;
 
+import cn.veasion.auto.core.BindingProxy;
 import cn.veasion.auto.core.Environment;
-import cn.veasion.auto.core.ResultProxy;
-import cn.veasion.auto.debug.Debug;
-import cn.veasion.auto.util.*;
 import cn.veasion.auto.core.JavaScriptCore;
+import cn.veasion.auto.core.ResultProxy;
+import cn.veasion.auto.core.WebDriverUtils;
+import cn.veasion.auto.debug.Debug;
+import cn.veasion.auto.util.Api;
+import cn.veasion.auto.util.ArgsCommandOption;
+import cn.veasion.auto.util.AssertException;
+import cn.veasion.auto.util.AutomationException;
+import cn.veasion.auto.util.CalculatorUtils;
+import cn.veasion.auto.util.ConfigVars;
+import cn.veasion.auto.util.Constants;
+import cn.veasion.auto.util.JavaScriptContextUtils;
+import cn.veasion.auto.util.JavaScriptUtils;
+import cn.veasion.auto.util.JdbcDao;
+import cn.veasion.auto.util.ScriptHttpUtils;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import jdk.nashorn.internal.objects.NativeDate;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Random;
-import java.util.Objects;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
@@ -200,49 +208,56 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
         return CalculatorUtils.calculate(str, n);
     }
 
-    @Api("写文本文件")
-    @ResultProxy(value = false, log = false)
-    public void writeText(String path, String context, boolean append, @Api.Param(allowNone = true) String charsetName) throws IOException {
-        StandardOpenOption[] options;
-        Path filePath = Paths.get(path);
-        if (append) {
-            options = new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.APPEND};
-        } else {
-            Files.deleteIfExists(filePath);
-            options = new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.WRITE};
+    @ResultProxy
+    @Api(value = "在新的浏览器驱动中执行脚本", result = Environment.class)
+    @SuppressWarnings("unchecked")
+    public Object runScriptWithNewDriver(final Object env, final String path) throws Exception {
+        Objects.requireNonNull(path);
+        File scriptFile = new File(path);
+        if (!scriptFile.exists() || !scriptFile.isFile()) {
+            throw new AutomationException("脚本文件错误：" + scriptFile.getPath());
         }
-        charsetName = JavaScriptUtils.isEmpty(charsetName) ? "UTF-8" : charsetName;
-        Files.write(filePath, context.getBytes(charsetName), options);
-    }
-
-    @Api("读取文本")
-    @ResultProxy(value = false, log = false)
-    public String readText(String pathOrUrl, @Api.Param(allowNone = true) String charsetName) throws IOException {
-        InputStream inputStream;
-        charsetName = JavaScriptUtils.isEmpty(charsetName) ? "UTF-8" : charsetName;
-        if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://")) {
-            inputStream = new URL(pathOrUrl).openStream();
-        } else {
-            inputStream = new FileInputStream(pathOrUrl);
-        }
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, charsetName))) {
-            String line;
-            StringBuilder sb = new StringBuilder();
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line).append("\r\n");
+        final ArgsCommandOption option = binding.getEnv().getOption();
+        FutureTask<Environment> task = new FutureTask<>(() -> {
+            WebDriver newDriver = null;
+            try {
+                Environment newEnv = new Environment(option);
+                newEnv.setDebug(false);
+                String configPath = newEnv.getString("configPath");
+                if (configPath == null || "".equals(configPath)) {
+                    configPath = JavaScriptUtils.getFilePath("config.json");
+                }
+                newEnv.loadGlobalConfig(configPath);
+                if (!JavaScriptUtils.isNull(env)) {
+                    Object object = JavaScriptUtils.toJavaObject(env);
+                    if (object instanceof Map) {
+                        newEnv.putAll((Map<String, Object>) object);
+                    } else {
+                        throw new AutomationException("env参数格式");
+                    }
+                }
+                newDriver = WebDriverUtils.getWebDriver(newEnv);
+                // JavaScriptCore.execute(newDriver, newEnv, scriptFile);
+                JavaScriptContextUtils.get(newDriver, newEnv).execute(scriptFile);
+                return newEnv;
+            } catch (Exception e) {
+                LOGGER.error("执行 withNewDriver 异常", e);
+                return null;
+            } finally {
+                JavaScriptContextUtils.remove();
+                if (newDriver != null) {
+                    newDriver.quit();
+                }
             }
-            return sb.toString();
-        } finally {
-            inputStream.close();
-        }
+        });
+        new Thread(task).start();
+        return task.get();
     }
 
     @ResultProxy
     @Api("运行新的脚本")
     public void runNewScript(String path) throws ExecutionException, InterruptedException {
-        if (path == null || "".equals(path)) {
-            path = (String) binding.getEnv().get(Constants.ENV_GLOBAL_FILE_PATH);
-        }
+        Objects.requireNonNull(path);
         File file = new File(path);
         if (file.isDirectory()) {
             File[] files = file.listFiles();
@@ -283,6 +298,18 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
             }
         } else {
             throw new AutomationException("脚本文件错误: " + file.getPath());
+        }
+    }
+
+    @Api(result = ChromeDriverBinding.class)
+    @ResultProxy(value = false, log = false)
+    public Object toChromeDriver() {
+        if (binding.getWebDriver() instanceof ChromeDriver) {
+            ChromeDriverBinding chrome = new ChromeDriverBinding();
+            chrome.setBinding(binding);
+            return BindingProxy.create(chrome);
+        } else {
+            throw new AutomationException(binding.getWebDriver().getClass().getSimpleName() + " 非 ChromeDriver");
         }
     }
 

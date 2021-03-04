@@ -1,5 +1,6 @@
 package cn.veasion.auto.util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,12 @@ import java.util.Map;
  * @author luozhuowei
  * @date 2021/2/22
  */
-public class ArgsCommandOption {
+public class ArgsCommandOption implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Map<String, List<String>> optionMap;
+    private String[] args;
 
     public boolean hasOption(String option) {
         return optionMap.containsKey(option);
@@ -25,6 +29,10 @@ public class ArgsCommandOption {
             return null;
         }
         return list.get(0);
+    }
+
+    public boolean getBoolean(String option) {
+        return getBoolean(option, false);
     }
 
     public boolean getBoolean(String option, boolean defaultValue) {
@@ -54,8 +62,13 @@ public class ArgsCommandOption {
         return val != null ? val : defaultValue;
     }
 
+    public String[] getArgs() {
+        return args;
+    }
+
     public static ArgsCommandOption parse(String... args) {
         ArgsCommandOption option = new ArgsCommandOption();
+        option.args = args;
         option.optionMap = new HashMap<>(args.length);
         if (args.length == 0) {
             return option;

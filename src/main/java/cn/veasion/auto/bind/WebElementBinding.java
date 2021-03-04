@@ -1,6 +1,6 @@
 package cn.veasion.auto.bind;
 
-import cn.veasion.auto.bind.bean.Image;
+import cn.veasion.auto.bind.bean.ImageBean;
 import cn.veasion.auto.core.BindingFactory;
 import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.util.Api;
@@ -75,7 +75,7 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
     @Api("发送文字/模拟按键")
     @ResultProxy(interval = true)
     public WebElementBinding sendKeys(Object key) {
-        binding.getBean().sendKeys(String.valueOf(key));
+        sendKeys(binding::getBean, key);
         return this;
     }
 
@@ -104,6 +104,18 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
     public String value() {
         Object value = executeScript("return (arguments[0].value);");
         return value != null ? value.toString() : null;
+    }
+
+    @Api("获取位置区域 x/y/height/width")
+    @ResultProxy(value = false, log = false)
+    public Object getRect() {
+        return binding.getBean().getRect();
+    }
+
+    @Api("获取css值")
+    @ResultProxy(log = false)
+    public String cssValue(String propertyName) {
+        return binding.getBean().getCssValue(propertyName);
     }
 
     @ResultProxy
@@ -219,7 +231,7 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
         if (JavaScriptUtils.isNull(path)) {
             path = String.format("%s\\%s_%d.png", binding.getEnv().get(Constants.DESKTOP_DIR), tagName(), System.currentTimeMillis());
         }
-        String imageBase64 = Image.getImageBase64(this);
+        String imageBase64 = ImageBean.getImageBase64(this);
         if (imageBase64 == null) {
             throw new AutomationException(String.format("%s 元素转换图片失败", tagName()));
         }

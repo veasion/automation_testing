@@ -170,3 +170,13 @@ auto.findRightSibling = function (element, target) {
     }
     return null;
 };
+
+/**
+ * 爬虫，开启防反爬
+ */
+auto.crawler = function () {
+    env.putGlobal("crawler", true);
+    env.putGlobal("INPUT_DELAY", 50);
+    let js = file.readText(env.getPath('/files/set_crawler.js'));
+    toChromeDriver().executeCdpCommand('Page.addScriptToEvaluateOnNewDocument', {source: js});
+};

@@ -23,7 +23,7 @@ public enum ConfigVars {
     /**
      * 页面加载超时时间（秒）
      */
-    TIMEOUT_PAGE_LOAD(Integer.class, 20),
+    TIMEOUT_PAGE_LOAD(Integer.class, 10),
 
     /**
      * 等待超时时间（秒）

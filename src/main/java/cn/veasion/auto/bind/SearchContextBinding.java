@@ -1,5 +1,6 @@
 package cn.veasion.auto.bind;
 
+import cn.veasion.auto.util.AutomationException;
 import cn.veasion.auto.util.ElementBy;
 import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.util.Api;
@@ -14,10 +15,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.util.CollectionUtils;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -161,11 +166,31 @@ public abstract class SearchContextBinding<T extends SearchContext> implements J
     public SearchContextBinding<T> sendKeys(String target, Object key) {
         By by = ElementBy.by(target);
         onWait(ExpectedConditions.visibilityOfElementLocated(by));
+        sendKeys(() -> findElement(by), key);
+        return this;
+    }
+
+    protected void sendKeys(Supplier<WebElement> supplier, Object key) {
         if (key instanceof Number) {
             key = new BigDecimal(key.toString()).toPlainString();
         }
-        findElement(by).sendKeys(key == null ? "" : key.toString());
-        return this;
+        String keys = key == null ? "" : key.toString();
+        String inputDelay = binding.getEnv().getString("INPUT_DELAY");
+        if (inputDelay == null || "".equals(inputDelay) || !inputDelay.matches("\\d+")) {
+            supplier.get().sendKeys(keys);
+        } else if (new File(keys).exists()) {
+            supplier.get().sendKeys(keys);
+        } else {
+            try {
+                int delay = Integer.parseInt(inputDelay);
+                for (String s : keys.split("")) {
+                    supplier.get().sendKeys(s);
+                    Thread.sleep(delay);
+                }
+            } catch (Exception e) {
+                throw new AutomationException("发送文字按键异常: " + keys, e);
+            }
+        }
     }
 
     @Api("鼠标移动到目标元素")

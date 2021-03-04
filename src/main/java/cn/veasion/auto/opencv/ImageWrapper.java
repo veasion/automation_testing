@@ -148,8 +148,9 @@ public class ImageWrapper implements ApiDocumentGenerator.DocGenerator {
 
     @Api(generator = false)
     public void ensureNotRecycled() {
-        if (mImage == null && mMat == null)
+        if (mImage == null && mMat == null) {
             throw new IllegalStateException("image has been recycled");
+        }
     }
 
     @Api("克隆")
@@ -162,6 +163,11 @@ public class ImageWrapper implements ApiDocumentGenerator.DocGenerator {
             return ImageWrapper.ofImage(ImageUtil.cloneImage(mImage));
         }
         return new ImageWrapper(ImageUtil.cloneImage(mImage), mMat.clone());
+    }
+
+    @Api("查看图片")
+    public void show() {
+        ImageGui.show("查看图片", this);
     }
 
 }

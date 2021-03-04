@@ -2,17 +2,18 @@
   "COMMAND_INTERVAL": 125,
   "TIMEOUT_PAGE_LOAD": 20,
   "CHROME_DRIVER_PATH": "C:\\data\\auto\\chromedriver.exe",
-  "FIREFOX_DRIVER_PATH": "C:\\data\\auto\\geckodriver.exe",
-  "JIRA": {
-    "url": "http://xxx.jira.com/",
-    "username": "luozhuowei",
-    "password": "123456",
-    "issueProject": "xxx",
-    "issueCategory": "缺陷",
-    "issueSeason": "xxx",
-    "issueStage": "MAT",
-    "issueType": "功能问题",
-    "issueAssignee": "luozhuowei"
+  "FIREFOX_DRIVER_PATH": null,
+  "DRIVER_ARGUMENTS": [
+    "no-sandbox",
+    "--disable-popup-blocking",
+    "--disable-blink-features=AutomationControlled",
+    // "--proxy-server=127.0.0.1:8080",
+    "--ignore-certificate-errors"
+  ],
+  "EXPERIMENTAL_OPTIONS": {
+    "excludeSwitches": [
+      "enable-automation"
+    ]
   },
   "OCR": {
     "baidu": {

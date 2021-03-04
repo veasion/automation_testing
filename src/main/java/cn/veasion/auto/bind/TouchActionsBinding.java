@@ -28,14 +28,21 @@ public class TouchActionsBinding implements JavaScriptBinding<TouchActions> {
     @Api("单击")
     @ResultProxy
     public TouchActionsBinding click() {
-        binding.getBean().singleTap(getElement()).perform();
+        binding.getBean().click(getElement());
+        return this;
+    }
+
+    @Api("单击并按住")
+    @ResultProxy
+    public TouchActionsBinding clickAndHold() {
+        binding.getBean().clickAndHold(getElement());
         return this;
     }
 
     @Api("双击")
     @ResultProxy
     public TouchActionsBinding doubleClick() {
-        binding.getBean().doubleTap(getElement()).perform();
+        binding.getBean().doubleClick(getElement());
         return this;
     }
 
@@ -95,6 +102,13 @@ public class TouchActionsBinding implements JavaScriptBinding<TouchActions> {
         return this;
     }
 
+    @Api("moveByOffset")
+    @ResultProxy
+    public TouchActionsBinding moveByOffset(int xOffset, int yOffset) {
+        binding.getBean().moveByOffset(xOffset, yOffset);
+        return this;
+    }
+
     @Api("scroll")
     @ResultProxy
     public TouchActionsBinding scroll(int x, int y) {
@@ -106,6 +120,13 @@ public class TouchActionsBinding implements JavaScriptBinding<TouchActions> {
     @ResultProxy
     public TouchActionsBinding scrollByElement(int x, int y) {
         binding.getBean().scroll(getElement(), x, y);
+        return this;
+    }
+
+    @Api("释放")
+    @ResultProxy(log = false)
+    public TouchActionsBinding release() {
+        binding.getBean().release();
         return this;
     }
 

@@ -33,14 +33,14 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Image
+ * ImageBean
  *
  * @author luozhuowei
  * @date 2021/1/5
  */
 @SuppressWarnings("unused")
 @Api.ClassInfo(value = "image", desc = "图片")
-public class Image extends AbstractInitializingBean {
+public class ImageBean extends AbstractInitializingBean {
 
     @Api("加载图片")
     public ImageWrapper load(String path) throws IOException {
@@ -52,8 +52,15 @@ public class Image extends AbstractInitializingBean {
         return ImageWrapper.ofImage(ImageIO.read(new ByteArrayInputStream(HttpClientUtils.get(url))));
     }
 
+    @Api("截图")
+    public ImageWrapper loadByScreenshot() throws IOException {
+        byte[] bytes = ((TakesScreenshot) getBinding().getWebDriver()).getScreenshotAs(OutputType.BYTES);
+        return ImageWrapper.ofImage(ImageIO.read(new ByteArrayInputStream(bytes)));
+    }
+
     @Api("元素渲染成图片")
     public ImageWrapper loadByElement(WebElementBinding element) throws IOException, InterruptedException {
+        // element.getBinding().getBean().getScreenshotAs(OutputType.BYTES)
         String imageBase64 = getImageBase64(element);
         if (imageBase64 == null) {
             throw new AutomationException(String.format("%s 元素转换图片失败", element.tagName()));

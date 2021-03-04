@@ -1,5 +1,6 @@
 package cn.veasion.auto.debug;
 
+import cn.veasion.auto.core.JavaScriptCore;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandler;
 import io.netty.channel.ChannelPromise;
@@ -69,6 +70,10 @@ public class WebSocketChannelHandler extends SimpleChannelInboundHandler<WebSock
     @Override
     public void close(ChannelHandlerContext ctx, ChannelPromise channelPromise) throws Exception {
         encoder.close(ctx, channelPromise);
+        JavaScriptCore.JavaScriptContext javaScriptContext = Debug.getJavaScriptContext();
+        if (javaScriptContext != null) {
+            javaScriptContext.destroy();
+        }
     }
 
     @Override

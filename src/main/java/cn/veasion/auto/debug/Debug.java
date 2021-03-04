@@ -106,6 +106,10 @@ public class Debug {
         if (server != null) {
             server.close();
         }
+        JavaScriptCore.JavaScriptContext javaScriptContext = getJavaScriptContext();
+        if (javaScriptContext != null) {
+            javaScriptContext.destroy();
+        }
     }
 
     static String newSocketResult(JSONObject req, String type, Object data) {

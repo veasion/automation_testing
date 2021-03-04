@@ -1,12 +1,19 @@
 package cn.veasion.auto.core;
 
+import cn.veasion.auto.util.ArgsCommandOption;
 import cn.veasion.auto.util.Constants;
 import com.alibaba.fastjson.JSON;
 import cn.veasion.auto.util.ConfigVars;
 import org.openqa.selenium.Keys;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Environment
@@ -18,7 +25,12 @@ public class Environment extends HashMap<String, Object> {
 
     private static final long serialVersionUID = 1L;
 
-    public Environment() {
+    private boolean debug;
+    private ArgsCommandOption option;
+
+    public Environment(ArgsCommandOption option) {
+        this.option = Objects.requireNonNull(option);
+        setDebug(option.getBoolean("debug", Constants.DEFAULT_DEBUG));
         Arrays.asList(Keys.ENTER, Keys.BACK_SPACE,
                 Keys.TAB, Keys.ARROW_UP, Keys.ARROW_DOWN, Keys.ARROW_LEFT, Keys.ARROW_RIGHT,
                 Keys.PAGE_UP, Keys.PAGE_DOWN, Keys.END, Keys.HOME,
@@ -26,6 +38,11 @@ public class Environment extends HashMap<String, Object> {
                 Keys.ESCAPE, Keys.F12).forEach(key -> put("KEY_" + key.name(), key.toString())
         );
         put(Constants.DESKTOP_DIR, javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath());
+    }
+
+    public Environment(ArgsCommandOption option, String configPath) throws Exception {
+        this(option);
+        loadGlobalConfig(configPath);
     }
 
     public String getString(Object key) {
@@ -37,8 +54,23 @@ public class Environment extends HashMap<String, Object> {
         }
     }
 
-    public void loadGlobal(String configJson) {
-        putAll(JSON.parseObject(configJson));
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public ArgsCommandOption getOption() {
+        return option;
+    }
+
+    public void loadGlobalConfig(String configPath) throws Exception {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configPath), StandardCharsets.UTF_8))) {
+            String configJson = br.lines().filter(l -> !l.trim().startsWith("//")).collect(Collectors.joining("\n"));
+            putAll(JSON.parseObject(configJson));
+        }
     }
 
     public Object readConfigVar(ConfigVars vars) {

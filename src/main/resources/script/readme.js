@@ -132,35 +132,56 @@ auto.loadCommon('http');
 // 上传图片
 type("css=input[type='file']", auto.getIcon());
 
-// 提交 bug 到 jira
-jira.createIssue('自动化测试异常', '执行xxx发生异常');
-
 // 遍历数组
-let array = [{ name: 'name1' }, { name: 'name2' }];
+let array = [{name: 'name1'}, {name: 'name2'}];
 for (let i in array) {
     println(array[i].name);
 }
-array.forEach(function(item) {
+array.forEach(function (item) {
     println(item.name)
 });
 
-// 运行新的js文件，命令 > run script/baidu.js
+// 运行新的js脚本文件，命令 > run script/baidu.js
 runNewScript(env.getSourcePath('/script/baidu.js'));
 
-// 重新加载并运行当前js文件，命令 > reload
+// 重新加载并运行当前js脚本文件，命令 > reload
 runNewScript(env.getString('filePath'));
+
+// 在新的浏览器驱动中执行js脚本文件，返回 env
+let newEnvResult = runScriptWithNewDriver({name: 'luozhuowei'}, env.getPath('/script/baidu.js'));
+println(newEnvResult.getString('name'));
+
+// 在新的浏览器驱动中后台隐私运行脚本
+runScriptWithNewDriver({
+    "DRIVER_ARGUMENTS": [
+        "--headless",
+        "--disable-gpu",
+        "--window-size=1920,1080",
+        "--disable-blink-features=AutomationControlled"
+    ],
+    "EXPERIMENTAL_OPTIONS": {
+        "excludeSwitches": [
+            "enable-automation"
+        ]
+    }
+}, env.getPath("/script/crawler.js"));
 
 // 浏览器截图
 screenshot('C:\\Users\\user\\Desktop\\temp.png');
 
+// chrome driver
+let chromeDriver = toChromeDriver();
+// cdp modify userAgent
+chromeDriver.executeCdpCommand('Network.setUserAgentOverride', {userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36'});
+
 // 写文件
-writeText('C:\\Users\\user\\Desktop\\test.txt', 'hello', false);
+file.writeText('C:\\Users\\user\\Desktop\\test.txt', 'hello', false);
 // 读取本地文本文件
-readText('C:\\Users\\user\\Desktop\\test.txt', 'utf-8');
+file.readText('C:\\Users\\user\\Desktop\\test.txt', 'utf-8');
 // 读取resource/script/baidu.js目录文件
-readText(env.getSourcePath('/script/baidu.js'), 'utf-8');
+file.readText(env.getSourcePath('/script/baidu.js'), 'utf-8');
 // 读取网络文本
-readText('http://www.baidu.com', 'utf-8');
+file.readText('http://www.baidu.com', 'utf-8');
 
 // translate
 env.translate("name: ${USER_NAME}");
@@ -177,7 +198,7 @@ println(calResult);
 // http
 auto.loadCommon('http');
 http.get('http://www.baidu.com');
-http.post('/api/ouser-web/mobileLogin/login.do', { username: 'superadmin', password: '123456'});
+http.post('/api/ouser-web/mobileLogin/login.do', {username: 'superadmin', password: '123456'});
 let response = http.request('/oms-web/so/list.do', 'POST');
 println('response: ' + response.data);
 let ut = http.getCookie('ut');
@@ -194,9 +215,7 @@ db.close();
 
 // 手机端触摸操作
 let h5Element = findOne('css=li');
-h5Element.touch().click();
-h5Element.touch().doubleClick();
-h5Element.touch().singleTap().scrollByElement(100, 200).perform();
+h5Element.clickAndHold().moveByOffset(300, 0).release().perform();
 
 // 依赖数据模块
 println(auto.dependency('demo', {name: 'xxx'}));

@@ -10,6 +10,8 @@ let savePath = env.getString('DESKTOP_DIR') + '\\斗破苍穹.txt';
 log.info('正在下载: ' + bookName);
 log.info('保存路径: ' + savePath);
 
+// 防反爬
+auto.crawler();
 // 起点小说
 open('https://www.qidian.com');
 // 搜索
@@ -43,7 +45,7 @@ for (let i = 0; i < chapterCount; i++) {
     // 小说内容
     let context = bookBody.findOne('css=div.read-content.j_readContent').text().replace(/[\n]/g, '\r\n\r\n');
     // 保存小说
-    writeText(savePath, title + '\r\n\r\n' + context + '\r\n\r\n\r\n\r\n', true);
+    file.writeText(savePath, title + '\r\n\r\n' + context + '\r\n\r\n\r\n\r\n', true);
     // 下一章
     let nextPage = findOne('id=j_chapterNext');
     if (nextPage) {
