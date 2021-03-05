@@ -3,21 +3,20 @@ package cn.veasion.auto.core;
 import cn.veasion.auto.debug.Debug;
 import cn.veasion.auto.util.ArgsCommandOption;
 import cn.veasion.auto.util.AutomationException;
+import cn.veasion.auto.util.Constants;
 import cn.veasion.auto.util.JavaScriptUtils;
 import com.google.common.collect.ImmutableMap;
-import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,20 +44,23 @@ public class WebDriverUtils {
         if (option == null) {
             option = new ArgsCommandOption();
         }
-        boolean h5 = option.getBoolean("h5");
         String userAgent = option.getOption("userAgent");
         boolean headless = option.getBoolean("headless");
         boolean gpuDisable = option.getBoolean("disable-gpu");
-        List<String> driverArguments = (List<String>) env.get("DRIVER_ARGUMENTS");
-        Map<String, Object> experimentalOptions = (Map<String, Object>) env.get("EXPERIMENTAL_OPTIONS");
 
-        String driverPath = (String) env.get("CHROME_DRIVER_PATH");
+        Map<String, Object> driverOptions = (Map<String, Object>) env.get(Constants.DRIVER_OPTIONS);
+        Map<String, Object> proxy = driverOptions != null ? (Map<String, Object>) driverOptions.get("proxy") : null;
+        List<String> driverArguments = driverOptions != null ? (List<String>) driverOptions.get("arguments") : null;
+        Map<String, Object> capability = driverOptions != null ? (Map<String, Object>) driverOptions.get("capability") : null;
+
+        String chromeDriverPath = (String) env.get("CHROME_DRIVER_PATH");
         String firefoxDriverPath = (String) env.get("FIREFOX_DRIVER_PATH");
-        if (driverPath != null) {
-            if (!new File(driverPath).exists()) {
-                throw new AutomationException("CHROME_DRIVER_PATH指向的文件不存在：" + driverPath);
+
+        if (chromeDriverPath != null) {
+            if (!new File(chromeDriverPath).exists()) {
+                throw new AutomationException("CHROME_DRIVER_PATH指向的文件不存在：" + chromeDriverPath);
             }
-            System.setProperty("webdriver.chrome.driver", driverPath);
+            System.setProperty("webdriver.chrome.driver", chromeDriverPath);
             ChromeOptions options = new ChromeOptions();
             if (headless) {
                 options.setHeadless(true);
@@ -70,26 +72,27 @@ public class WebDriverUtils {
                     options.addExtensions(new File(devCrx));
                 }
             }
-            if (h5) {
-                String deviceName = "iPhone X"; // iPhone X / Galaxy S5
-                Map<String, String> mobileEmulation = new HashMap<>();
-                mobileEmulation.put("deviceName", deviceName);
-                options.setExperimentalOption("mobileEmulation", mobileEmulation);
-            }
             if (gpuDisable) {
                 options.addArguments("--disable-gpu");
             }
             if (driverArguments != null) {
                 options.addArguments(driverArguments);
             }
+            if (capability != null && !capability.isEmpty()) {
+                capability.forEach(options::setCapability);
+            }
+            Map<String, Object> experimentalOptions = driverOptions != null ? (Map<String, Object>) driverOptions.get("experimentalOptions") : null;
             if (experimentalOptions != null) {
                 experimentalOptions.forEach(options::setExperimentalOption);
+            }
+            if (proxy != null && !proxy.isEmpty()) {
+                options.setProxy(new Proxy(proxy));
             }
             ChromeDriver chromeDriver;
             try {
                 chromeDriver = new ChromeDriver(options);
             } catch (Exception e) {
-                LOGGER.error("chrome浏览器驱动有问题或版本不匹配，chromedriver路径: {}\n下载驱动地址见: {}", driverPath, "http://npm.taobao.org/mirrors/chromedriver/");
+                LOGGER.error("chrome浏览器驱动有问题或版本不匹配，chromedriver路径: {}\n下载驱动地址见: {}", chromeDriverPath, "http://npm.taobao.org/mirrors/chromedriver/");
                 throw e;
             }
             if (env.isDebug()) {
@@ -105,15 +108,8 @@ public class WebDriverUtils {
             }
             System.setProperty("webdriver.gecko.driver", firefoxDriverPath);
             FirefoxOptions options = new FirefoxOptions();
-            if (h5 || !StringUtils.isEmpty(userAgent)) {
-                // iPhone X
-                String useragent = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/12.0 Mobile/15A372 Safari/604.1";
-                if (!StringUtils.isEmpty(userAgent)) {
-                    useragent = userAgent;
-                }
-                FirefoxProfile firefoxProfile = new FirefoxProfile();
-                firefoxProfile.setPreference("general.useragent.override", useragent);
-                options.setProfile(firefoxProfile);
+            if (!StringUtils.isEmpty(userAgent)) {
+                options.addPreference("general.useragent.override", userAgent);
             }
             if (headless) {
                 options.setHeadless(true);
@@ -125,12 +121,18 @@ public class WebDriverUtils {
             if (driverArguments != null) {
                 options.addArguments(driverArguments);
             }
-            FirefoxDriver firefoxDriver = new FirefoxDriver(options);
-            if (h5) {
-                firefoxDriver.manage().window().setSize(new Dimension(375, 812));
-            } else {
-                firefoxDriver.manage().window().maximize();
+            if (capability != null && !capability.isEmpty()) {
+                capability.forEach(options::setCapability);
             }
+            if (proxy != null && !proxy.isEmpty()) {
+                options.setProxy(new Proxy(proxy));
+            }
+            Map<String, Object> preference = driverOptions != null ? (Map<String, Object>) driverOptions.get("preference") : null;
+            if (preference != null) {
+                preference.forEach(options::addPreference);
+            }
+            FirefoxDriver firefoxDriver = new FirefoxDriver(options);
+            firefoxDriver.manage().window().maximize();
             return firefoxDriver;
         } else {
             throw new AutomationException("CHROME_DRIVER_PATH 驱动未设置！");

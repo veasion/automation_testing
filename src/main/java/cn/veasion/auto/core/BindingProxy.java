@@ -2,8 +2,8 @@ package cn.veasion.auto.core;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import cn.veasion.auto.bind.EnvironmentBinding;
 import cn.veasion.auto.bind.JavaScriptBinding;
@@ -23,7 +23,7 @@ import org.springframework.cglib.proxy.MethodProxy;
  */
 public class BindingProxy<T> implements MethodInterceptor {
 
-    private static final Map<Class<?>, Logger> LOGGER_MAP = new HashMap<>();
+    private static final Map<Class<?>, Logger> LOGGER_MAP = new ConcurrentHashMap<>();
 
     private T obj;
 

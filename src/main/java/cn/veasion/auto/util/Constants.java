@@ -47,6 +47,11 @@ public class Constants {
     public static final String DESKTOP_DIR = "DESKTOP_DIR";
 
     /**
+     * 驱动选项
+     */
+    public static final String DRIVER_OPTIONS = "DRIVER_OPTIONS";
+
+    /**
      * 图片旋转统计范围
      */
     public static final int HOUGH_RANGE_VALUE = 3;

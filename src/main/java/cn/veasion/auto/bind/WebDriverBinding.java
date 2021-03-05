@@ -226,48 +226,55 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
 
     @ResultProxy
     @Api(value = "在新的浏览器驱动中执行脚本", result = Environment.class)
-    @SuppressWarnings("unchecked")
-    public Object runScriptWithNewDriver(final Object env, final String path) throws Exception {
+    public Object runScriptWithNewDriver(final Object env,
+                                         final String path,
+                                         @Api.Param(desc = "是否异步，true 异步时返回 null可以通过 env.putSystemVar 来传递数据") boolean async) throws Exception {
         Objects.requireNonNull(path);
         File scriptFile = new File(path);
         if (!scriptFile.exists() || !scriptFile.isFile()) {
             throw new AutomationException("脚本文件错误：" + scriptFile.getPath());
         }
         final ArgsCommandOption option = binding.getEnv().getOption();
-        FutureTask<Environment> task = new FutureTask<>(() -> {
-            WebDriver newDriver = null;
-            try {
-                Environment newEnv = new Environment(option);
-                newEnv.setDebug(false);
-                String configPath = newEnv.getString("configPath");
-                if (configPath == null || "".equals(configPath)) {
-                    configPath = JavaScriptUtils.getFilePath("config.json");
-                }
-                newEnv.loadGlobalConfig(configPath);
-                if (!JavaScriptUtils.isNull(env)) {
-                    Object object = JavaScriptUtils.toJavaObject(env);
-                    if (object instanceof Map) {
-                        newEnv.putAll((Map<String, Object>) object);
-                    } else {
-                        throw new AutomationException("env参数格式");
-                    }
-                }
-                newDriver = WebDriverUtils.getWebDriver(newEnv);
-                // JavaScriptCore.execute(newDriver, newEnv, scriptFile);
-                JavaScriptContextUtils.get(newDriver, newEnv).execute(scriptFile);
-                return newEnv;
-            } catch (Exception e) {
-                LOGGER.error("执行 withNewDriver 异常", e);
-                return null;
-            } finally {
-                JavaScriptContextUtils.remove();
-                if (newDriver != null) {
-                    newDriver.quit();
+        FutureTask<Environment> task = new FutureTask<>(() -> runScriptWithNewDriver(option, env, scriptFile));
+        new Thread(task).start();
+        if (async) {
+            return null;
+        } else {
+            return task.get();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Environment runScriptWithNewDriver(ArgsCommandOption option, Object env, File scriptFile) {
+        WebDriver newDriver = null;
+        try {
+            Environment newEnv = new Environment(option);
+            newEnv.setDebug(false);
+            String configPath = newEnv.getString("configPath");
+            if (configPath == null || "".equals(configPath)) {
+                configPath = JavaScriptUtils.getFilePath("config.json");
+            }
+            newEnv.loadGlobalConfig(configPath);
+            if (!JavaScriptUtils.isNull(env)) {
+                Object object = JavaScriptUtils.toJavaObject(env);
+                if (object instanceof Map) {
+                    newEnv.putAll((Map<String, Object>) object);
+                } else {
+                    throw new AutomationException("env参数格式");
                 }
             }
-        });
-        new Thread(task).start();
-        return task.get();
+            newDriver = WebDriverUtils.getWebDriver(newEnv);
+            JavaScriptContextUtils.get(newDriver, newEnv).execute(scriptFile);
+            return newEnv;
+        } catch (Exception e) {
+            LOGGER.error("执行 withNewDriver 异常", e);
+            return null;
+        } finally {
+            JavaScriptContextUtils.remove();
+            if (newDriver != null) {
+                newDriver.quit();
+            }
+        }
     }
 
     @ResultProxy
@@ -317,16 +324,20 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
         }
     }
 
+    private ChromeDriverBinding chrome;
+
     @Api(result = ChromeDriverBinding.class)
     @ResultProxy(value = false, log = false)
-    public Object toChromeDriver() {
-        if (binding.getWebDriver() instanceof ChromeDriver) {
-            ChromeDriverBinding chrome = new ChromeDriverBinding();
-            chrome.setBinding(binding);
-            return BindingProxy.create(chrome);
-        } else {
+    public synchronized Object toChromeDriver() {
+        if (!(binding.getWebDriver() instanceof ChromeDriver)) {
             throw new AutomationException(binding.getWebDriver().getClass().getSimpleName() + " 非 ChromeDriver");
         }
+        if (chrome == null && binding.getWebDriver() instanceof ChromeDriver) {
+            ChromeDriverBinding chromeBinding = new ChromeDriverBinding();
+            chromeBinding.setBinding(binding);
+            chrome = BindingProxy.create(chromeBinding);
+        }
+        return chrome;
     }
 
     @Api("截图")

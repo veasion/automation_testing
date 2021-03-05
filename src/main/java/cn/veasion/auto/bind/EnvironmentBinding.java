@@ -10,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -24,16 +25,27 @@ public class EnvironmentBinding implements InitializingBinding<Environment> {
 
     private Environment env;
     private Map<String, Object> localMap = new HashMap<>();
+    private static final Map<String, Object> SYSTEM_VAR_MAP = new ConcurrentHashMap<>();
 
-    @Api("存储变量")
+    @Api("存储变量（当前脚本）")
     @ResultProxy(value = false, log = false)
     public void put(String key, Object value) {
         localMap.put(key, value);
     }
 
-    @Api("存储全局变量")
+    @Api("存储全局变量（当前驱动）")
     public void putGlobal(String key, Object value) {
         env.put(key, JavaScriptUtils.toJavaObject(value));
+    }
+
+    @Api("存储系统变量（当前系统）")
+    public void putSystemVar(String key, Object value) {
+        SYSTEM_VAR_MAP.put(key, JavaScriptUtils.toJavaObject(value));
+    }
+
+    @Api("获取系统变量（当前系统）")
+    public Object getSystemVar(String key) {
+        return SYSTEM_VAR_MAP.get(key);
     }
 
     @Api("获取变量")
@@ -41,8 +53,10 @@ public class EnvironmentBinding implements InitializingBinding<Environment> {
     public Object get(String key) {
         if (localMap.containsKey(key)) {
             return localMap.get(key);
-        } else {
+        } else if (env.containsKey(key)) {
             return env.get(key);
+        } else {
+            return SYSTEM_VAR_MAP.get(key);
         }
     }
 

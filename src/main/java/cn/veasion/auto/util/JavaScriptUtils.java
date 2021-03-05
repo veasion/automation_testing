@@ -1,7 +1,7 @@
 package cn.veasion.auto.util;
 
 import cn.veasion.auto.core.JavaScriptCore;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import jdk.nashorn.internal.objects.NativeArray;
 import jdk.nashorn.internal.runtime.Property;
@@ -45,7 +45,7 @@ public class JavaScriptUtils {
         if (o.isEmpty()) {
             return new ArrayList<>();
         }
-        return JSONObject.parseArray(JSONObject.toJSONString(o.values()), c);
+        return JSON.parseArray(JSON.toJSONString(o.values()), c);
     }
 
     public static <T> T toObject(ScriptObjectMirror o, Class<T> c) {
@@ -55,7 +55,7 @@ public class JavaScriptUtils {
         if (o.isArray()) {
             throw new ClassCastException("object is array");
         } else {
-            return JSONObject.parseObject(JSONObject.toJSONString(o), c);
+            return JSON.parseObject(JSON.toJSONString(o), c);
         }
     }
 

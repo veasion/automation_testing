@@ -3,17 +3,28 @@
   "TIMEOUT_PAGE_LOAD": 20,
   "CHROME_DRIVER_PATH": "C:\\data\\auto\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": null,
-  "DRIVER_ARGUMENTS": [
-    "no-sandbox",
-    "--disable-popup-blocking",
-    "--disable-blink-features=AutomationControlled",
-    // "--proxy-server=127.0.0.1:8080",
-    "--ignore-certificate-errors"
-  ],
-  "EXPERIMENTAL_OPTIONS": {
-    "excludeSwitches": [
-      "enable-automation"
-    ]
+  "DRIVER_OPTIONS": {
+    "arguments": [
+      "no-sandbox",
+      "--disable-popup-blocking",
+      "--disable-blink-features=AutomationControlled",
+      "--ignore-certificate-errors"
+    ],
+    "experimentalOptions": {
+      "excludeSwitches": [
+        "enable-automation"
+      ],
+      "perfLoggingPrefs": {
+        "enableNetwork": true,
+        "enablePage": false
+      }
+    },
+    "proxy": {},
+    "capability": {
+      "loggingPrefs": {
+        "performance": "ALL"
+      }
+    }
   },
   "OCR": {
     "baidu": {

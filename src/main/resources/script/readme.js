@@ -148,23 +148,30 @@ runNewScript(env.getSourcePath('/script/baidu.js'));
 runNewScript(env.getString('filePath'));
 
 // 在新的浏览器驱动中执行js脚本文件，返回 env
-let newEnvResult = runScriptWithNewDriver({name: 'luozhuowei'}, env.getPath('/script/baidu.js'));
+let newEnvResult = runScriptWithNewDriver({name: 'luozhuowei'}, env.getPath('/script/baidu.js'), false);
 println(newEnvResult.getString('name'));
 
 // 在新的浏览器驱动中后台隐私运行脚本
 runScriptWithNewDriver({
-    "DRIVER_ARGUMENTS": [
-        "--headless",
-        "--disable-gpu",
-        "--window-size=1920,1080",
-        "--disable-blink-features=AutomationControlled"
-    ],
-    "EXPERIMENTAL_OPTIONS": {
-        "excludeSwitches": [
-            "enable-automation"
-        ]
+    "DRIVER_OPTIONS": {
+        "arguments": [
+            "no-sandbox",
+            "--disable-popup-blocking",
+            "--disable-blink-features=AutomationControlled",
+            "--ignore-certificate-errors"
+        ],
+        "experimentalOptions": {
+            "excludeSwitches": [
+                "enable-automation"
+            ]
+        },
+        // "proxy": {
+        //     "proxyType": "MANUAL",
+        //     "httpProxy": "127.0.0.1:8080"
+        // },
+        "capability": {}
     }
-}, env.getPath("/script/crawler.js"));
+}, env.getPath("/script/crawler.js"), false);
 
 // 浏览器截图
 screenshot('C:\\Users\\user\\Desktop\\temp.png');
