@@ -1,5 +1,6 @@
 package cn.veasion.auto.bind;
 
+import cn.veasion.auto.bind.base.Binding;
 import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.util.Api;
 import cn.veasion.auto.util.AutomationException;
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
  * @author luozhuowei
  * @date 2021/3/2
  */
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "restriction"})
 @Api.ClassInfo(desc = "chromeDriver")
 public class ChromeDriverBinding extends WebDriverBinding {
 
@@ -132,6 +133,7 @@ public class ChromeDriverBinding extends WebDriverBinding {
         return null;
     }
 
+    @SuppressWarnings("serial")
     private Map<String, Object> getResponseBody(String requestId) {
         return chromeDriver.getDevTools().send(new Command<>(
                 "Network.getResponseBody",

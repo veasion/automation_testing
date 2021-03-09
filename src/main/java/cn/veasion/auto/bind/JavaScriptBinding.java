@@ -1,5 +1,6 @@
 package cn.veasion.auto.bind;
 
+import cn.veasion.auto.bind.base.Binding;
 import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.util.Api;
 import cn.veasion.auto.util.ApiDocumentGenerator;

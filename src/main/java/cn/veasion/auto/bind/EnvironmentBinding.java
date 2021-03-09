@@ -1,5 +1,7 @@
 package cn.veasion.auto.bind;
 
+import cn.veasion.auto.bind.base.Binding;
+import cn.veasion.auto.bind.base.InitializingBinding;
 import cn.veasion.auto.core.Environment;
 import cn.veasion.auto.util.EvalAnalysisUtils;
 import cn.veasion.auto.core.JavaScriptCore;

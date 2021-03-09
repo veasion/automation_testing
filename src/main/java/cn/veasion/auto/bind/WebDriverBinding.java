@@ -1,24 +1,20 @@
 package cn.veasion.auto.bind;
 
+import cn.veasion.auto.bind.base.InitializingBinding;
 import cn.veasion.auto.core.BindingProxy;
 import cn.veasion.auto.core.Environment;
 import cn.veasion.auto.core.JavaScriptCore;
 import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.core.WebDriverUtils;
-import cn.veasion.auto.debug.Debug;
 import cn.veasion.auto.util.Api;
 import cn.veasion.auto.util.ArgsCommandOption;
-import cn.veasion.auto.util.AssertException;
 import cn.veasion.auto.util.AutomationException;
-import cn.veasion.auto.util.CalculatorUtils;
 import cn.veasion.auto.util.ConfigVars;
 import cn.veasion.auto.util.Constants;
 import cn.veasion.auto.util.JavaScriptContextUtils;
 import cn.veasion.auto.util.JavaScriptUtils;
-import cn.veasion.auto.util.JdbcDao;
 import cn.veasion.auto.util.ScriptHttpUtils;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import jdk.nashorn.internal.objects.NativeDate;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -33,12 +29,8 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
@@ -52,31 +44,12 @@ import java.util.concurrent.FutureTask;
 @Api.ClassInfo(value = JavaScriptCore.DRIVER, root = true)
 public class WebDriverBinding extends SearchContextBinding<WebDriver> implements InitializingBinding<WebDriver> {
 
-    private static final Random RAND = new Random(System.currentTimeMillis());
-
     @ResultProxy
     @Api("打开页面并等待页面加载")
-    public void open(String url) {
+    public void open(String url) throws InterruptedException {
         binding.getWebDriver().get(url);
         waitForPageLoaded((Integer) ConfigVars.TIMEOUT_PAGE_LOAD.read(binding.getEnv()));
-        sleep(200);
-    }
-
-    @ResultProxy
-    @Api("暂停多少毫秒")
-    public void pause(long millis) {
-        sleep(millis);
-    }
-
-    @ResultProxy
-    @Api("暂停多少毫秒")
-    public void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            LOGGER.error("sleep", e);
-            Thread.currentThread().interrupt();
-        }
+        Thread.sleep(200);
     }
 
     @Api(value = "鼠标动作", result = TouchActions.class)
@@ -119,22 +92,6 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
         }
     }
 
-    @Api("info")
-    @ResultProxy(value = false)
-    public String info() {
-        return JavaScriptCore.getCurrentJsInfo();
-    }
-
-    @Api("断言")
-    @ResultProxy(value = false)
-    public void assertResult(boolean flag, Object message) {
-        String msg = String.valueOf(message);
-        if (!flag) {
-            LOGGER.error("断言未通过: {}", msg);
-            throw new AssertException(msg);
-        }
-    }
-
     @Api("等待页面加载")
     @ResultProxy(interval = true)
     public void waitForPageLoaded(@Api.Param(allowNone = true) Integer seconds) {
@@ -156,79 +113,83 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
         }
     }
 
-    @Api("格式化时间")
+    @Api("截图")
     @ResultProxy(value = false, log = false)
-    public String formatDate(Object date, String pattern) {
-        Date newDate = null;
-        if (date instanceof NativeDate) {
-            newDate = new Date((long) NativeDate.getTime(date));
-        } else if (date instanceof Date) {
-            newDate = (Date) date;
-        } else if (date instanceof Number) {
-            newDate = new Date(((Number) date).longValue());
-        } else if (date instanceof ScriptObjectMirror) {
-            ScriptObjectMirror obj = (ScriptObjectMirror) date;
-            if ("Date".equalsIgnoreCase(obj.getClassName())) {
-                double time = (double) obj.callMember("getTime");
-                newDate = new Date((long) time);
+    public boolean screenshot(@Api.Param(allowNull = true) String path) {
+        try {
+            if (JavaScriptUtils.isNull(path)) {
+                path = String.format("%s\\screenshot_%d.png", binding.getEnv().get(Constants.DESKTOP_DIR), System.currentTimeMillis());
             }
+            File image = ((TakesScreenshot) binding.getWebDriver()).getScreenshotAs(OutputType.FILE);
+            if (image != null) {
+                try (FileInputStream is = new FileInputStream(image)) {
+                    Files.copy(is, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("截图失败", e);
         }
-        if (newDate == null) {
-            return String.valueOf(date);
-        }
-        return new SimpleDateFormat(pattern).format(newDate);
+        return false;
     }
 
-    @Api("随机字符串")
+    @Api("获取当前窗口句柄")
     @ResultProxy(value = false, log = false)
-    public String randCode(Integer length) {
-        if (length == null) {
-            length = 8;
+    public String getWindowHandle() {
+        return binding.getWebDriver().getWindowHandle();
+    }
+
+    @Api("打开并切换到新的窗口")
+    @ResultProxy(value = false)
+    public void openNewWindow() {
+        executeScript("window.open('about:blank');");
+        switchToNextWindow(null);
+    }
+
+    @Api("在新的窗口中执行函数")
+    @ResultProxy(value = false)
+    public void withNewWindow(@Api.Param(desc = "函数", jsType = "Function") ScriptObjectMirror fun) {
+        if (fun == null || !fun.isFunction()) {
+            throw new AutomationException("withNewWindow params is not function");
         }
-        StringBuilder sb = new StringBuilder();
-        while (length > 0) {
-            if (length >= 8) {
-                length -= 8;
-                sb.append(String.format("%08d", RAND.nextInt(100000000)));
+        final String currentHandle = binding.getWebDriver().getWindowHandle();
+        try {
+            openNewWindow();
+            fun.call(null);
+            binding.getWebDriver().close();
+        } finally {
+            switchToNextWindow(currentHandle);
+        }
+    }
+
+    @Api("切换窗口")
+    @ResultProxy(value = false)
+    public void switchToNextWindow(@Api.Param(desc = "指定窗口句柄，为 null 则切换为下一个窗口", allowNone = true) String windowHandle) {
+        if (JavaScriptUtils.isNull(windowHandle)) {
+            int currentIndex = -1;
+            final String currentHandle = binding.getWebDriver().getWindowHandle();
+            String[] windowHandles = binding.getWebDriver().getWindowHandles().toArray(new String[]{});
+            for (int i = 0; i < windowHandles.length; i++) {
+                if (Objects.equals(windowHandles[i], currentHandle)) {
+                    currentIndex = i;
+                    break;
+                }
+            }
+            if (currentIndex == -1 || currentIndex >= windowHandles.length - 1) {
+                currentIndex = 0;
             } else {
-                length -= 1;
-                sb.append(RAND.nextInt(10));
+                currentIndex++;
             }
+            windowHandle = windowHandles[currentIndex];
         }
-        return sb.toString();
-    }
-
-    @Api("控制台打印")
-    @ResultProxy(value = false, log = false)
-    public void println(Object message, @Api.Param(allowNone = true) Object... args) {
-        String str;
-        if (message == null) {
-            str = "null";
-        } else if (message instanceof String) {
-            str = message.toString();
-        } else {
-            StringBuilder sb = new StringBuilder();
-            JavaScriptUtils.appendObject(sb, message);
-            str = sb.toString();
-        }
-        if (args != null && args.length > 0) {
-            JavaScriptUtils.println(String.format(str, args));
-        } else {
-            JavaScriptUtils.println(str);
-        }
-    }
-
-    @Api("计算")
-    @ResultProxy(value = false, log = false)
-    public String calculate(@Api.Param(desc = "运算式") String str, @Api.Param(desc = "保留几位小数") int n) {
-        return CalculatorUtils.calculate(str, n);
+        binding.getWebDriver().switchTo().window(windowHandle);
     }
 
     @ResultProxy
     @Api(value = "在新的浏览器驱动中执行脚本", result = Environment.class)
     public Object runScriptWithNewDriver(final Object env,
                                          final String path,
-                                         @Api.Param(desc = "是否异步，true 异步时返回 null可以通过 env.putSystemVar 来传递数据") boolean async) throws Exception {
+                                         @Api.Param(desc = "是否异步，true 异步时返回 null可以通过 env.putSystemVar 来传递数据") boolean async) throws ExecutionException, InterruptedException {
         Objects.requireNonNull(path);
         File scriptFile = new File(path);
         if (!scriptFile.exists() || !scriptFile.isFile()) {
@@ -308,7 +269,7 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
                     JavaScriptContextUtils.get(binding.getWebDriver(), binding.getEnv()).execute(file);
                     return true;
                 } catch (Exception e) {
-                    LOGGER.info("info: {}", info());
+                    LOGGER.info("info: {}", JavaScriptCore.getCurrentJsInfo());
                     LOGGER.error("运行 js 文件异常，文件：{}", file.getPath(), e);
                     return false;
                 } finally {
@@ -340,103 +301,14 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
         return chrome;
     }
 
-    @Api("截图")
-    @ResultProxy(value = false, log = false)
-    public boolean screenshot(@Api.Param(allowNull = true) String path) {
-        try {
-            if (JavaScriptUtils.isNull(path)) {
-                path = String.format("%s\\screenshot_%d.png", binding.getEnv().get(Constants.DESKTOP_DIR), System.currentTimeMillis());
-            }
-            File image = ((TakesScreenshot) binding.getWebDriver()).getScreenshotAs(OutputType.FILE);
-            if (image != null) {
-                try (FileInputStream is = new FileInputStream(image)) {
-                    Files.copy(is, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.error("截图失败", e);
-        }
-        return false;
-    }
-
-    @Api("获取当前窗口句柄")
-    @ResultProxy(value = false, log = false)
-    public String getWindowHandle() {
-        return binding.getWebDriver().getWindowHandle();
-    }
-
-    @Api("打开并切换到新的窗口")
-    @ResultProxy(value = false)
-    public void openNewWindow() {
-        executeScript("window.open('about:blank');");
-        switchToNextWindow(null);
-    }
-
-    @Api("在新的窗口中执行函数")
-    @ResultProxy(value = false)
-    public void withNewWindow(@Api.Param(desc = "函数", jsType = "Function") ScriptObjectMirror fun) {
-        if (fun == null || !fun.isFunction()) {
-            throw new AutomationException("withNewWindow params is not function");
-        }
-        final String currentHandle = binding.getWebDriver().getWindowHandle();
-        try {
-            openNewWindow();
-            fun.call(null);
-            binding.getWebDriver().close();
-        } finally {
-            switchToNextWindow(currentHandle);
-        }
-    }
-
-    @Api("切换窗口")
-    @ResultProxy(value = false)
-    public void switchToNextWindow(@Api.Param(desc = "指定窗口句柄，为 null 则切换为下一个窗口", allowNone = true) String windowHandle) {
-        if (JavaScriptUtils.isNull(windowHandle)) {
-            int currentIndex = -1;
-            final String currentHandle = binding.getWebDriver().getWindowHandle();
-            String[] windowHandles = binding.getWebDriver().getWindowHandles().toArray(new String[]{});
-            for (int i = 0; i < windowHandles.length; i++) {
-                if (Objects.equals(windowHandles[i], currentHandle)) {
-                    currentIndex = i;
-                    break;
-                }
-            }
-            if (currentIndex == -1 || currentIndex >= windowHandles.length - 1) {
-                currentIndex = 0;
-            } else {
-                currentIndex++;
-            }
-            windowHandle = windowHandles[currentIndex];
-        }
-        binding.getWebDriver().switchTo().window(windowHandle);
-    }
-
-    @ResultProxy
-    @Api(value = "数据库连接", result = java.sql.Connection.class)
-    public Object createJdbcConnection(String jdbcUrl, String user, String password) throws SQLException {
-        return JdbcDao.createConnection(jdbcUrl, user, password);
-    }
-
-    @ResultProxy
-    @Api(value = "Mysql数据库连接", result = java.sql.Connection.class)
-    public Object createMysqlConnection(String ip, int port, String database, String user, String password) throws SQLException {
-        return JdbcDao.createConnection(JdbcDao.MYSQL_EVAL_URL, ip, port, database, user, password);
-    }
-
-    @ResultProxy(value = false, log = false)
-    @Api(value = "输入")
-    public String input(String title) {
-        return Debug.input(title, null);
-    }
-
     @Api("HTTP 请求")
     @ResultProxy(value = false)
     public Object request(@Api.Param(desc = "请求url/uri", allowNull = true) String url,
                           @Api.Param(desc = "请求方式 POST/GET 默认GET", allowNone = true) String method,
                           @Api.Param(desc = "请求body内容", allowNone = true) Object content,
                           @Api.Param(desc = "请求头", allowNone = true) Object headers) throws IOException {
-        String url1, url2;
+        String url1;
+        String url2;
         if (url.trim().toLowerCase().startsWith("http")) {
             // url
             int idx = url.indexOf("/", url.indexOf("://") + 3);

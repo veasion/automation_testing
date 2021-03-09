@@ -1,6 +1,6 @@
-package cn.veasion.auto.bind.bean;
+package cn.veasion.auto.bind;
 
-import cn.veasion.auto.bind.WebElementBinding;
+import cn.veasion.auto.bind.base.AbstractInitializingBean;
 import cn.veasion.auto.captcha.image.ImageUtil;
 import cn.veasion.auto.captcha.ocr.OcrResult;
 import cn.veasion.auto.captcha.ocr.OcrServiceFactory;

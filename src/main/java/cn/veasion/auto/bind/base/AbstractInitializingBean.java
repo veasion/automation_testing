@@ -1,7 +1,5 @@
-package cn.veasion.auto.bind.bean;
+package cn.veasion.auto.bind.base;
 
-import cn.veasion.auto.bind.Binding;
-import cn.veasion.auto.bind.InitializingBinding;
 import cn.veasion.auto.core.Environment;
 import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.util.Api;

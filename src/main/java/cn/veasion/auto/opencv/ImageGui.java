@@ -2,7 +2,9 @@ package cn.veasion.auto.opencv;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 /**
  * ImageGui
@@ -11,6 +13,8 @@ import javax.swing.*;
  * @date 2021/3/2
  */
 public class ImageGui extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     private BufferedImage image;
     private JFrame jframe = new JFrame();

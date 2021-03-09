@@ -1,4 +1,4 @@
-package cn.veasion.auto.bind;
+package cn.veasion.auto.bind.base;
 
 import cn.veasion.auto.core.Environment;
 import org.openqa.selenium.WebDriver;

@@ -1,5 +1,6 @@
 package cn.veasion.auto.bind;
 
+import cn.veasion.auto.bind.base.Binding;
 import cn.veasion.auto.util.AutomationException;
 import cn.veasion.auto.util.ElementBy;
 import cn.veasion.auto.core.ResultProxy;
@@ -11,7 +12,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.touch.TouchActions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.util.CollectionUtils;
@@ -21,8 +21,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 

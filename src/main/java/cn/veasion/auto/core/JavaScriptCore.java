@@ -1,8 +1,8 @@
 package cn.veasion.auto.core;
 
-import cn.veasion.auto.bind.InitializingBinding;
+import cn.veasion.auto.bind.base.InitializingBinding;
 import cn.veasion.auto.bind.JavaScriptBinding;
-import cn.veasion.auto.bind.bean.AbstractInitializingBean;
+import cn.veasion.auto.bind.base.AbstractInitializingBean;
 import cn.veasion.auto.debug.Debug;
 import cn.veasion.auto.util.Api;
 import cn.veasion.auto.util.AutomationException;

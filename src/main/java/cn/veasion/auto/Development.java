@@ -21,7 +21,7 @@ import java.util.Objects;
 public class Development {
 
     static {
-        // -Djava.library.path=$PROJECT_DIR$/lib/dll
+        // JVM参数: -Djava.library.path=lib/dll
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 

@@ -96,10 +96,9 @@ auto.scroll = function (element, x, y) {
  *
  * @param {string} name 依赖模块名称
  * @param {object?} args 参数，如 { audit: true, status: 1 }
- * @param {string?} argsVar
  * @return {object} result
  */
-auto.dependency = function (name, args, argsVar) {
+auto.dependency = function (name, args) {
     let result = null;
     auto.args = 'ARGS';
     auto.result = 'RESULT';
@@ -108,9 +107,6 @@ auto.dependency = function (name, args, argsVar) {
         log.info('正在依赖' + name + '数据...');
         env.remove(auto.args);
         env.remove(auto.result);
-        if (argsVar) {
-            args = env.getOrDefault(argsVar, args);
-        }
         env.putGlobal(auto.args, args || null);
         let path = '/dependency/' + name;
         if (path.endsWith(".js")) {
