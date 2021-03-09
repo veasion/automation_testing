@@ -70,6 +70,9 @@ public class BindingFactory {
     }
 
     static Object convert(Object value) {
+        if (value == null) {
+            return null;
+        }
         try {
             if (value instanceof Collection) {
                 return convertList((Collection<Object>) value);

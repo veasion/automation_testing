@@ -37,14 +37,17 @@ public class BindingProxy<T> implements MethodInterceptor {
         if (declaringClass.equals(Object.class) || Modifier.isPrivate(method.getModifiers()) || Modifier.isProtected(method.getModifiers())) {
             return proxy.invokeSuper(source, args);
         }
-        EnvironmentBinding env = (EnvironmentBinding) BindingFactory.convert(JavaScriptCore.getEnvironment());
         ResultProxy resultProxy = method.getAnnotation(ResultProxy.class);
-        executeLog(env, method, args, resultProxy);
-        if (resultProxy != null && resultProxy.interval()) {
-            ConfigVars commandInterval = ConfigVars.COMMAND_INTERVAL;
-            Integer millis = (Integer) env.getOrDefault(commandInterval.name(), commandInterval.getDefaultValue());
-            if (millis != null) {
-                Thread.sleep(millis);
+        Environment environment = JavaScriptCore.getEnvironment();
+        if (environment != null) {
+            EnvironmentBinding env = (EnvironmentBinding) BindingFactory.convert(environment);
+            executeLog(env, method, args, resultProxy);
+            if (resultProxy != null && resultProxy.interval()) {
+                ConfigVars commandInterval = ConfigVars.COMMAND_INTERVAL;
+                Integer millis = (Integer) env.getOrDefault(commandInterval.name(), commandInterval.getDefaultValue());
+                if (millis != null) {
+                    Thread.sleep(millis);
+                }
             }
         }
         Object result = method.invoke(obj, args);

@@ -107,7 +107,7 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
         return value != null ? value.toString() : null;
     }
 
-    @Api("获取位置区域 x/y/height/width")
+    @Api("获取位置区域 x/y/width/height")
     @ResultProxy(value = false, log = false)
     public Object getRect() {
         return binding.getBean().getRect();

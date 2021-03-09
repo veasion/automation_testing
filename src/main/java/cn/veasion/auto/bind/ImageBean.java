@@ -49,7 +49,7 @@ public class ImageBean extends AbstractInitializingBean {
         return ImageWrapper.ofImage(ImageIO.read(new ByteArrayInputStream(HttpClientUtils.get(url))));
     }
 
-    @Api("截图")
+    @Api("浏览器截图")
     public ImageWrapper loadByScreenshot() throws IOException {
         byte[] bytes = ((TakesScreenshot) getBinding().getWebDriver()).getScreenshotAs(OutputType.BYTES);
         return ImageWrapper.ofImage(ImageIO.read(new ByteArrayInputStream(bytes)));

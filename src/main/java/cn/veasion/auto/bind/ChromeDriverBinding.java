@@ -86,8 +86,22 @@ public class ChromeDriverBinding extends WebDriverBinding {
         }
         requestHandlerKey = network.addRequestHandler(request -> true, request -> {
             List<HttpResponse> list = uriHandlers.entrySet().stream()
-                    .filter(entry -> entry.getKey().test(request))
-                    .map(Map.Entry::getValue).map(func -> func.apply(request))
+                    .filter(entry -> {
+                        try {
+                            return entry.getKey().test(request);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                    })
+                    .map(Map.Entry::getValue).map(func -> {
+                        try {
+                            return func.apply(request);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    })
                     .filter(Objects::nonNull).collect(Collectors.toList());
             HttpResponse response;
             if (!list.isEmpty()) {
@@ -151,7 +165,7 @@ public class ChromeDriverBinding extends WebDriverBinding {
         }
         uriHandlers.put(request -> {
             Object call = filter.call(null, request);
-            return call != null && !JavaScriptUtils.isEmpty(call.toString()) && "false".equalsIgnoreCase(call.toString());
+            return call != null && "true".equalsIgnoreCase(call.toString());
         }, requestHandler(fun));
     }
 

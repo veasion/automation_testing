@@ -259,3 +259,20 @@ img1.show();
 img1.show(point.getX(), point.getY());
 img1.show(point.getX(), point.getY(), img2.getWidth(), img2.getHeight());
 
+// 拦截请求并修改，需要激活 dev tools
+toChromeDriver().activateDevTools();
+// 请求拦截处理
+toChromeDriver().addRequestHandler(function(request) {
+    // 拦截指定请求
+    return request && request.uri.indexOf('www.baidu.com') > -1;
+}, function(request) {
+    // 修改请求响应
+    let response = {};
+    response.status = 200;
+    response.content = '请求被修改了！';
+    response.headers = { 'Content-Type': 'text/html;charset=utf-8' };
+    println('修改请求: ' + request.uri);
+    return response;
+});
+// 测试
+open('http://www.baidu.com');

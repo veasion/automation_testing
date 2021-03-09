@@ -23,7 +23,7 @@ import java.util.Random;
  * @author luozhuowei
  * @date 2021/3/9
  */
-@SuppressWarnings({ "unused", "restriction" })
+@SuppressWarnings({"unused", "restriction"})
 @Api.ClassInfo(value = "common", root = true)
 public class CommonBean extends AbstractInitializingBean {
 
@@ -119,7 +119,9 @@ public class CommonBean extends AbstractInitializingBean {
             JavaScriptUtils.appendObject(sb, message);
             str = sb.toString();
         }
-        if (args != null && args.length > 0) {
+        if (args != null && args.length == 1 && JavaScriptUtils.isNull(args[0])) {
+            JavaScriptUtils.println(str);
+        } else if (args != null && args.length > 0) {
             JavaScriptUtils.println(String.format(str, args));
         } else {
             JavaScriptUtils.println(str);
