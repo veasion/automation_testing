@@ -21,7 +21,7 @@ import java.util.Objects;
 public class Development {
 
     static {
-        // -Djava.library.path=$PROJECT_DIR$/opencv/dll/x64
+        // -Djava.library.path=$PROJECT_DIR$/lib/dll
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 

@@ -77,7 +77,7 @@
             <artifactId>opencv-java</artifactId>
             <version>4.5.1</version>
             <!--<scope>system</scope>
-            <systemPath>${basedir}/opencv/opencv-java-4.5.1.jar</systemPath>-->
+            <systemPath>${basedir}/lib/opencv-java-4.5.1.jar</systemPath>-->
         </dependency>
     </dependencies>
 
@@ -101,7 +101,7 @@
                         <id>opencv-binary</id>
                         <phase>clean</phase>
                         <configuration>
-                            <file>${basedir}/opencv/opencv-java-4.5.1.jar</file>
+                            <file>${basedir}/lib/opencv-java-4.5.1.jar</file>
                             <repositoryLayout>default</repositoryLayout>
                             <groupId>org.opencv</groupId>
                             <artifactId>opencv-java</artifactId>
@@ -209,8 +209,8 @@
                                         <include name="**/*"/>
                                     </fileset>
                                 </copy>
-                                <copy todir="${basedir}/target/automation/opencv/dll">
-                                    <fileset dir="${basedir}/opencv/dll">
+                                <copy todir="${basedir}/target/automation/lib/dll">
+                                    <fileset dir="${basedir}/lib/dll">
                                         <include name="**/*"/>
                                     </fileset>
                                 </copy>

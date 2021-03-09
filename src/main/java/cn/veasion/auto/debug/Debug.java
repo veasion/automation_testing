@@ -150,7 +150,7 @@ public class Debug {
         Scanner scanner = new Scanner(System.in);
         try {
             do {
-                String jsCode = input("请输入js代码: ", scanner);
+                String jsCode = input("请输入: ", scanner);
                 if ("exit".equals(jsCode)) {
                     try {
                         Runtime.getRuntime().exec(System.getProperty("os.name").toLowerCase().contains("windows") ? "tskill chromedriver" : "killall -9 chromedriver");
