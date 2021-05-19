@@ -1,5 +1,6 @@
 package cn.veasion.auto.util;
 
+import com.alibaba.fastjson.JSON;
 import org.openqa.selenium.remote.http.ClientConfig;
 import org.openqa.selenium.remote.http.Contents;
 import org.openqa.selenium.remote.http.HttpClient;
@@ -58,7 +59,7 @@ public class ScriptHttpUtils {
             if (JavaScriptUtils.isEmpty(request.getHeader("Content-Type"))) {
                 request.addHeader("Content-Type", "application/json;charset=UTF-8");
             }
-            request.setContent(Contents.bytes(content.toString().getBytes(StandardCharsets.UTF_8)));
+            request.setContent(Contents.bytes(JSON.toJSONString(content).getBytes(StandardCharsets.UTF_8)));
         }
         HttpResponse response = client.execute(request);
         Map<String, Object> result = new HashMap<>();
