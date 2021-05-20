@@ -29,13 +29,44 @@ http.post = function (url, body, headers) {
 };
 
 /**
+ * POST Form 请求
+ *
+ * @param {string} url 请求url/uri
+ * @param {object?} form 请求表单内容
+ * @param {object?} headers 请求头
+ * @return {object} { status: 200, success: true, data: (string), headers: {} }
+ */
+http.postForm = function (url, form, headers) {
+    if (!headers) {
+        headers = {};
+    }
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    let body = '';
+    if (typeof (form) == 'string') {
+        body = form;
+    } else {
+        for (let key in form) {
+            let value = form[key] || '';
+            if (typeof (value) != 'string') {
+                value = JSON.stringify(value);
+            }
+            body += (key + '=' + encodeURIComponent(value) + '&');
+        }
+        if (body.length > 1) {
+            body = body.substring(0, body.length - 1);
+        }
+    }
+    return http.request(url, 'POST', body, headers);
+};
+
+/**
  * 请求
  *
  * @param {string} url 请求url/uri
  * @param {string?} method 请求方式 POST/GET 默认GET
  * @param {object?} body 请求body内容
  * @param {object?} headers 请求头
- * @return {object} { status: 200, success: true, data: (string), headers: {} }
+ * @return {object} { status: 200, success: true, data: (object), headers: {} }
  */
 http.request = function (url, method, body, headers) {
     if (!headers) {
@@ -53,6 +84,13 @@ http.request = function (url, method, body, headers) {
     let response = request(url, method || 'GET', body, headers);
     if (!response.success) {
         throw new Error('请求失败！http response status: ' + response.status)
+    }
+    if (response.data && typeof response.data === 'string' && response.data.trimLeft().startsWith('{')) {
+        try {
+            response.data = JSON.parse(response.data);
+        } catch (e) {
+            log.warn('is not json => ' + response.data);
+        }
     }
     return response;
 };

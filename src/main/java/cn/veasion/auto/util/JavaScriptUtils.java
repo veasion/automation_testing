@@ -272,14 +272,23 @@ public class JavaScriptUtils {
         }
     }
 
+    public static String formatToString(Object obj) {
+        if (obj == null || obj instanceof String) {
+            return (String) obj;
+        }
+        StringBuilder sb = new StringBuilder();
+        appendObject(sb, obj);
+        return sb.toString();
+    }
+
     public static void println(Object... args) {
         if (args == null || args.length == 0) {
             System.out.println();
         } else if (args.length == 1) {
-            System.out.println(args[0]);
+            System.out.println(formatToString(args[0]));
         } else {
             for (Object message : args) {
-                System.out.println(message);
+                System.out.println(formatToString(message));
             }
         }
     }

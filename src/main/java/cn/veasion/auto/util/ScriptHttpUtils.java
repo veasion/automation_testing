@@ -59,7 +59,10 @@ public class ScriptHttpUtils {
             if (JavaScriptUtils.isEmpty(request.getHeader("Content-Type"))) {
                 request.addHeader("Content-Type", "application/json;charset=UTF-8");
             }
-            request.setContent(Contents.bytes(JSON.toJSONString(content).getBytes(StandardCharsets.UTF_8)));
+            if (!(content instanceof String)) {
+                content = JSON.toJSONString(content);
+            }
+            request.setContent(Contents.bytes(content.toString().getBytes(StandardCharsets.UTF_8)));
         }
         HttpResponse response = client.execute(request);
         Map<String, Object> result = new HashMap<>();

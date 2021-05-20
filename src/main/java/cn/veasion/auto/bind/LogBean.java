@@ -22,34 +22,34 @@ public class LogBean extends AbstractInitializingBean {
     @Api
     @ResultProxy(value = false, log = false)
     public void debug(Object message) {
-        LOGGER.debug(String.valueOf(message));
+        LOGGER.debug(JavaScriptUtils.formatToString(message));
     }
 
     @Api
     @ResultProxy(value = false, log = false)
     public void warn(Object message) {
-        LOGGER.warn(String.valueOf(message));
+        LOGGER.warn(JavaScriptUtils.formatToString(message));
     }
 
     @Api
     @ResultProxy(value = false, log = false)
     public void info(Object message) {
-        LOGGER.info(String.valueOf(message));
+        LOGGER.info(JavaScriptUtils.formatToString(message));
     }
 
     @Api
     @ResultProxy(value = false, log = false)
     public void error(Object message) {
-        LOGGER.error(String.valueOf(message));
+        LOGGER.error(JavaScriptUtils.formatToString(message));
     }
 
     @Api
     @ResultProxy(value = false, log = false)
     public void error(Object message, Object e) {
         if (e instanceof Throwable) {
-            LOGGER.error(String.valueOf(message), (Throwable) e);
+            LOGGER.error(JavaScriptUtils.formatToString(message), (Throwable) e);
         } else {
-            LOGGER.error(message + (e != null ? e.toString() : ""));
+            LOGGER.error(JavaScriptUtils.formatToString(message) + (e != null ? e.toString() : ""));
         }
     }
 
