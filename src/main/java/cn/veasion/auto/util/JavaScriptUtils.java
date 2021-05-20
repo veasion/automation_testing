@@ -160,10 +160,12 @@ public class JavaScriptUtils {
             return new File(System.getProperty("user.dir") + path).getCanonicalPath() + (path.endsWith("/") ? File.separator : "");
         } else {
             URL resource = JavaScriptUtils.class.getResource(path);
-            if (resource == null) {
-                return null;
+            if (resource != null) {
+                return new File(resource.getPath()).getCanonicalPath() + (path.endsWith("/") ? File.separator : "");
+            } else {
+                File file = new File(System.getProperty("user.dir") + "\\src\\main\\resources" + path);
+                return file.exists() ? file.getCanonicalPath() : null;
             }
-            return new File(resource.getPath()).getCanonicalPath() + (path.endsWith("/") ? File.separator : "");
         }
     }
 

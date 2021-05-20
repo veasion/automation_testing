@@ -260,7 +260,7 @@ public class EvalAnalysisUtils {
     private static Object reflect(Object object, String key) throws InvocationTargetException, IllegalAccessException {
         // method
         Method getMethod = null;
-        Method[] methods = object.getClass().getDeclaredMethods();
+        Method[] methods = object.getClass().getMethods();
         for (Method method : methods) {
             String methodName = method.getName();
             if (!Modifier.isPublic(method.getModifiers())) {
