@@ -262,7 +262,7 @@ public class JdbcDao {
             }
         }
         // method
-        Method[] methods = object.getClass().getDeclaredMethods();
+        Method[] methods = object.getClass().getMethods();
         for (Method method : methods) {
             String methodName = method.getName();
             if (methodName.equalsIgnoreCase("set" + fieldName) &&
