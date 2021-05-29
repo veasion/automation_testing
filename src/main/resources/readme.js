@@ -151,6 +151,38 @@ runNewScript(env.getString('filePath'));
 let newEnvResult = runScriptWithNewDriver({name: 'luozhuowei'}, env.getPath('/script/baidu.js'), false);
 println(newEnvResult.getString('name'));
 
+// 多线程运行函数
+let syncMap = thread.synchronizedMap();
+let syncList = thread.synchronizedList();
+thread.runAndWaitThreads([
+    function () {
+        sleep(1000);
+        println('函数1');
+        syncList.add(1);
+        syncMap.put(1, '函数1');
+    },
+    function () {
+        sleep(1000);
+        println('函数2');
+        syncList.add(2);
+        syncMap.put(2, '函数2');
+    },
+    function () {
+        sleep(1000);
+        println('函数3');
+        syncList.add(3);
+        syncMap.put(3, '函数3');
+    }
+]);
+let keySet = syncMap.keySet().toArray();
+for (let i in keySet) {
+    let key = keySet[i];
+    println('key: ' + key + ', value: ' + syncMap.get(key));
+}
+for (let i in syncList) {
+    println(syncList[i]);
+}
+
 // 在新的浏览器驱动中后台隐私运行脚本
 runScriptWithNewDriver({
     "DRIVER_OPTIONS": {
