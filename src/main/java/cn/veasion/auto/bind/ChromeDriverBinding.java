@@ -194,7 +194,7 @@ public class ChromeDriverBinding extends WebDriverBinding {
         }
         return request -> {
             Object object = fun.call(null, request);
-            if (object != null) {
+            if (!JavaScriptUtils.isNull(object)) {
                 Map<String, Object> result = (Map<String, Object>) JavaScriptUtils.toJavaObject(object);
                 Map<String, Object> headers = (Map<String, Object>) result.get("headers");
                 Object status = result.get("status");

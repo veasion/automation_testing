@@ -8,6 +8,7 @@ import cn.veasion.auto.util.ArgsCommandOption;
 import cn.veasion.auto.util.JavaScriptUtils;
 import org.opencv.core.Core;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.io.File;
 import java.util.Objects;
@@ -59,6 +60,8 @@ public class Development {
         JavaScriptUtils.println("7> 退出: exit");
         JavaScriptUtils.println("8> 在线文档: https://veasion.github.io/automationjs-docs");
         JavaScriptUtils.println();
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
     }
 
 }

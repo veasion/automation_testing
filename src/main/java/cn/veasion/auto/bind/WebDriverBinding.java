@@ -13,6 +13,7 @@ import cn.veasion.auto.util.ConfigVars;
 import cn.veasion.auto.util.Constants;
 import cn.veasion.auto.util.JavaScriptContextUtils;
 import cn.veasion.auto.util.JavaScriptUtils;
+import cn.veasion.auto.util.Pair;
 import cn.veasion.auto.util.ScriptHttpUtils;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.openqa.selenium.JavascriptExecutor;
@@ -307,25 +308,27 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
                           @Api.Param(desc = "请求方式 POST/GET 默认GET", allowNone = true) String method,
                           @Api.Param(desc = "请求body内容", allowNone = true) Object content,
                           @Api.Param(desc = "请求头", allowNone = true) Object headers) throws IOException {
-        String url1;
-        String url2;
-        if (url.trim().toLowerCase().startsWith("http")) {
-            // url
-            int idx = url.indexOf("/", url.indexOf("://") + 3);
-            if (idx > 0) {
-                url1 = url.substring(0, idx);
-                url2 = url.substring(idx);
-            } else {
-                url1 = url;
-                url2 = "";
-            }
-        } else {
-            // uri
-            url2 = url;
-            url1 = (String) executeScript("return location.protocol + '//' + location.hostname");
-        }
+        Pair<String, String> urlPair = ScriptHttpUtils.getUrlPair(url, this::executeScript);
         Integer timeout = (Integer) binding.getEnv().readConfigVar(ConfigVars.TIMEOUT_WAIT);
-        return ScriptHttpUtils.request(url1, url2, JavaScriptUtils.isEmpty(method) ? "GET" : method, content, headers, timeout);
+        return ScriptHttpUtils.requestByXHR(urlPair.getLeft(), urlPair.getRight(), JavaScriptUtils.isEmpty(method) ? "GET" : method, content, headers, timeout);
+    }
+
+    @Api("下载")
+    @ResultProxy(value = false)
+    public Object download(@Api.Param(desc = "请求url/uri", allowNull = true) String url,
+                           @Api.Param(desc = "文件路径", allowNone = true) String filePath) throws IOException {
+        if (JavaScriptUtils.isEmpty(filePath) || filePath.endsWith("\\") || filePath.endsWith("/")) {
+            int idx = url.indexOf("?");
+            int lastIdx = url.lastIndexOf("/");
+            String fileName = idx > 0 ? url.substring(lastIdx + 1, idx) : url.substring(lastIdx + 1);
+            if (lastIdx <= 6 || "".equals(fileName.trim())) {
+                fileName = System.currentTimeMillis() + ".html";
+            }
+            filePath = (JavaScriptUtils.isEmpty(filePath) ? (binding.getEnv().get(Constants.DESKTOP_DIR) + File.separator) : filePath) + fileName;
+        }
+        Pair<String, String> urlPair = ScriptHttpUtils.getUrlPair(url, this::executeScript);
+        ScriptHttpUtils.download(urlPair.getLeft(), urlPair.getRight(), filePath);
+        return filePath;
     }
 
     @Override

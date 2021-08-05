@@ -292,6 +292,7 @@ img1.show(point.getX(), point.getY());
 img1.show(point.getX(), point.getY(), img2.getWidth(), img2.getHeight());
 
 // 拦截请求并修改，需要激活 dev tools
+// 仅在当前tab页生效，新开tab窗口需要再次执行才会生效
 toChromeDriver().activateDevTools();
 // 请求拦截处理
 toChromeDriver().addRequestHandler(function(request) {
