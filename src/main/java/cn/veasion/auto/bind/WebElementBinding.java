@@ -83,7 +83,13 @@ public class WebElementBinding extends SearchContextBinding<WebElement> {
     @Api("获取文本内容")
     @ResultProxy(log = false)
     public String text() {
-        return text(binding.getBean());
+        return text(binding.getBean(), false);
+    }
+
+    @Api("获取可见文本内容")
+    @ResultProxy(log = false)
+    public String displayedText() {
+        return text(binding.getBean(), true);
     }
 
     @Api("innerHTML")

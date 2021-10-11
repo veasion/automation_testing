@@ -151,7 +151,17 @@ public abstract class SearchContextBinding<T extends SearchContext> implements J
         if (element == null) {
             return null;
         }
-        return text(element);
+        return text(element, false);
+    }
+
+    @Api("获取目标元素可见文本内容")
+    @ResultProxy(interval = true)
+    public String displayedText(String target) {
+        WebElement element = findElement(ElementBy.by(target));
+        if (element == null) {
+            return null;
+        }
+        return text(element, true);
     }
 
     @ResultProxy(interval = true)
@@ -304,16 +314,52 @@ public abstract class SearchContextBinding<T extends SearchContext> implements J
         return element;
     }
 
-    protected String text(WebElement element) {
+    protected String text(WebElement element, boolean displayedText) {
         String text = element.getText();
         if (text == null || "".equals(text.trim())) {
-            try {
-                text = executeScriptByParams("return (arguments[0].textContent || arguments[0].innerText);", element).toString();
-            } catch (Exception e) {
-                text = null;
+            if (displayedText) {
+                try {
+                    text = executeScriptByParams("return (arguments[0].innerText || arguments[0].textContent);", element).toString();
+                    List<String> list = findHiddenText(element);
+                    if (list.size() > 0) {
+                        for (String s : list) {
+                            int sIdx = text.indexOf(s);
+                            if (sIdx == -1) {
+                                continue;
+                            }
+                            text = text.substring(0, sIdx) + text.substring(sIdx + s.length());
+                        }
+                    }
+                } catch (Exception e) {
+                    return text(element, false);
+                }
+            } else {
+                try {
+                    text = executeScriptByParams("return (arguments[0].innerText || arguments[0].textContent);", element).toString();
+                } catch (Exception e) {
+                    text = null;
+                }
             }
         }
         return text != null ? text.trim() : null;
+    }
+
+    private List<String> findHiddenText(WebElement element) {
+        List<String> list = new ArrayList<>();
+        List<WebElement> elements = element.findElements(By.cssSelector("*[style*='display: none']"));
+        if (elements == null || elements.isEmpty()) {
+            elements = element.findElements(By.cssSelector("*[style*='display:none']"));
+        }
+        if (elements == null || elements.isEmpty()) {
+            return list;
+        }
+        for (WebElement webElement : elements) {
+            String text = executeScriptByParams("return (arguments[0].innerText || arguments[0].textContent);", webElement).toString().trim();
+            if (!"".equals(text)) {
+                list.add(text);
+            }
+        }
+        return list;
     }
 
     protected Object executeScriptByParams(String jsCode, Object... params) {

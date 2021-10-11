@@ -71,6 +71,11 @@
             <artifactId>jul-to-slf4j</artifactId>
             <version>1.7.25</version>
         </dependency>
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.1</version>
+        </dependency>
         <!-- opencv -->
         <dependency>
             <groupId>org.opencv</groupId>
