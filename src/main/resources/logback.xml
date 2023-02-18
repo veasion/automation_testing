@@ -6,6 +6,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{MM-dd HH:mm:ss.SSS} - %msg%n</pattern>
+            <!--<pattern>%d{MM-dd HH:mm:ss} [%thread] %-5level %logger{36}:%line - %msg%n</pattern>-->
             <!-- Windows CMD 执行需要设置编码为 GBK -->
             <!--<charset>GBK</charset>-->
         </encoder>
@@ -24,11 +25,11 @@
         </triggeringPolicy>
     </appender>
 
-    <root level="INFO">
+    <root level="ERROR">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE"/>
     </root>
 
-    <!--<logger name="cn.veasion" level="DEBUG" />-->
+    <logger name="cn.veasion" level="INFO" />
 
 </configuration>

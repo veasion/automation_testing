@@ -2,581 +2,247 @@ function load(url) {}
 function loadWithNewGlobal(url) {}
 
 /**
- * 环境变量
+ * 数据库连接
  */
-function EnvironmentBinding() {
+function JdbcConnectionBinding() {
     /**
-     * 移除当前变量<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#remove</code>
-     * @param {string} key
+     * 执行增删改<br>
+     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#update</code>
+     * @param {string} sql
+     * @param {array} params
+     * @return {number}
+     */
+    this.update = function(sql, params) { }
+    /**
+     * 关闭连接<br>
+     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#close</code>
      * @return void
      */
-    this.remove = function(key) { }
+    this.close = function() { }
     /**
-     * 获取变量<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#get</code>
-     * @param {string} key
+     * 执行新增，返回自增长id<br>
+     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#insert</code>
+     * @param {string} sql
+     * @param {array} params
+     * @return {number}
+     */
+    this.insert = function(sql, params) { }
+    /**
+     * 列表查询<br>
+     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#query</code>
+     * @param {string} sql
+     * @param {array} params
+     * @return {array}
+     */
+    this.query = function(sql, params) { }
+    /**
+     * 执行DDL<br>
+     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#executeDDL</code>
+     * @param {string} sql
+     * @return {number}
+     */
+    this.executeDDL = function(sql) { }
+    /**
+     * 获取单个值<br>
+     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#queryOnly</code>
+     * @param {string} sql
+     * @param {array} params
      * @return {object}
      */
-    this.get = function(key) { }
-    /**
-     * 存储变量（当前脚本）<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#put</code>
-     * @param {string} key
-     * @param {object} value
-     * @return void
-     */
-    this.put = function(key, value) { }
-    /**
-     * 获取变量<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#getOrDefault</code>
-     * @param {string} key
-     * @param {object} defaultVal
-     * @return {object}
-     */
-    this.getOrDefault = function(key, defaultVal) { }
-    /**
-     * 获取class决定路径<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#getPath</code>
-     * @param {string} path
-     * @return {string}
-     */
-    this.getPath = function(path) { }
-    /**
-     * 获取变量<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#getString</code>
-     * @param {string} key
-     * @return {string}
-     */
-    this.getString = function(key) { }
-    /**
-     * 获取源文件绝对路径<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#getSourcePath</code>
-     * @param {string} path
-     * @return {string}
-     */
-    this.getSourcePath = function(path) { }
-    /**
-     * 获取系统变量（当前系统）<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#getSystemVar</code>
-     * @param {string} key
-     * @return {object}
-     */
-    this.getSystemVar = function(key) { }
-    /**
-     * 存储系统变量（当前系统）<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#putSystemVar</code>
-     * @param {string} key
-     * @param {object} value
-     * @return void
-     */
-    this.putSystemVar = function(key, value) { }
-    /**
-     * 存储全局变量（当前驱动）<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#putGlobal</code>
-     * @param {string} key
-     * @param {object} value
-     * @return void
-     */
-    this.putGlobal = function(key, value) { }
-    /**
-     * translate<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#translate</code>
-     * @param {string} str
-     * @return {object}
-     */
-    this.translate = function(str) { }
-    /**
-     * translate<br>
-     * <code>cn.veasion.auto.bind.EnvironmentBinding#translate</code>
-     * @param {string} str
-     * @param {object} object
-     * @return {object}
-     */
-    this.translate = function(str, object) { }
+    this.queryOnly = function(sql, params) { }
 }
 
-const env = new EnvironmentBinding();
-
 /**
- * 图片
+ * 元素
  */
-function ImageBean() {
+function WebElementBinding() {
     /**
-     * 加载图片<br>
-     * <code>cn.veasion.auto.bind.ImageBean#load</code>
-     * @param {string} path
-     * @return {ImageWrapper}
+     * 父元素<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#parent</code>
+     * @return {WebElementBinding}
      */
-    this.load = function(path) { }
+    this.parent = function() { }
     /**
-     * 加载网络图片<br>
-     * <code>cn.veasion.auto.bind.ImageBean#loadByUrl</code>
-     * @param {string} url
-     * @return {ImageWrapper}
+     * 发送文字/模拟按键<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#type</code>
+     * @param {object} key
+     * @return {WebElementBinding}
      */
-    this.loadByUrl = function(url) { }
+    this.type = function(key) { }
     /**
-     * 浏览器截图<br>
-     * <code>cn.veasion.auto.bind.ImageBean#loadByScreenshot</code>
-     * @return {ImageWrapper}
-     */
-    this.loadByScreenshot = function() { }
-    /**
-     * 元素渲染成图片<br>
-     * <code>cn.veasion.auto.bind.ImageBean#loadByElement</code>
-     * @param {WebElementBinding} element
-     * @return {ImageWrapper}
-     */
-    this.loadByElement = function(element) { }
-    /**
-     * 根据元素OCR识别验证码<br>
-     * <code>cn.veasion.auto.bind.ImageBean#captchaByElement</code>
-     * @param {WebElementBinding} element
-     * @return {OcrResult}
-     */
-    this.captchaByElement = function(element) { }
-    /**
-     * 根据图片链接OCR识别验证码<br>
-     * <code>cn.veasion.auto.bind.ImageBean#captchaByUrl</code>
-     * @param {string} imgUrl
-     * @return {OcrResult}
-     */
-    this.captchaByUrl = function(imgUrl) { }
-    /**
-     * 根据图片链接OCR识别<br>
-     * <code>cn.veasion.auto.bind.ImageBean#ocrByUrl</code>
-     * @param {string} imgUrl
-     * @return {OcrResult}
-     */
-    this.ocrByUrl = function(imgUrl) { }
-    /**
-     * 根据元素OCR识别<br>
-     * <code>cn.veasion.auto.bind.ImageBean#ocrByElement</code>
-     * @param {WebElementBinding} element
-     * @return {OcrResult}
-     */
-    this.ocrByElement = function(element) { }
-    /**
-     * 根据图片OCR识别验证码<br>
-     * <code>cn.veasion.auto.bind.ImageBean#captchaByImage</code>
-     * @param {ImageWrapper} imageWrapper
-     * @return {OcrResult}
-     */
-    this.captchaByImage = function(imageWrapper) { }
-    /**
-     * 根据图片OCR识别<br>
-     * <code>cn.veasion.auto.bind.ImageBean#ocrByImage</code>
-     * @param {ImageWrapper} imageWrapper
-     * @return {OcrResult}
-     */
-    this.ocrByImage = function(imageWrapper) { }
-}
-
-const image = new ImageBean();
-
-/**
- * 打开页面并等待页面加载<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#open</code>
- * @param {string} url
- * @return void
- */
-function open(url) { }
-/**
- * HTTP 请求<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#request</code>
- * @param {string|null} url 请求url/uri
- * @param {string?} method 请求方式 POST/GET 默认GET
- * @param {object?} content 请求body内容
- * @param {object?} headers 请求头
- * @return {object}
- */
-function request(url, method, content, headers) { }
-/**
- * 获取当前窗口句柄<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#getWindowHandle</code>
- * @return {string}
- */
-function getWindowHandle() { }
-/**
- * iframe<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#iframe</code>
- * @param {string} target
- * @param {Function} fun 函数
- * @return void
- */
-function iframe(target, fun) { }
-/**
- * 向浏览器驱动执行 js 代码<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#executeScript</code>
- * @param {string} jsCode
- * @return {object}
- */
-function executeScript(jsCode) { }
-/**
- * 点击坐标<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#clickPoint</code>
- * @param {number} x
- * @param {number} y
- * @return void
- */
-function clickPoint(x, y) { }
-/**
- * 鼠标动作<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#newTouchActions</code>
- * @return {ActionsBinding}
- */
-function newTouchActions() { }
-/**
- * 截图<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#screenshot</code>
- * @param {string|null} path
- * @return {boolean}
- */
-function screenshot(path) { }
-/**
- * <br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#toChromeDriver</code>
- * @return {ChromeDriverBinding}
- */
-function toChromeDriver() { }
-/**
- * 打开并切换到新的窗口<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#openNewWindow</code>
- * @return void
- */
-function openNewWindow() { }
-/**
- * 在新的窗口中执行函数<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#withNewWindow</code>
- * @param {Function} fun 函数
- * @return void
- */
-function withNewWindow(fun) { }
-/**
- * 运行新的脚本<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#runNewScript</code>
- * @param {string} path
- * @return void
- */
-function runNewScript(path) { }
-/**
- * 等待页面加载<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#waitForPageLoaded</code>
- * @param {number?} seconds
- * @return void
- */
-function waitForPageLoaded(seconds) { }
-/**
- * 向浏览器驱动执行 js 代码<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#executeScriptByParams</code>
- * @param {string} jsCode
- * @param {array?} args
- * @return {object}
- */
-function executeScriptByParams(jsCode, args) { }
-/**
- * 切换窗口<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#switchToNextWindow</code>
- * @param {string?} windowHandle 指定窗口句柄，为 null 则切换为下一个窗口
- * @return void
- */
-function switchToNextWindow(windowHandle) { }
-/**
- * 在新的浏览器驱动中执行脚本<br>
- * <code>cn.veasion.auto.bind.WebDriverBinding#runScriptWithNewDriver</code>
- * @param {object} env
- * @param {string} path
- * @param {boolean} async 是否异步，true 异步时返回 null可以通过 env.putSystemVar 来传递数据
- * @return {EnvironmentBinding}
- */
-function runScriptWithNewDriver(env, path, async) { }
-/**
- * 向目标元素发送文字/模拟按键<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#type</code>
- * @param {string} target
- * @param {object} key
- * @return {WebDriverBinding}
- */
-function type(target, key) { }
-/**
- * 查找多个元素<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#find</code>
- * @param {string} target
- * @return {WebElementBinding[]}
- */
-function find(target) { }
-/**
- * 获取目标元素属性值<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#attr</code>
- * @param {string} target
- * @param {string} attr
- * @return {WebDriverBinding}
- */
-function attr(target, attr) { }
-/**
- * 选择下拉框<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#select</code>
- * @param {string} target
- * @param {string} label
- * @param {object} value
- * @return {WebDriverBinding}
- */
-function select(target, label, value) { }
-/**
- * 获取目标元素文本内容<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#text</code>
- * @param {string} target
- * @return {string}
- */
-function text(target) { }
-/**
- * 查找多个元素<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#findList</code>
- * @param {string[]} targets
- * @return {WebElementBinding[]}
- */
-function findList(targets) { }
-/**
- * 查找元素包含某文字的节点<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#findTextAll</code>
- * @param {string} tagName
- * @param {string} text
- * @param {boolean} fuzzyMatches 是否模糊匹配
- * @return {WebElementBinding[]}
- */
-function findTextAll(tagName, text, fuzzyMatches) { }
-/**
- * 鼠标移动到目标元素<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#mouseOver</code>
- * @param {string} target
- * @return {WebDriverBinding}
- */
-function mouseOver(target) { }
-/**
- * 查找多个可见元素<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#findDisplayed</code>
- * @param {string} target
- * @return {WebElementBinding[]}
- */
-function findDisplayed(target) { }
-/**
- * 查找一个元素<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#findOne</code>
- * @param {string} target
- * @return {WebElementBinding}
- */
-function findOne(target) { }
-/**
- * 查找一个元素并点击<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#click</code>
- * @param {string} target
- * @return {WebDriverBinding}
- */
-function click(target) { }
-/**
- * 向目标元素发送文字/模拟按键<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#sendKeys</code>
- * @param {string} target
- * @param {object} key
- * @return {WebDriverBinding}
- */
-function sendKeys(target, key) { }
-/**
- * 滚动到目标元素<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#scrollToCenter</code>
- * @param {string|null} target
- * @return {WebDriverBinding}
- */
-function scrollToCenter(target) { }
-/**
- * 通过value选择下拉框<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#selectByValue</code>
- * @param {string} target
- * @param {object} value
- * @return {WebDriverBinding}
- */
-function selectByValue(target, value) { }
-/**
- * 查找元素包含某文字的节点<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#findText</code>
- * @param {string} tagName
- * @param {string} text
- * @param {boolean} fuzzyMatches 是否模糊匹配
- * @return {WebElementBinding}
- */
-function findText(tagName, text, fuzzyMatches) { }
-/**
- * 查找一个元素并点击<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#tryClick</code>
- * @param {string} target
- * @return {WebDriverBinding}
- */
-function tryClick(target) { }
-/**
- * 通过label选择下拉框<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#selectByLabel</code>
- * @param {string} target
- * @param {object} value
- * @return {WebDriverBinding}
- */
-function selectByLabel(target, value) { }
-/**
- * 等待元素显示（可见）<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementDisplayed</code>
- * @param {string} target
- * @param {number?} seconds
- * @return {WebDriverBinding}
- */
-function waitForElementDisplayed(target, seconds) { }
-/**
- * 等待元素出现<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementPresent</code>
- * @param {string} target
- * @param {number?} seconds
- * @return {WebDriverBinding}
- */
-function waitForElementPresent(target, seconds) { }
-/**
- * 等待元素隐藏（不可见）<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotDisplayed</code>
- * @param {string} target
- * @param {number?} seconds
- * @return {WebDriverBinding}
- */
-function waitForElementNotDisplayed(target, seconds) { }
-/**
- * 等待元素消失<br>
- * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotPresent</code>
- * @param {string} target
- * @param {number?} seconds
- * @return {WebDriverBinding}
- */
-function waitForElementNotPresent(target, seconds) { }
-
-function WebDriverBinding() {
-    /**
-     * 打开页面并等待页面加载<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#open</code>
-     * @param {string} url
-     * @return void
-     */
-    this.open = function(url) { }
-    /**
-     * HTTP 请求<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#request</code>
-     * @param {string|null} url 请求url/uri
-     * @param {string?} method 请求方式 POST/GET 默认GET
-     * @param {object?} content 请求body内容
-     * @param {object?} headers 请求头
-     * @return {object}
-     */
-    this.request = function(url, method, content, headers) { }
-    /**
-     * 获取当前窗口句柄<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#getWindowHandle</code>
+     * 获取值<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#value</code>
      * @return {string}
      */
-    this.getWindowHandle = function() { }
+    this.value = function() { }
     /**
-     * iframe<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#iframe</code>
-     * @param {string} target
-     * @param {Function} fun 函数
-     * @return void
+     * 清空值<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#clear</code>
+     * @return {WebElementBinding}
      */
-    this.iframe = function(target, fun) { }
+    this.clear = function() { }
     /**
-     * 向浏览器驱动执行 js 代码<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#executeScript</code>
-     * @param {string} jsCode
+     * 设值<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#setValue</code>
+     * @param {string} text
+     * @return {WebElementBinding}
+     */
+    this.setValue = function(text) { }
+    /**
+     * 获取属性值<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#attr</code>
+     * @param {string} attr
      * @return {object}
      */
-    this.executeScript = function(jsCode) { }
+    this.attr = function(attr) { }
     /**
-     * 点击坐标<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#clickPoint</code>
-     * @param {number} x
-     * @param {number} y
-     * @return void
+     * 选择下拉框<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#select</code>
+     * @param {string} label
+     * @param {object} value
+     * @return {WebElementBinding}
      */
-    this.clickPoint = function(x, y) { }
-    /**
-     * 鼠标动作<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#newTouchActions</code>
-     * @return {ActionsBinding}
-     */
-    this.newTouchActions = function() { }
-    /**
-     * 截图<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#screenshot</code>
-     * @param {string|null} path
-     * @return {boolean}
-     */
-    this.screenshot = function(path) { }
+    this.select = function(label, value) { }
     /**
      * <br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#toChromeDriver</code>
-     * @return {ChromeDriverBinding}
-     */
-    this.toChromeDriver = function() { }
-    /**
-     * 打开并切换到新的窗口<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#openNewWindow</code>
+     * <code>cn.veasion.auto.bind.WebElementBinding#show</code>
      * @return void
      */
-    this.openNewWindow = function() { }
+    this.show = function() { }
     /**
-     * 在新的窗口中执行函数<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#withNewWindow</code>
-     * @param {Function} fun 函数
+     * 获取文本内容<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#text</code>
+     * @return {string}
+     */
+    this.text = function() { }
+    /**
+     * tagName<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#tagName</code>
+     * @return {string}
+     */
+    this.tagName = function() { }
+    /**
+     * outerHTML<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#outerHtml</code>
+     * @return {string}
+     */
+    this.outerHtml = function() { }
+    /**
+     * 保存成图片<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#saveAsImage</code>
+     * @param {string|null} path
      * @return void
      */
-    this.withNewWindow = function(fun) { }
+    this.saveAsImage = function(path) { }
     /**
-     * 运行新的脚本<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#runNewScript</code>
-     * @param {string} path
-     * @return void
+     * 右边兄弟节点集合<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#rightSibling</code>
+     * @return {WebElementBinding[]}
      */
-    this.runNewScript = function(path) { }
+    this.rightSibling = function() { }
     /**
-     * 等待页面加载<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#waitForPageLoaded</code>
-     * @param {number?} seconds
-     * @return void
+     * 子元素集合<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#childList</code>
+     * @return {WebElementBinding[]}
      */
-    this.waitForPageLoaded = function(seconds) { }
+    this.childList = function() { }
     /**
-     * 向浏览器驱动执行 js 代码<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#executeScriptByParams</code>
-     * @param {string} jsCode
-     * @param {array?} args
+     * 左边兄弟节点集合<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#leftSibling</code>
+     * @return {WebElementBinding[]}
+     */
+    this.leftSibling = function() { }
+    /**
+     * innerHTML<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#innerHtml</code>
+     * @return {string}
+     */
+    this.innerHtml = function() { }
+    /**
+     * 获取css值<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#cssValue</code>
+     * @param {string} propertyName
+     * @return {string}
+     */
+    this.cssValue = function(propertyName) { }
+    /**
+     * 获取位置区域 x/y/width/height<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#getRect</code>
      * @return {object}
      */
-    this.executeScriptByParams = function(jsCode, args) { }
+    this.getRect = function() { }
     /**
-     * 切换窗口<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#switchToNextWindow</code>
-     * @param {string?} windowHandle 指定窗口句柄，为 null 则切换为下一个窗口
-     * @return void
+     * 父元素<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#parentByTag</code>
+     * @param {string} tagName
+     * @return {WebElementBinding}
      */
-    this.switchToNextWindow = function(windowHandle) { }
+    this.parentByTag = function(tagName) { }
     /**
-     * 在新的浏览器驱动中执行脚本<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#runScriptWithNewDriver</code>
-     * @param {object} env
-     * @param {string} path
-     * @param {boolean} async 是否异步，true 异步时返回 null可以通过 env.putSystemVar 来传递数据
-     * @return {EnvironmentBinding}
+     * 通过label选择下拉框<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#selectByLabel</code>
+     * @param {object} value
+     * @return {WebElementBinding}
      */
-    this.runScriptWithNewDriver = function(env, path, async) { }
+    this.selectByLabel = function(value) { }
+    /**
+     * 查找元素包含某文字的节点<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#findText</code>
+     * @param {string} tagName
+     * @param {string} text
+     * @return {WebElementBinding}
+     */
+    this.findText = function(tagName, text) { }
+    /**
+     * 点击<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#click</code>
+     * @return {WebElementBinding}
+     */
+    this.click = function() { }
+    /**
+     * 获取可见文本内容<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#displayedText</code>
+     * @return {string}
+     */
+    this.displayedText = function() { }
+    /**
+     * 发送文字/模拟按键<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#sendKeys</code>
+     * @param {object} key
+     * @return {WebElementBinding}
+     */
+    this.sendKeys = function(key) { }
+    /**
+     * 通过value选择下拉框<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#selectByValue</code>
+     * @param {object} value
+     * @return {WebElementBinding}
+     */
+    this.selectByValue = function(value) { }
+    /**
+     * 是否可见<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#isDisplayed</code>
+     * @return {boolean}
+     */
+    this.isDisplayed = function() { }
+    /**
+     * 点击这个元素区域<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#tryClick</code>
+     * @return {WebElementBinding}
+     */
+    this.tryClick = function() { }
+    /**
+     * xpath<br>
+     * <code>cn.veasion.auto.bind.WebElementBinding#xpath</code>
+     * @return {string}
+     */
+    this.xpath = function() { }
     /**
      * 向目标元素发送文字/模拟按键<br>
      * <code>cn.veasion.auto.bind.SearchContextBinding#type</code>
      * @param {string} target
      * @param {object} key
-     * @return {WebDriverBinding}
+     * @return {WebElementBinding}
      */
     this.type = function(target, key) { }
     /**
@@ -591,7 +257,7 @@ function WebDriverBinding() {
      * <code>cn.veasion.auto.bind.SearchContextBinding#attr</code>
      * @param {string} target
      * @param {string} attr
-     * @return {WebDriverBinding}
+     * @return {WebElementBinding}
      */
     this.attr = function(target, attr) { }
     /**
@@ -600,7 +266,7 @@ function WebDriverBinding() {
      * @param {string} target
      * @param {string} label
      * @param {object} value
-     * @return {WebDriverBinding}
+     * @return {WebElementBinding}
      */
     this.select = function(target, label, value) { }
     /**
@@ -611,72 +277,36 @@ function WebDriverBinding() {
      */
     this.text = function(target) { }
     /**
+     * 等待元素显示（可见）<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementDisplayed</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {WebElementBinding}
+     */
+    this.waitForElementDisplayed = function(target, seconds) { }
+    /**
+     * 等待元素隐藏（不可见）<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotDisplayed</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {WebElementBinding}
+     */
+    this.waitForElementNotDisplayed = function(target, seconds) { }
+    /**
+     * 通过label选择下拉框<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByLabel</code>
+     * @param {string} target
+     * @param {object} value
+     * @return {WebElementBinding}
+     */
+    this.selectByLabel = function(target, value) { }
+    /**
      * 查找多个元素<br>
      * <code>cn.veasion.auto.bind.SearchContextBinding#findList</code>
      * @param {string[]} targets
      * @return {WebElementBinding[]}
      */
     this.findList = function(targets) { }
-    /**
-     * 查找元素包含某文字的节点<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findTextAll</code>
-     * @param {string} tagName
-     * @param {string} text
-     * @param {boolean} fuzzyMatches 是否模糊匹配
-     * @return {WebElementBinding[]}
-     */
-    this.findTextAll = function(tagName, text, fuzzyMatches) { }
-    /**
-     * 鼠标移动到目标元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#mouseOver</code>
-     * @param {string} target
-     * @return {WebDriverBinding}
-     */
-    this.mouseOver = function(target) { }
-    /**
-     * 查找多个可见元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findDisplayed</code>
-     * @param {string} target
-     * @return {WebElementBinding[]}
-     */
-    this.findDisplayed = function(target) { }
-    /**
-     * 查找一个元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findOne</code>
-     * @param {string} target
-     * @return {WebElementBinding}
-     */
-    this.findOne = function(target) { }
-    /**
-     * 查找一个元素并点击<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#click</code>
-     * @param {string} target
-     * @return {WebDriverBinding}
-     */
-    this.click = function(target) { }
-    /**
-     * 向目标元素发送文字/模拟按键<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#sendKeys</code>
-     * @param {string} target
-     * @param {object} key
-     * @return {WebDriverBinding}
-     */
-    this.sendKeys = function(target, key) { }
-    /**
-     * 滚动到目标元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#scrollToCenter</code>
-     * @param {string|null} target
-     * @return {WebDriverBinding}
-     */
-    this.scrollToCenter = function(target) { }
-    /**
-     * 通过value选择下拉框<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByValue</code>
-     * @param {string} target
-     * @param {object} value
-     * @return {WebDriverBinding}
-     */
-    this.selectByValue = function(target, value) { }
     /**
      * 查找元素包含某文字的节点<br>
      * <code>cn.veasion.auto.bind.SearchContextBinding#findText</code>
@@ -688,140 +318,286 @@ function WebDriverBinding() {
     this.findText = function(tagName, text, fuzzyMatches) { }
     /**
      * 查找一个元素并点击<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#click</code>
+     * @param {string} target
+     * @return {WebElementBinding}
+     */
+    this.click = function(target) { }
+    /**
+     * 获取目标元素可见文本内容<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#displayedText</code>
+     * @param {string} target
+     * @return {string}
+     */
+    this.displayedText = function(target) { }
+    /**
+     * 向目标元素发送文字/模拟按键<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#sendKeys</code>
+     * @param {string} target
+     * @param {object} key
+     * @return {WebElementBinding}
+     */
+    this.sendKeys = function(target, key) { }
+    /**
+     * 查找多个可见元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findDisplayed</code>
+     * @param {string} target
+     * @return {WebElementBinding[]}
+     */
+    this.findDisplayed = function(target) { }
+    /**
+     * 滚动到目标元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#scrollToCenter</code>
+     * @param {string|null} target
+     * @return {WebElementBinding}
+     */
+    this.scrollToCenter = function(target) { }
+    /**
+     * 通过value选择下拉框<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByValue</code>
+     * @param {string} target
+     * @param {object} value
+     * @return {WebElementBinding}
+     */
+    this.selectByValue = function(target, value) { }
+    /**
+     * 鼠标移动到目标元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#mouseOver</code>
+     * @param {string} target
+     * @return {WebElementBinding}
+     */
+    this.mouseOver = function(target) { }
+    /**
+     * 查找一个元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findOne</code>
+     * @param {string} target
+     * @return {WebElementBinding}
+     */
+    this.findOne = function(target) { }
+    /**
+     * 查找一个元素并点击<br>
      * <code>cn.veasion.auto.bind.SearchContextBinding#tryClick</code>
      * @param {string} target
-     * @return {WebDriverBinding}
+     * @return {WebElementBinding}
      */
     this.tryClick = function(target) { }
     /**
-     * 通过label选择下拉框<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByLabel</code>
-     * @param {string} target
-     * @param {object} value
-     * @return {WebDriverBinding}
+     * 查找元素包含某文字的节点<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findTextAll</code>
+     * @param {string} tagName
+     * @param {string} text
+     * @param {boolean} fuzzyMatches 是否模糊匹配
+     * @return {WebElementBinding[]}
      */
-    this.selectByLabel = function(target, value) { }
-    /**
-     * 等待元素显示（可见）<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementDisplayed</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {WebDriverBinding}
-     */
-    this.waitForElementDisplayed = function(target, seconds) { }
+    this.findTextAll = function(tagName, text, fuzzyMatches) { }
     /**
      * 等待元素出现<br>
      * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementPresent</code>
      * @param {string} target
      * @param {number?} seconds
-     * @return {WebDriverBinding}
+     * @return {WebElementBinding}
      */
     this.waitForElementPresent = function(target, seconds) { }
-    /**
-     * 等待元素隐藏（不可见）<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotDisplayed</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {WebDriverBinding}
-     */
-    this.waitForElementNotDisplayed = function(target, seconds) { }
     /**
      * 等待元素消失<br>
      * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotPresent</code>
      * @param {string} target
      * @param {number?} seconds
-     * @return {WebDriverBinding}
+     * @return {WebElementBinding}
      */
     this.waitForElementNotPresent = function(target, seconds) { }
 }
 
-const driver = new WebDriverBinding();
-
 /**
- * 识别结果
+ * 动作
  */
-function OcrResult() {
+function ActionsBinding() {
     /**
-     * getContent<br>
-     * <code>cn.veasion.auto.captcha.ocr.OcrResult#getContent</code>
-     * @return {string}
+     * 释放<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#release</code>
+     * @return {ActionsBinding}
      */
-    this.getContent = function() { }
+    this.release = function() { }
+    /**
+     * 释放<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#release</code>
+     * @param {WebElementBinding} target
+     * @return {ActionsBinding}
+     */
+    this.release = function(target) { }
     /**
      * <br>
-     * <code>cn.veasion.auto.captcha.ocr.OcrResult#getWordsList</code>
-     * @return {Words[]}
+     * <code>cn.veasion.auto.bind.ActionsBinding#keyDown</code>
+     * @param {string} key
+     * @return {ActionsBinding}
      */
-    this.getWordsList = function() { }
-}
-
-/**
- * 图片
- */
-function ImageWrapper() {
+    this.keyDown = function(key) { }
     /**
-     * 克隆<br>
-     * <code>cn.veasion.auto.util.ImageWrapper#clone</code>
-     * @return {object}
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#keyDown</code>
+     * @param {WebElementBinding} element
+     * @param {string} key
+     * @return {ActionsBinding}
      */
-    this.clone = function() { }
+    this.keyDown = function(element, key) { }
     /**
-     * 克隆<br>
-     * <code>cn.veasion.auto.util.ImageWrapper#clone</code>
-     * @return {ImageWrapper}
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#keyUp</code>
+     * @param {string} key
+     * @return {ActionsBinding}
      */
-    this.clone = function() { }
+    this.keyUp = function(key) { }
     /**
-     * 保存<br>
-     * <code>cn.veasion.auto.util.ImageWrapper#saveTo</code>
-     * @param {string} path
-     * @return void
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#keyUp</code>
+     * @param {WebElementBinding} element
+     * @param {string} key
+     * @return {ActionsBinding}
      */
-    this.saveTo = function(path) { }
+    this.keyUp = function(element, key) { }
     /**
-     * 获取RGB值<br>
-     * <code>cn.veasion.auto.util.ImageWrapper#getRGB</code>
-     * @param {number} x
-     * @param {number} y
-     * @return {number}
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#moveToElement</code>
+     * @param {WebElementBinding} element
+     * @param {number} xOffset
+     * @param {number} yOffset
+     * @return {ActionsBinding}
      */
-    this.getRGB = function(x, y) { }
+    this.moveToElement = function(element, xOffset, yOffset) { }
     /**
-     * 查看图片<br>
-     * <code>cn.veasion.auto.util.ImageWrapper#show</code>
-     * @return void
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#moveToElement</code>
+     * @param {WebElementBinding} element
+     * @return {ActionsBinding}
      */
-    this.show = function() { }
+    this.moveToElement = function(element) { }
     /**
-     * 查看图片<br>
-     * <code>cn.veasion.auto.util.ImageWrapper#show</code>
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return void
+     * 单击元素-左键<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#click</code>
+     * @param {WebElementBinding} element
+     * @return {ActionsBinding}
      */
-    this.show = function(x, y, width, height) { }
+    this.click = function(element) { }
     /**
-     * 查看图片<br>
-     * <code>cn.veasion.auto.util.ImageWrapper#show</code>
-     * @param {number} x
-     * @param {number} y
-     * @return void
+     * 单击-左键<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#click</code>
+     * @return {ActionsBinding}
      */
-    this.show = function(x, y) { }
+    this.click = function() { }
     /**
-     * 高度<br>
-     * <code>cn.veasion.auto.util.ImageWrapper#getHeight</code>
-     * @return {number}
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#sendKeys</code>
+     * @param {string} key
+     * @return {ActionsBinding}
      */
-    this.getHeight = function() { }
+    this.sendKeys = function(key) { }
     /**
-     * 宽度<br>
-     * <code>cn.veasion.auto.util.ImageWrapper#getWidth</code>
-     * @return {number}
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#sendKeys</code>
+     * @param {WebElementBinding} target
+     * @param {string} key
+     * @return {ActionsBinding}
      */
-    this.getWidth = function() { }
+    this.sendKeys = function(target, key) { }
+    /**
+     * 执行<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#perform</code>
+     * @return {ActionsBinding}
+     */
+    this.perform = function() { }
+    /**
+     * 单击并按住<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#clickAndHold</code>
+     * @param {WebElementBinding} element
+     * @return {ActionsBinding}
+     */
+    this.clickAndHold = function(element) { }
+    /**
+     * 单击并按住<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#clickAndHold</code>
+     * @return {ActionsBinding}
+     */
+    this.clickAndHold = function() { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#dragAndDrop</code>
+     * @param {WebElementBinding} source
+     * @param {WebElementBinding} target
+     * @return {ActionsBinding}
+     */
+    this.dragAndDrop = function(source, target) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#moveByOffset</code>
+     * @param {number} xOffset
+     * @param {number} yOffset
+     * @return {ActionsBinding}
+     */
+    this.moveByOffset = function(xOffset, yOffset) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#scrollByAmount</code>
+     * @param {number} deltaX
+     * @param {number} deltaY
+     * @return {ActionsBinding}
+     */
+    this.scrollByAmount = function(deltaX, deltaY) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#pause</code>
+     * @param {number} millis
+     * @return {ActionsBinding}
+     */
+    this.pause = function(millis) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#pause</code>
+     * @param {number} millis
+     * @return {ActionsBinding}
+     */
+    this.pause = function(millis) { }
+    /**
+     * 单击元素-右键<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#contextClick</code>
+     * @param {WebElementBinding} element
+     * @return {ActionsBinding}
+     */
+    this.contextClick = function(element) { }
+    /**
+     * 单击-右键<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#contextClick</code>
+     * @return {ActionsBinding}
+     */
+    this.contextClick = function() { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#dragAndDropBy</code>
+     * @param {WebElementBinding} element
+     * @param {number} xOffset
+     * @param {number} yOffset
+     * @return {ActionsBinding}
+     */
+    this.dragAndDropBy = function(element, xOffset, yOffset) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#scrollToElement</code>
+     * @param {WebElementBinding} element
+     * @return {ActionsBinding}
+     */
+    this.scrollToElement = function(element) { }
+    /**
+     * 双击<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#doubleClick</code>
+     * @param {WebElementBinding} element
+     * @return {ActionsBinding}
+     */
+    this.doubleClick = function(element) { }
+    /**
+     * 双击<br>
+     * <code>cn.veasion.auto.bind.ActionsBinding#doubleClick</code>
+     * @return {ActionsBinding}
+     */
+    this.doubleClick = function() { }
 }
 
 /**
@@ -877,22 +653,208 @@ function LogBean() {
 const log = new LogBean();
 
 /**
- * 单词
+ * 文件
  */
-function Words() {
+function FileBean() {
     /**
-     * getLocation<br>
-     * <code>cn.veasion.auto.captcha.ocr.OcrResult$Words#getLocation</code>
-     * @return {Location}
-     */
-    this.getLocation = function() { }
-    /**
-     * getWords<br>
-     * <code>cn.veasion.auto.captcha.ocr.OcrResult$Words#getWords</code>
+     * 读取文本<br>
+     * <code>cn.veasion.auto.bind.FileBean#readText</code>
+     * @param {string} pathOrUrl
      * @return {string}
      */
-    this.getWords = function() { }
+    this.readText = function(pathOrUrl) { }
+    /**
+     * 读取文本<br>
+     * <code>cn.veasion.auto.bind.FileBean#readText</code>
+     * @param {string} pathOrUrl
+     * @param {string?} charsetName
+     * @return {string}
+     */
+    this.readText = function(pathOrUrl, charsetName) { }
+    /**
+     * 写文本文件<br>
+     * <code>cn.veasion.auto.bind.FileBean#writeText</code>
+     * @param {string} path
+     * @param {string} context
+     * @param {boolean} append
+     * @return void
+     */
+    this.writeText = function(path, context, append) { }
+    /**
+     * 写文本文件<br>
+     * <code>cn.veasion.auto.bind.FileBean#writeText</code>
+     * @param {string} path
+     * @param {string} context
+     * @param {boolean} append
+     * @param {string?} charsetName
+     * @return void
+     */
+    this.writeText = function(path, context, append, charsetName) { }
 }
+
+const file = new FileBean();
+
+/**
+ * 点位置
+ */
+function PointWrapper() {
+    /**
+     * x<br>
+     * <code>cn.veasion.auto.util.PointWrapper#getX</code>
+     * @return {number}
+     */
+    this.getX = function() { }
+    /**
+     * y<br>
+     * <code>cn.veasion.auto.util.PointWrapper#getY</code>
+     * @return {number}
+     */
+    this.getY = function() { }
+}
+
+/**
+ * 识别结果
+ */
+function OcrResult() {
+    /**
+     * getContent<br>
+     * <code>cn.veasion.auto.captcha.ocr.OcrResult#getContent</code>
+     * @return {string}
+     */
+    this.getContent = function() { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.captcha.ocr.OcrResult#getWordsList</code>
+     * @return {Words[]}
+     */
+    this.getWordsList = function() { }
+}
+
+/**
+ * 桌面
+ */
+function WindowsBean() {
+    /**
+     * 鼠标移动<br>
+     * <code>cn.veasion.auto.bind.WindowsBean#mouseMove</code>
+     * @param {number} x
+     * @param {number} y
+     * @return {WindowsBean}
+     */
+    this.mouseMove = function(x, y) { }
+    /**
+     * 高度<br>
+     * <code>cn.veasion.auto.bind.WindowsBean#getHeight</code>
+     * @return {number}
+     */
+    this.getHeight = function() { }
+    /**
+     * 宽度<br>
+     * <code>cn.veasion.auto.bind.WindowsBean#getWidth</code>
+     * @return {number}
+     */
+    this.getWidth = function() { }
+    /**
+     * 点击<br>
+     * <code>cn.veasion.auto.bind.WindowsBean#click</code>
+     * @return {WindowsBean}
+     */
+    this.click = function() { }
+    /**
+     * 点击坐标<br>
+     * <code>cn.veasion.auto.bind.WindowsBean#clickPoint</code>
+     * @param {number} x
+     * @param {number} y
+     * @return {WindowsBean}
+     */
+    this.clickPoint = function(x, y) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#keyPress</code>
+     * @param {number} keycode
+     * @return {WindowsBean}
+     */
+    this.keyPress = function(keycode) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#mouseRelease</code>
+     * @param {number} buttons
+     * @return {WindowsBean}
+     */
+    this.mouseRelease = function(buttons) { }
+    /**
+     * 截图<br>
+     * <code>cn.veasion.auto.bind.WindowsBean#getScreenshot</code>
+     * @return {ImageWrapper}
+     */
+    this.getScreenshot = function() { }
+    /**
+     * 键入字符串<br>
+     * <code>cn.veasion.auto.bind.WindowsBean#sendKey</code>
+     * @param {string} text
+     * @return {WindowsBean}
+     */
+    this.sendKey = function(text) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#keyRelease</code>
+     * @param {number} keycode
+     * @return {WindowsBean}
+     */
+    this.keyRelease = function(keycode) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#mousePress</code>
+     * @param {number} buttons
+     * @return {WindowsBean}
+     */
+    this.mousePress = function(buttons) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#leftMouseRelease</code>
+     * @return {WindowsBean}
+     */
+    this.leftMouseRelease = function() { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#cmd</code>
+     * @param {string} command
+     * @return {string}
+     */
+    this.cmd = function(command) { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#rightMousePress</code>
+     * @return {WindowsBean}
+     */
+    this.rightMousePress = function() { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#getDesktopDir</code>
+     * @return {string}
+     */
+    this.getDesktopDir = function() { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#leftMousePress</code>
+     * @return {WindowsBean}
+     */
+    this.leftMousePress = function() { }
+    /**
+     * 获取鼠标位置<br>
+     * <code>cn.veasion.auto.bind.WindowsBean#getMouseLocation</code>
+     * @return {PointWrapper}
+     */
+    this.getMouseLocation = function() { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WindowsBean#rightMouseRelease</code>
+     * @return {WindowsBean}
+     */
+    this.rightMouseRelease = function() { }
+}
+
+const windows = new WindowsBean();
 
 /**
  * 控制台打印<br>
@@ -960,6 +922,13 @@ function randCode(length) { }
  * @return {string}
  */
 function formatDate(date, pattern) { }
+/**
+ * 拼音<br>
+ * <code>cn.veasion.auto.bind.CommonBean#pinyin</code>
+ * @param {string} chinese
+ * @return {string}
+ */
+function pinyin(chinese) { }
 /**
  * 数据库连接<br>
  * <code>cn.veasion.auto.bind.CommonBean#createJdbcConnection</code>
@@ -1049,6 +1018,13 @@ function CommonBean() {
      */
     this.formatDate = function(date, pattern) { }
     /**
+     * 拼音<br>
+     * <code>cn.veasion.auto.bind.CommonBean#pinyin</code>
+     * @param {string} chinese
+     * @return {string}
+     */
+    this.pinyin = function(chinese) { }
+    /**
      * 数据库连接<br>
      * <code>cn.veasion.auto.bind.CommonBean#createJdbcConnection</code>
      * @param {string} jdbcUrl
@@ -1073,752 +1049,72 @@ function CommonBean() {
 const common = new CommonBean();
 
 /**
- * 元素
+ * 图片
  */
-function WebElementBinding() {
+function ImageWrapper() {
     /**
-     * 父元素<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#parent</code>
-     * @return {WebElementBinding}
-     */
-    this.parent = function() { }
-    /**
-     * 发送文字/模拟按键<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#type</code>
-     * @param {object} key
-     * @return {WebElementBinding}
-     */
-    this.type = function(key) { }
-    /**
-     * 获取值<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#value</code>
-     * @return {string}
-     */
-    this.value = function() { }
-    /**
-     * 清空值<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#clear</code>
-     * @return {WebElementBinding}
-     */
-    this.clear = function() { }
-    /**
-     * 设值<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#setValue</code>
-     * @param {string} text
-     * @return {WebElementBinding}
-     */
-    this.setValue = function(text) { }
-    /**
-     * 获取属性值<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#attr</code>
-     * @param {string} attr
+     * 克隆<br>
+     * <code>cn.veasion.auto.util.ImageWrapper#clone</code>
      * @return {object}
      */
-    this.attr = function(attr) { }
+    this.clone = function() { }
     /**
-     * 选择下拉框<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#select</code>
-     * @param {string} label
-     * @param {object} value
-     * @return {WebElementBinding}
+     * 克隆<br>
+     * <code>cn.veasion.auto.util.ImageWrapper#clone</code>
+     * @return {ImageWrapper}
      */
-    this.select = function(label, value) { }
+    this.clone = function() { }
     /**
-     * 获取文本内容<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#text</code>
-     * @return {string}
-     */
-    this.text = function() { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#show</code>
-     * @return void
-     */
-    this.show = function() { }
-    /**
-     * tagName<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#tagName</code>
-     * @return {string}
-     */
-    this.tagName = function() { }
-    /**
-     * xpath<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#xpath</code>
-     * @return {string}
-     */
-    this.xpath = function() { }
-    /**
-     * 点击<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#click</code>
-     * @return {WebElementBinding}
-     */
-    this.click = function() { }
-    /**
-     * 发送文字/模拟按键<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#sendKeys</code>
-     * @param {object} key
-     * @return {WebElementBinding}
-     */
-    this.sendKeys = function(key) { }
-    /**
-     * 通过value选择下拉框<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#selectByValue</code>
-     * @param {object} value
-     * @return {WebElementBinding}
-     */
-    this.selectByValue = function(value) { }
-    /**
-     * 查找元素包含某文字的节点<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#findText</code>
-     * @param {string} tagName
-     * @param {string} text
-     * @return {WebElementBinding}
-     */
-    this.findText = function(tagName, text) { }
-    /**
-     * 点击这个元素区域<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#tryClick</code>
-     * @return {WebElementBinding}
-     */
-    this.tryClick = function() { }
-    /**
-     * 通过label选择下拉框<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#selectByLabel</code>
-     * @param {object} value
-     * @return {WebElementBinding}
-     */
-    this.selectByLabel = function(value) { }
-    /**
-     * 是否可见<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#isDisplayed</code>
-     * @return {boolean}
-     */
-    this.isDisplayed = function() { }
-    /**
-     * 左边兄弟节点集合<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#leftSibling</code>
-     * @return {WebElementBinding[]}
-     */
-    this.leftSibling = function() { }
-    /**
-     * 获取css值<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#cssValue</code>
-     * @param {string} propertyName
-     * @return {string}
-     */
-    this.cssValue = function(propertyName) { }
-    /**
-     * 获取位置区域 x/y/width/height<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#getRect</code>
-     * @return {object}
-     */
-    this.getRect = function() { }
-    /**
-     * 父元素<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#parentByTag</code>
-     * @param {string} tagName
-     * @return {WebElementBinding}
-     */
-    this.parentByTag = function(tagName) { }
-    /**
-     * 子元素集合<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#childList</code>
-     * @return {WebElementBinding[]}
-     */
-    this.childList = function() { }
-    /**
-     * innerHTML<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#innerHtml</code>
-     * @return {string}
-     */
-    this.innerHtml = function() { }
-    /**
-     * 右边兄弟节点集合<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#rightSibling</code>
-     * @return {WebElementBinding[]}
-     */
-    this.rightSibling = function() { }
-    /**
-     * 保存成图片<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#saveAsImage</code>
-     * @param {string|null} path
-     * @return void
-     */
-    this.saveAsImage = function(path) { }
-    /**
-     * outerHTML<br>
-     * <code>cn.veasion.auto.bind.WebElementBinding#outerHtml</code>
-     * @return {string}
-     */
-    this.outerHtml = function() { }
-    /**
-     * 向目标元素发送文字/模拟按键<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#type</code>
-     * @param {string} target
-     * @param {object} key
-     * @return {WebElementBinding}
-     */
-    this.type = function(target, key) { }
-    /**
-     * 查找多个元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#find</code>
-     * @param {string} target
-     * @return {WebElementBinding[]}
-     */
-    this.find = function(target) { }
-    /**
-     * 获取目标元素属性值<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#attr</code>
-     * @param {string} target
-     * @param {string} attr
-     * @return {WebElementBinding}
-     */
-    this.attr = function(target, attr) { }
-    /**
-     * 选择下拉框<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#select</code>
-     * @param {string} target
-     * @param {string} label
-     * @param {object} value
-     * @return {WebElementBinding}
-     */
-    this.select = function(target, label, value) { }
-    /**
-     * 获取目标元素文本内容<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#text</code>
-     * @param {string} target
-     * @return {string}
-     */
-    this.text = function(target) { }
-    /**
-     * 查找多个元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findList</code>
-     * @param {string[]} targets
-     * @return {WebElementBinding[]}
-     */
-    this.findList = function(targets) { }
-    /**
-     * 查找元素包含某文字的节点<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findTextAll</code>
-     * @param {string} tagName
-     * @param {string} text
-     * @param {boolean} fuzzyMatches 是否模糊匹配
-     * @return {WebElementBinding[]}
-     */
-    this.findTextAll = function(tagName, text, fuzzyMatches) { }
-    /**
-     * 鼠标移动到目标元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#mouseOver</code>
-     * @param {string} target
-     * @return {WebElementBinding}
-     */
-    this.mouseOver = function(target) { }
-    /**
-     * 查找多个可见元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findDisplayed</code>
-     * @param {string} target
-     * @return {WebElementBinding[]}
-     */
-    this.findDisplayed = function(target) { }
-    /**
-     * 查找一个元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findOne</code>
-     * @param {string} target
-     * @return {WebElementBinding}
-     */
-    this.findOne = function(target) { }
-    /**
-     * 查找一个元素并点击<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#click</code>
-     * @param {string} target
-     * @return {WebElementBinding}
-     */
-    this.click = function(target) { }
-    /**
-     * 向目标元素发送文字/模拟按键<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#sendKeys</code>
-     * @param {string} target
-     * @param {object} key
-     * @return {WebElementBinding}
-     */
-    this.sendKeys = function(target, key) { }
-    /**
-     * 滚动到目标元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#scrollToCenter</code>
-     * @param {string|null} target
-     * @return {WebElementBinding}
-     */
-    this.scrollToCenter = function(target) { }
-    /**
-     * 通过value选择下拉框<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByValue</code>
-     * @param {string} target
-     * @param {object} value
-     * @return {WebElementBinding}
-     */
-    this.selectByValue = function(target, value) { }
-    /**
-     * 查找元素包含某文字的节点<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findText</code>
-     * @param {string} tagName
-     * @param {string} text
-     * @param {boolean} fuzzyMatches 是否模糊匹配
-     * @return {WebElementBinding}
-     */
-    this.findText = function(tagName, text, fuzzyMatches) { }
-    /**
-     * 查找一个元素并点击<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#tryClick</code>
-     * @param {string} target
-     * @return {WebElementBinding}
-     */
-    this.tryClick = function(target) { }
-    /**
-     * 通过label选择下拉框<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByLabel</code>
-     * @param {string} target
-     * @param {object} value
-     * @return {WebElementBinding}
-     */
-    this.selectByLabel = function(target, value) { }
-    /**
-     * 等待元素显示（可见）<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementDisplayed</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {WebElementBinding}
-     */
-    this.waitForElementDisplayed = function(target, seconds) { }
-    /**
-     * 等待元素出现<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementPresent</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {WebElementBinding}
-     */
-    this.waitForElementPresent = function(target, seconds) { }
-    /**
-     * 等待元素隐藏（不可见）<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotDisplayed</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {WebElementBinding}
-     */
-    this.waitForElementNotDisplayed = function(target, seconds) { }
-    /**
-     * 等待元素消失<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotPresent</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {WebElementBinding}
-     */
-    this.waitForElementNotPresent = function(target, seconds) { }
-}
-
-/**
- * 点位置
- */
-function PointWrapper() {
-    /**
-     * x<br>
-     * <code>cn.veasion.auto.util.PointWrapper#getX</code>
-     * @return {number}
-     */
-    this.getX = function() { }
-    /**
-     * y<br>
-     * <code>cn.veasion.auto.util.PointWrapper#getY</code>
-     * @return {number}
-     */
-    this.getY = function() { }
-}
-
-/**
- * chromeDriver
- */
-function ChromeDriverBinding() {
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ChromeDriverBinding#setUserAgent</code>
-     * @param {string} userAgent
-     * @return void
-     */
-    this.setUserAgent = function(userAgent) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ChromeDriverBinding#activateDevTools</code>
-     * @return void
-     */
-    this.activateDevTools = function() { }
-    /**
-     * 执行cdp命令<br>
-     * <code>cn.veasion.auto.bind.ChromeDriverBinding#executeCdpCommand</code>
-     * @param {string} commandName
-     * @param {object} parameters
-     * @return {object}
-     */
-    this.executeCdpCommand = function(commandName, parameters) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ChromeDriverBinding#addRequestHandlerByUrlContains</code>
-     * @param {string} str
-     * @param {Function} fun 函数
-     * @return void
-     */
-    this.addRequestHandlerByUrlContains = function(str, fun) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ChromeDriverBinding#addRequestHandlerByUrlPattern</code>
-     * @param {string} urlPattern
-     * @param {Function} fun 函数
-     * @return void
-     */
-    this.addRequestHandlerByUrlPattern = function(urlPattern, fun) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ChromeDriverBinding#addRequestHandler</code>
-     * @param {Function} filter 函数
-     * @param {Function} fun 函数
-     * @return void
-     */
-    this.addRequestHandler = function(filter, fun) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ChromeDriverBinding#addRequestHandlerByUrlEquals</code>
-     * @param {string} url
-     * @param {Function} fun 函数
-     * @return void
-     */
-    this.addRequestHandlerByUrlEquals = function(url, fun) { }
-    /**
-     * 打开页面并等待页面加载<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#open</code>
-     * @param {string} url
-     * @return void
-     */
-    this.open = function(url) { }
-    /**
-     * HTTP 请求<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#request</code>
-     * @param {string|null} url 请求url/uri
-     * @param {string?} method 请求方式 POST/GET 默认GET
-     * @param {object?} content 请求body内容
-     * @param {object?} headers 请求头
-     * @return {ChromeDriverBinding}
-     */
-    this.request = function(url, method, content, headers) { }
-    /**
-     * 获取当前窗口句柄<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#getWindowHandle</code>
-     * @return {string}
-     */
-    this.getWindowHandle = function() { }
-    /**
-     * iframe<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#iframe</code>
-     * @param {string} target
-     * @param {Function} fun 函数
-     * @return void
-     */
-    this.iframe = function(target, fun) { }
-    /**
-     * 向浏览器驱动执行 js 代码<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#executeScript</code>
-     * @param {string} jsCode
-     * @return {ChromeDriverBinding}
-     */
-    this.executeScript = function(jsCode) { }
-    /**
-     * 点击坐标<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#clickPoint</code>
+     * 查看图片<br>
+     * <code>cn.veasion.auto.util.ImageWrapper#show</code>
      * @param {number} x
      * @param {number} y
      * @return void
      */
-    this.clickPoint = function(x, y) { }
+    this.show = function(x, y) { }
     /**
-     * 鼠标动作<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#newTouchActions</code>
-     * @return {ActionsBinding}
-     */
-    this.newTouchActions = function() { }
-    /**
-     * 截图<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#screenshot</code>
-     * @param {string|null} path
-     * @return {boolean}
-     */
-    this.screenshot = function(path) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#toChromeDriver</code>
-     * @return {ChromeDriverBinding}
-     */
-    this.toChromeDriver = function() { }
-    /**
-     * 打开并切换到新的窗口<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#openNewWindow</code>
+     * 查看图片<br>
+     * <code>cn.veasion.auto.util.ImageWrapper#show</code>
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
      * @return void
      */
-    this.openNewWindow = function() { }
+    this.show = function(x, y, width, height) { }
     /**
-     * 在新的窗口中执行函数<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#withNewWindow</code>
-     * @param {Function} fun 函数
+     * 查看图片<br>
+     * <code>cn.veasion.auto.util.ImageWrapper#show</code>
      * @return void
      */
-    this.withNewWindow = function(fun) { }
+    this.show = function() { }
     /**
-     * 运行新的脚本<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#runNewScript</code>
+     * 高度<br>
+     * <code>cn.veasion.auto.util.ImageWrapper#getHeight</code>
+     * @return {number}
+     */
+    this.getHeight = function() { }
+    /**
+     * 宽度<br>
+     * <code>cn.veasion.auto.util.ImageWrapper#getWidth</code>
+     * @return {number}
+     */
+    this.getWidth = function() { }
+    /**
+     * 获取RGB值<br>
+     * <code>cn.veasion.auto.util.ImageWrapper#getRGB</code>
+     * @param {number} x
+     * @param {number} y
+     * @return {number}
+     */
+    this.getRGB = function(x, y) { }
+    /**
+     * 保存<br>
+     * <code>cn.veasion.auto.util.ImageWrapper#saveTo</code>
      * @param {string} path
      * @return void
      */
-    this.runNewScript = function(path) { }
-    /**
-     * 等待页面加载<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#waitForPageLoaded</code>
-     * @param {number?} seconds
-     * @return void
-     */
-    this.waitForPageLoaded = function(seconds) { }
-    /**
-     * 向浏览器驱动执行 js 代码<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#executeScriptByParams</code>
-     * @param {string} jsCode
-     * @param {array?} args
-     * @return {ChromeDriverBinding}
-     */
-    this.executeScriptByParams = function(jsCode, args) { }
-    /**
-     * 切换窗口<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#switchToNextWindow</code>
-     * @param {string?} windowHandle 指定窗口句柄，为 null 则切换为下一个窗口
-     * @return void
-     */
-    this.switchToNextWindow = function(windowHandle) { }
-    /**
-     * 在新的浏览器驱动中执行脚本<br>
-     * <code>cn.veasion.auto.bind.WebDriverBinding#runScriptWithNewDriver</code>
-     * @param {object} env
-     * @param {string} path
-     * @param {boolean} async 是否异步，true 异步时返回 null可以通过 env.putSystemVar 来传递数据
-     * @return {EnvironmentBinding}
-     */
-    this.runScriptWithNewDriver = function(env, path, async) { }
-    /**
-     * 向目标元素发送文字/模拟按键<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#type</code>
-     * @param {string} target
-     * @param {object} key
-     * @return {ChromeDriverBinding}
-     */
-    this.type = function(target, key) { }
-    /**
-     * 查找多个元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#find</code>
-     * @param {string} target
-     * @return {WebElementBinding[]}
-     */
-    this.find = function(target) { }
-    /**
-     * 获取目标元素属性值<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#attr</code>
-     * @param {string} target
-     * @param {string} attr
-     * @return {ChromeDriverBinding}
-     */
-    this.attr = function(target, attr) { }
-    /**
-     * 选择下拉框<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#select</code>
-     * @param {string} target
-     * @param {string} label
-     * @param {object} value
-     * @return {ChromeDriverBinding}
-     */
-    this.select = function(target, label, value) { }
-    /**
-     * 获取目标元素文本内容<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#text</code>
-     * @param {string} target
-     * @return {string}
-     */
-    this.text = function(target) { }
-    /**
-     * 查找多个元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findList</code>
-     * @param {string[]} targets
-     * @return {WebElementBinding[]}
-     */
-    this.findList = function(targets) { }
-    /**
-     * 查找元素包含某文字的节点<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findTextAll</code>
-     * @param {string} tagName
-     * @param {string} text
-     * @param {boolean} fuzzyMatches 是否模糊匹配
-     * @return {WebElementBinding[]}
-     */
-    this.findTextAll = function(tagName, text, fuzzyMatches) { }
-    /**
-     * 鼠标移动到目标元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#mouseOver</code>
-     * @param {string} target
-     * @return {ChromeDriverBinding}
-     */
-    this.mouseOver = function(target) { }
-    /**
-     * 查找多个可见元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findDisplayed</code>
-     * @param {string} target
-     * @return {WebElementBinding[]}
-     */
-    this.findDisplayed = function(target) { }
-    /**
-     * 查找一个元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findOne</code>
-     * @param {string} target
-     * @return {WebElementBinding}
-     */
-    this.findOne = function(target) { }
-    /**
-     * 查找一个元素并点击<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#click</code>
-     * @param {string} target
-     * @return {ChromeDriverBinding}
-     */
-    this.click = function(target) { }
-    /**
-     * 向目标元素发送文字/模拟按键<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#sendKeys</code>
-     * @param {string} target
-     * @param {object} key
-     * @return {ChromeDriverBinding}
-     */
-    this.sendKeys = function(target, key) { }
-    /**
-     * 滚动到目标元素<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#scrollToCenter</code>
-     * @param {string|null} target
-     * @return {ChromeDriverBinding}
-     */
-    this.scrollToCenter = function(target) { }
-    /**
-     * 通过value选择下拉框<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByValue</code>
-     * @param {string} target
-     * @param {object} value
-     * @return {ChromeDriverBinding}
-     */
-    this.selectByValue = function(target, value) { }
-    /**
-     * 查找元素包含某文字的节点<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#findText</code>
-     * @param {string} tagName
-     * @param {string} text
-     * @param {boolean} fuzzyMatches 是否模糊匹配
-     * @return {WebElementBinding}
-     */
-    this.findText = function(tagName, text, fuzzyMatches) { }
-    /**
-     * 查找一个元素并点击<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#tryClick</code>
-     * @param {string} target
-     * @return {ChromeDriverBinding}
-     */
-    this.tryClick = function(target) { }
-    /**
-     * 通过label选择下拉框<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByLabel</code>
-     * @param {string} target
-     * @param {object} value
-     * @return {ChromeDriverBinding}
-     */
-    this.selectByLabel = function(target, value) { }
-    /**
-     * 等待元素显示（可见）<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementDisplayed</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {ChromeDriverBinding}
-     */
-    this.waitForElementDisplayed = function(target, seconds) { }
-    /**
-     * 等待元素出现<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementPresent</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {ChromeDriverBinding}
-     */
-    this.waitForElementPresent = function(target, seconds) { }
-    /**
-     * 等待元素隐藏（不可见）<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotDisplayed</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {ChromeDriverBinding}
-     */
-    this.waitForElementNotDisplayed = function(target, seconds) { }
-    /**
-     * 等待元素消失<br>
-     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotPresent</code>
-     * @param {string} target
-     * @param {number?} seconds
-     * @return {ChromeDriverBinding}
-     */
-    this.waitForElementNotPresent = function(target, seconds) { }
-}
-
-/**
- * 数据库连接
- */
-function JdbcConnectionBinding() {
-    /**
-     * 执行增删改<br>
-     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#update</code>
-     * @param {string} sql
-     * @param {array} params
-     * @return {number}
-     */
-    this.update = function(sql, params) { }
-    /**
-     * 关闭连接<br>
-     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#close</code>
-     * @return void
-     */
-    this.close = function() { }
-    /**
-     * 执行新增，返回自增长id<br>
-     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#insert</code>
-     * @param {string} sql
-     * @param {array} params
-     * @return {number}
-     */
-    this.insert = function(sql, params) { }
-    /**
-     * 列表查询<br>
-     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#query</code>
-     * @param {string} sql
-     * @param {array} params
-     * @return {array}
-     */
-    this.query = function(sql, params) { }
-    /**
-     * 执行DDL<br>
-     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#executeDDL</code>
-     * @param {string} sql
-     * @return {number}
-     */
-    this.executeDDL = function(sql) { }
-    /**
-     * 获取单个值<br>
-     * <code>cn.veasion.auto.bind.JdbcConnectionBinding#queryOnly</code>
-     * @param {string} sql
-     * @param {array} params
-     * @return {object}
-     */
-    this.queryOnly = function(sql, params) { }
+    this.saveTo = function(path) { }
 }
 
 /**
@@ -1849,21 +1145,201 @@ function ThreadBean() {
 const thread = new ThreadBean();
 
 /**
+ * 环境变量
+ */
+function EnvironmentBinding() {
+    /**
+     * 移除当前变量<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#remove</code>
+     * @param {string} key
+     * @return void
+     */
+    this.remove = function(key) { }
+    /**
+     * 获取变量<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#get</code>
+     * @param {string} key
+     * @return {object}
+     */
+    this.get = function(key) { }
+    /**
+     * 存储变量（当前脚本）<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#put</code>
+     * @param {string} key
+     * @param {object} value
+     * @return void
+     */
+    this.put = function(key, value) { }
+    /**
+     * 获取变量<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#getOrDefault</code>
+     * @param {string} key
+     * @param {object} defaultVal
+     * @return {object}
+     */
+    this.getOrDefault = function(key, defaultVal) { }
+    /**
+     * 获取class决定路径<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#getPath</code>
+     * @param {string} path
+     * @return {string}
+     */
+    this.getPath = function(path) { }
+    /**
+     * 获取变量<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#getString</code>
+     * @param {string} key
+     * @return {string}
+     */
+    this.getString = function(key) { }
+    /**
+     * translate<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#translate</code>
+     * @param {string} str
+     * @return {object}
+     */
+    this.translate = function(str) { }
+    /**
+     * translate<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#translate</code>
+     * @param {string} str
+     * @param {object} object
+     * @return {object}
+     */
+    this.translate = function(str, object) { }
+    /**
+     * 获取源文件绝对路径<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#getSourcePath</code>
+     * @param {string} path
+     * @return {string}
+     */
+    this.getSourcePath = function(path) { }
+    /**
+     * 获取系统变量（当前系统）<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#getSystemVar</code>
+     * @param {string} key
+     * @return {object}
+     */
+    this.getSystemVar = function(key) { }
+    /**
+     * 存储全局变量（当前驱动）<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#putGlobal</code>
+     * @param {string} key
+     * @param {object} value
+     * @return void
+     */
+    this.putGlobal = function(key, value) { }
+    /**
+     * 存储系统变量（当前系统）<br>
+     * <code>cn.veasion.auto.bind.EnvironmentBinding#putSystemVar</code>
+     * @param {string} key
+     * @param {object} value
+     * @return void
+     */
+    this.putSystemVar = function(key, value) { }
+}
+
+const env = new EnvironmentBinding();
+
+/**
+ * 单词
+ */
+function Words() {
+    /**
+     * getLocation<br>
+     * <code>cn.veasion.auto.captcha.ocr.OcrResult$Words#getLocation</code>
+     * @return {Location}
+     */
+    this.getLocation = function() { }
+    /**
+     * getWords<br>
+     * <code>cn.veasion.auto.captcha.ocr.OcrResult$Words#getWords</code>
+     * @return {string}
+     */
+    this.getWords = function() { }
+}
+
+/**
+ * 图片
+ */
+function ImageBean() {
+    /**
+     * 加载图片<br>
+     * <code>cn.veasion.auto.bind.ImageBean#load</code>
+     * @param {string} path
+     * @return {ImageWrapper}
+     */
+    this.load = function(path) { }
+    /**
+     * 加载网络图片<br>
+     * <code>cn.veasion.auto.bind.ImageBean#loadByUrl</code>
+     * @param {string} url
+     * @return {ImageWrapper}
+     */
+    this.loadByUrl = function(url) { }
+    /**
+     * 浏览器截图<br>
+     * <code>cn.veasion.auto.bind.ImageBean#loadByScreenshot</code>
+     * @return {ImageWrapper}
+     */
+    this.loadByScreenshot = function() { }
+    /**
+     * 元素渲染成图片<br>
+     * <code>cn.veasion.auto.bind.ImageBean#loadByElement</code>
+     * @param {WebElementBinding} element
+     * @return {ImageWrapper}
+     */
+    this.loadByElement = function(element) { }
+    /**
+     * 根据图片链接OCR识别<br>
+     * <code>cn.veasion.auto.bind.ImageBean#ocrByUrl</code>
+     * @param {string} imgUrl
+     * @return {OcrResult}
+     */
+    this.ocrByUrl = function(imgUrl) { }
+    /**
+     * 根据图片链接OCR识别验证码<br>
+     * <code>cn.veasion.auto.bind.ImageBean#captchaByUrl</code>
+     * @param {string} imgUrl
+     * @return {OcrResult}
+     */
+    this.captchaByUrl = function(imgUrl) { }
+    /**
+     * 根据图片OCR识别<br>
+     * <code>cn.veasion.auto.bind.ImageBean#ocrByImage</code>
+     * @param {ImageWrapper} imageWrapper
+     * @return {OcrResult}
+     */
+    this.ocrByImage = function(imageWrapper) { }
+    /**
+     * 根据元素OCR识别<br>
+     * <code>cn.veasion.auto.bind.ImageBean#ocrByElement</code>
+     * @param {WebElementBinding} element
+     * @return {OcrResult}
+     */
+    this.ocrByElement = function(element) { }
+    /**
+     * 根据图片OCR识别验证码<br>
+     * <code>cn.veasion.auto.bind.ImageBean#captchaByImage</code>
+     * @param {ImageWrapper} imageWrapper
+     * @return {OcrResult}
+     */
+    this.captchaByImage = function(imageWrapper) { }
+    /**
+     * 根据元素OCR识别验证码<br>
+     * <code>cn.veasion.auto.bind.ImageBean#captchaByElement</code>
+     * @param {WebElementBinding} element
+     * @return {OcrResult}
+     */
+    this.captchaByElement = function(element) { }
+}
+
+const image = new ImageBean();
+
+/**
  * 位置
  */
 function Location() {
-    /**
-     * getLeft<br>
-     * <code>cn.veasion.auto.captcha.ocr.OcrResult$Location#getLeft</code>
-     * @return {number}
-     */
-    this.getLeft = function() { }
-    /**
-     * getTop<br>
-     * <code>cn.veasion.auto.captcha.ocr.OcrResult$Location#getTop</code>
-     * @return {number}
-     */
-    this.getTop = function() { }
     /**
      * getHeight<br>
      * <code>cn.veasion.auto.captcha.ocr.OcrResult$Location#getHeight</code>
@@ -1876,365 +1352,989 @@ function Location() {
      * @return {number}
      */
     this.getWidth = function() { }
+    /**
+     * getTop<br>
+     * <code>cn.veasion.auto.captcha.ocr.OcrResult$Location#getTop</code>
+     * @return {number}
+     */
+    this.getTop = function() { }
+    /**
+     * getLeft<br>
+     * <code>cn.veasion.auto.captcha.ocr.OcrResult$Location#getLeft</code>
+     * @return {number}
+     */
+    this.getLeft = function() { }
 }
 
 /**
- * 活动
+ * chromeDriver
  */
-function ActionsBinding() {
-    /**
-     * 释放<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#release</code>
-     * @return {ActionsBinding}
-     */
-    this.release = function() { }
-    /**
-     * 释放<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#release</code>
-     * @param {WebElementBinding} target
-     * @return {ActionsBinding}
-     */
-    this.release = function(target) { }
-    /**
-     * 单击元素-左键<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#click</code>
-     * @param {WebElementBinding} element
-     * @return {ActionsBinding}
-     */
-    this.click = function(element) { }
-    /**
-     * 单击-左键<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#click</code>
-     * @return {ActionsBinding}
-     */
-    this.click = function() { }
+function ChromeDriverBinding() {
     /**
      * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#sendKeys</code>
-     * @param {string} key
-     * @return {ActionsBinding}
+     * <code>cn.veasion.auto.bind.ChromeDriverBinding#setUserAgent</code>
+     * @param {string} userAgent
+     * @return void
      */
-    this.sendKeys = function(key) { }
+    this.setUserAgent = function(userAgent) { }
     /**
      * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#sendKeys</code>
-     * @param {WebElementBinding} target
-     * @param {string} key
-     * @return {ActionsBinding}
+     * <code>cn.veasion.auto.bind.ChromeDriverBinding#activateDevTools</code>
+     * @param {string|null} windowHandle
+     * @return void
      */
-    this.sendKeys = function(target, key) { }
+    this.activateDevTools = function(windowHandle) { }
     /**
      * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#scrollToElement</code>
-     * @param {WebElementBinding} element
-     * @return {ActionsBinding}
+     * <code>cn.veasion.auto.bind.ChromeDriverBinding#addRequestHandler</code>
+     * @param {Function} filter 函数
+     * @param {Function} fun 函数
+     * @return void
      */
-    this.scrollToElement = function(element) { }
+    this.addRequestHandler = function(filter, fun) { }
     /**
      * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#pause</code>
-     * @param {number} millis
-     * @return {ActionsBinding}
+     * <code>cn.veasion.auto.bind.ChromeDriverBinding#addRequestHandlerByUrlPattern</code>
+     * @param {string} urlPattern
+     * @param {Function} fun 函数
+     * @return void
      */
-    this.pause = function(millis) { }
+    this.addRequestHandlerByUrlPattern = function(urlPattern, fun) { }
     /**
      * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#pause</code>
-     * @param {number} millis
-     * @return {ActionsBinding}
+     * <code>cn.veasion.auto.bind.ChromeDriverBinding#addRequestHandlerByUrlContains</code>
+     * @param {string} str
+     * @param {Function} fun 函数
+     * @return void
      */
-    this.pause = function(millis) { }
+    this.addRequestHandlerByUrlContains = function(str, fun) { }
     /**
-     * 单击元素-右键<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#contextClick</code>
-     * @param {WebElementBinding} element
-     * @return {ActionsBinding}
+     * 执行cdp命令<br>
+     * <code>cn.veasion.auto.bind.ChromeDriverBinding#executeCdpCommand</code>
+     * @param {string} commandName
+     * @param {object} parameters
+     * @return {object}
      */
-    this.contextClick = function(element) { }
-    /**
-     * 单击-右键<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#contextClick</code>
-     * @return {ActionsBinding}
-     */
-    this.contextClick = function() { }
-    /**
-     * 双击<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#doubleClick</code>
-     * @param {WebElementBinding} element
-     * @return {ActionsBinding}
-     */
-    this.doubleClick = function(element) { }
-    /**
-     * 双击<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#doubleClick</code>
-     * @return {ActionsBinding}
-     */
-    this.doubleClick = function() { }
+    this.executeCdpCommand = function(commandName, parameters) { }
     /**
      * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#scrollByAmount</code>
-     * @param {number} deltaX
-     * @param {number} deltaY
-     * @return {ActionsBinding}
+     * <code>cn.veasion.auto.bind.ChromeDriverBinding#addRequestHandlerByUrlEquals</code>
+     * @param {string} url
+     * @param {Function} fun 函数
+     * @return void
      */
-    this.scrollByAmount = function(deltaX, deltaY) { }
+    this.addRequestHandlerByUrlEquals = function(url, fun) { }
     /**
      * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#moveByOffset</code>
-     * @param {number} xOffset
-     * @param {number} yOffset
-     * @return {ActionsBinding}
+     * <code>cn.veasion.auto.bind.ChromeDriverBinding#clearAllRequestHandlers</code>
+     * @return void
      */
-    this.moveByOffset = function(xOffset, yOffset) { }
+    this.clearAllRequestHandlers = function() { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#dragAndDrop</code>
-     * @param {WebElementBinding} source
-     * @param {WebElementBinding} target
-     * @return {ActionsBinding}
+     * 打开页面并等待页面加载<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#open</code>
+     * @param {string} url
+     * @return void
      */
-    this.dragAndDrop = function(source, target) { }
+    this.open = function(url) { }
     /**
-     * 单击并按住<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#clickAndHold</code>
-     * @param {WebElementBinding} element
-     * @return {ActionsBinding}
+     * 等待页面加载<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#waitForPageLoaded</code>
+     * @param {number?} seconds
+     * @return void
      */
-    this.clickAndHold = function(element) { }
+    this.waitForPageLoaded = function(seconds) { }
     /**
-     * 单击并按住<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#clickAndHold</code>
-     * @return {ActionsBinding}
+     * 向浏览器驱动执行 js 代码<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#executeScript</code>
+     * @param {string} jsCode
+     * @return {ChromeDriverBinding}
      */
-    this.clickAndHold = function() { }
+    this.executeScript = function(jsCode) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#moveToElement</code>
-     * @param {WebElementBinding} element
-     * @param {number} xOffset
-     * @param {number} yOffset
-     * @return {ActionsBinding}
+     * 在新的窗口中执行函数<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#withNewWindow</code>
+     * @param {Function} fun 函数
+     * @return void
      */
-    this.moveToElement = function(element, xOffset, yOffset) { }
+    this.withNewWindow = function(fun) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#moveToElement</code>
-     * @param {WebElementBinding} element
-     * @return {ActionsBinding}
+     * 截图<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#screenshot</code>
+     * @param {string|null} path
+     * @return {boolean}
      */
-    this.moveToElement = function(element) { }
-    /**
-     * 执行<br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#perform</code>
-     * @return {ActionsBinding}
-     */
-    this.perform = function() { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#dragAndDropBy</code>
-     * @param {WebElementBinding} element
-     * @param {number} xOffset
-     * @param {number} yOffset
-     * @return {ActionsBinding}
-     */
-    this.dragAndDropBy = function(element, xOffset, yOffset) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#keyDown</code>
-     * @param {WebElementBinding} element
-     * @param {string} key
-     * @return {ActionsBinding}
-     */
-    this.keyDown = function(element, key) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#keyDown</code>
-     * @param {string} key
-     * @return {ActionsBinding}
-     */
-    this.keyDown = function(key) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#keyUp</code>
-     * @param {WebElementBinding} element
-     * @param {string} key
-     * @return {ActionsBinding}
-     */
-    this.keyUp = function(element, key) { }
-    /**
-     * <br>
-     * <code>cn.veasion.auto.bind.ActionsBinding#keyUp</code>
-     * @param {string} key
-     * @return {ActionsBinding}
-     */
-    this.keyUp = function(key) { }
-}
-
-/**
- * 桌面
- */
-function WindowsBean() {
-    /**
-     * 点击<br>
-     * <code>cn.veasion.auto.bind.WindowsBean#click</code>
-     * @return {WindowsBean}
-     */
-    this.click = function() { }
+    this.screenshot = function(path) { }
     /**
      * 点击坐标<br>
-     * <code>cn.veasion.auto.bind.WindowsBean#clickPoint</code>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#clickPoint</code>
      * @param {number} x
      * @param {number} y
-     * @return {WindowsBean}
+     * @return void
      */
     this.clickPoint = function(x, y) { }
     /**
-     * 键入字符串<br>
-     * <code>cn.veasion.auto.bind.WindowsBean#sendKey</code>
+     * 下载<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#download</code>
+     * @param {string|null} url 请求url/uri
+     * @param {string?} filePath 文件路径
+     * @return {ChromeDriverBinding}
+     */
+    this.download = function(url, filePath) { }
+    /**
+     * iframe<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#iframe</code>
+     * @param {string} target
+     * @param {Function} fun 函数
+     * @return void
+     */
+    this.iframe = function(target, fun) { }
+    /**
+     * 动作<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#newActions</code>
+     * @return {ActionsBinding}
+     */
+    this.newActions = function() { }
+    /**
+     * 获取当前窗口句柄<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#getWindowHandle</code>
+     * @return {string}
+     */
+    this.getWindowHandle = function() { }
+    /**
+     * 打开并切换到新的窗口<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#openNewWindow</code>
+     * @return {string}
+     */
+    this.openNewWindow = function() { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#toChromeDriver</code>
+     * @return {ChromeDriverBinding}
+     */
+    this.toChromeDriver = function() { }
+    /**
+     * HTTP 请求<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#request</code>
+     * @param {string|null} url 请求url/uri
+     * @param {string?} method 请求方式 POST/GET 默认GET
+     * @param {object?} content 请求body内容
+     * @param {object?} headers 请求头
+     * @return {ChromeDriverBinding}
+     */
+    this.request = function(url, method, content, headers) { }
+    /**
+     * 打开页面不等待<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#openNotWait</code>
+     * @param {string} url
+     * @return void
+     */
+    this.openNotWait = function(url) { }
+    /**
+     * 运行新的脚本<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#runNewScript</code>
+     * @param {string} path
+     * @return void
+     */
+    this.runNewScript = function(path) { }
+    /**
+     * 在新的浏览器驱动中执行脚本<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#runScriptWithNewDriver</code>
+     * @param {object} env
+     * @param {string} path
+     * @param {boolean} async 是否异步，true 异步时返回 null可以通过 env.putSystemVar 来传递数据
+     * @return {EnvironmentBinding}
+     */
+    this.runScriptWithNewDriver = function(env, path, async) { }
+    /**
+     * 切换窗口<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#switchToNextWindow</code>
+     * @param {string?} windowHandle 指定窗口句柄，为 null 则切换为下一个窗口
+     * @return {string}
+     */
+    this.switchToNextWindow = function(windowHandle) { }
+    /**
+     * 向浏览器驱动执行 js 代码<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#executeScriptByParams</code>
+     * @param {string} jsCode
+     * @param {array?} args
+     * @return {ChromeDriverBinding}
+     */
+    this.executeScriptByParams = function(jsCode, args) { }
+    /**
+     * 向目标元素发送文字/模拟按键<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#type</code>
+     * @param {string} target
+     * @param {object} key
+     * @return {ChromeDriverBinding}
+     */
+    this.type = function(target, key) { }
+    /**
+     * 查找多个元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#find</code>
+     * @param {string} target
+     * @return {WebElementBinding[]}
+     */
+    this.find = function(target) { }
+    /**
+     * 获取目标元素属性值<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#attr</code>
+     * @param {string} target
+     * @param {string} attr
+     * @return {ChromeDriverBinding}
+     */
+    this.attr = function(target, attr) { }
+    /**
+     * 选择下拉框<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#select</code>
+     * @param {string} target
+     * @param {string} label
+     * @param {object} value
+     * @return {ChromeDriverBinding}
+     */
+    this.select = function(target, label, value) { }
+    /**
+     * 获取目标元素文本内容<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#text</code>
+     * @param {string} target
+     * @return {string}
+     */
+    this.text = function(target) { }
+    /**
+     * 等待元素显示（可见）<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementDisplayed</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {ChromeDriverBinding}
+     */
+    this.waitForElementDisplayed = function(target, seconds) { }
+    /**
+     * 等待元素隐藏（不可见）<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotDisplayed</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {ChromeDriverBinding}
+     */
+    this.waitForElementNotDisplayed = function(target, seconds) { }
+    /**
+     * 通过label选择下拉框<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByLabel</code>
+     * @param {string} target
+     * @param {object} value
+     * @return {ChromeDriverBinding}
+     */
+    this.selectByLabel = function(target, value) { }
+    /**
+     * 查找多个元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findList</code>
+     * @param {string[]} targets
+     * @return {WebElementBinding[]}
+     */
+    this.findList = function(targets) { }
+    /**
+     * 查找元素包含某文字的节点<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findText</code>
+     * @param {string} tagName
      * @param {string} text
-     * @return {WindowsBean}
+     * @param {boolean} fuzzyMatches 是否模糊匹配
+     * @return {WebElementBinding}
      */
-    this.sendKey = function(text) { }
+    this.findText = function(tagName, text, fuzzyMatches) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#mousePress</code>
-     * @param {number} buttons
-     * @return {WindowsBean}
+     * 查找一个元素并点击<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#click</code>
+     * @param {string} target
+     * @return {ChromeDriverBinding}
      */
-    this.mousePress = function(buttons) { }
+    this.click = function(target) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#getDesktopDir</code>
+     * 获取目标元素可见文本内容<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#displayedText</code>
+     * @param {string} target
      * @return {string}
      */
-    this.getDesktopDir = function() { }
+    this.displayedText = function(target) { }
     /**
-     * 获取鼠标位置<br>
-     * <code>cn.veasion.auto.bind.WindowsBean#getMouseLocation</code>
-     * @return {PointWrapper}
+     * 向目标元素发送文字/模拟按键<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#sendKeys</code>
+     * @param {string} target
+     * @param {object} key
+     * @return {ChromeDriverBinding}
      */
-    this.getMouseLocation = function() { }
+    this.sendKeys = function(target, key) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#rightMousePress</code>
-     * @return {WindowsBean}
+     * 查找多个可见元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findDisplayed</code>
+     * @param {string} target
+     * @return {WebElementBinding[]}
      */
-    this.rightMousePress = function() { }
+    this.findDisplayed = function(target) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#keyRelease</code>
-     * @param {number} keycode
-     * @return {WindowsBean}
+     * 滚动到目标元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#scrollToCenter</code>
+     * @param {string|null} target
+     * @return {ChromeDriverBinding}
      */
-    this.keyRelease = function(keycode) { }
+    this.scrollToCenter = function(target) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#cmd</code>
-     * @param {string} command
-     * @return {string}
+     * 通过value选择下拉框<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByValue</code>
+     * @param {string} target
+     * @param {object} value
+     * @return {ChromeDriverBinding}
      */
-    this.cmd = function(command) { }
+    this.selectByValue = function(target, value) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#leftMousePress</code>
-     * @return {WindowsBean}
+     * 鼠标移动到目标元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#mouseOver</code>
+     * @param {string} target
+     * @return {ChromeDriverBinding}
      */
-    this.leftMousePress = function() { }
+    this.mouseOver = function(target) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#keyPress</code>
-     * @param {number} keycode
-     * @return {WindowsBean}
+     * 查找一个元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findOne</code>
+     * @param {string} target
+     * @return {WebElementBinding}
      */
-    this.keyPress = function(keycode) { }
+    this.findOne = function(target) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#mouseRelease</code>
-     * @param {number} buttons
-     * @return {WindowsBean}
+     * 查找一个元素并点击<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#tryClick</code>
+     * @param {string} target
+     * @return {ChromeDriverBinding}
      */
-    this.mouseRelease = function(buttons) { }
+    this.tryClick = function(target) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#leftMouseRelease</code>
-     * @return {WindowsBean}
+     * 查找元素包含某文字的节点<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findTextAll</code>
+     * @param {string} tagName
+     * @param {string} text
+     * @param {boolean} fuzzyMatches 是否模糊匹配
+     * @return {WebElementBinding[]}
      */
-    this.leftMouseRelease = function() { }
+    this.findTextAll = function(tagName, text, fuzzyMatches) { }
     /**
-     * 截图<br>
-     * <code>cn.veasion.auto.bind.WindowsBean#getScreenshot</code>
-     * @return {ImageWrapper}
+     * 等待元素出现<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementPresent</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {ChromeDriverBinding}
      */
-    this.getScreenshot = function() { }
+    this.waitForElementPresent = function(target, seconds) { }
     /**
-     * <br>
-     * <code>cn.veasion.auto.bind.WindowsBean#rightMouseRelease</code>
-     * @return {WindowsBean}
+     * 等待元素消失<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotPresent</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {ChromeDriverBinding}
      */
-    this.rightMouseRelease = function() { }
-    /**
-     * 高度<br>
-     * <code>cn.veasion.auto.bind.WindowsBean#getHeight</code>
-     * @return {number}
-     */
-    this.getHeight = function() { }
-    /**
-     * 宽度<br>
-     * <code>cn.veasion.auto.bind.WindowsBean#getWidth</code>
-     * @return {number}
-     */
-    this.getWidth = function() { }
-    /**
-     * 鼠标移动<br>
-     * <code>cn.veasion.auto.bind.WindowsBean#mouseMove</code>
-     * @param {number} x
-     * @param {number} y
-     * @return {WindowsBean}
-     */
-    this.mouseMove = function(x, y) { }
+    this.waitForElementNotPresent = function(target, seconds) { }
 }
-
-const windows = new WindowsBean();
 
 /**
- * 文件
+ * 打开页面并等待页面加载<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#open</code>
+ * @param {string} url
+ * @return void
  */
-function FileBean() {
+function open(url) { }
+/**
+ * 等待页面加载<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#waitForPageLoaded</code>
+ * @param {number?} seconds
+ * @return void
+ */
+function waitForPageLoaded(seconds) { }
+/**
+ * 向浏览器驱动执行 js 代码<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#executeScript</code>
+ * @param {string} jsCode
+ * @return {object}
+ */
+function executeScript(jsCode) { }
+/**
+ * 在新的窗口中执行函数<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#withNewWindow</code>
+ * @param {Function} fun 函数
+ * @return void
+ */
+function withNewWindow(fun) { }
+/**
+ * 截图<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#screenshot</code>
+ * @param {string|null} path
+ * @return {boolean}
+ */
+function screenshot(path) { }
+/**
+ * 点击坐标<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#clickPoint</code>
+ * @param {number} x
+ * @param {number} y
+ * @return void
+ */
+function clickPoint(x, y) { }
+/**
+ * 下载<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#download</code>
+ * @param {string|null} url 请求url/uri
+ * @param {string?} filePath 文件路径
+ * @return {object}
+ */
+function download(url, filePath) { }
+/**
+ * iframe<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#iframe</code>
+ * @param {string} target
+ * @param {Function} fun 函数
+ * @return void
+ */
+function iframe(target, fun) { }
+/**
+ * 动作<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#newActions</code>
+ * @return {ActionsBinding}
+ */
+function newActions() { }
+/**
+ * 获取当前窗口句柄<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#getWindowHandle</code>
+ * @return {string}
+ */
+function getWindowHandle() { }
+/**
+ * 打开并切换到新的窗口<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#openNewWindow</code>
+ * @return {string}
+ */
+function openNewWindow() { }
+/**
+ * <br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#toChromeDriver</code>
+ * @return {ChromeDriverBinding}
+ */
+function toChromeDriver() { }
+/**
+ * HTTP 请求<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#request</code>
+ * @param {string|null} url 请求url/uri
+ * @param {string?} method 请求方式 POST/GET 默认GET
+ * @param {object?} content 请求body内容
+ * @param {object?} headers 请求头
+ * @return {object}
+ */
+function request(url, method, content, headers) { }
+/**
+ * 打开页面不等待<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#openNotWait</code>
+ * @param {string} url
+ * @return void
+ */
+function openNotWait(url) { }
+/**
+ * 运行新的脚本<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#runNewScript</code>
+ * @param {string} path
+ * @return void
+ */
+function runNewScript(path) { }
+/**
+ * 在新的浏览器驱动中执行脚本<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#runScriptWithNewDriver</code>
+ * @param {object} env
+ * @param {string} path
+ * @param {boolean} async 是否异步，true 异步时返回 null可以通过 env.putSystemVar 来传递数据
+ * @return {EnvironmentBinding}
+ */
+function runScriptWithNewDriver(env, path, async) { }
+/**
+ * 切换窗口<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#switchToNextWindow</code>
+ * @param {string?} windowHandle 指定窗口句柄，为 null 则切换为下一个窗口
+ * @return {string}
+ */
+function switchToNextWindow(windowHandle) { }
+/**
+ * 向浏览器驱动执行 js 代码<br>
+ * <code>cn.veasion.auto.bind.WebDriverBinding#executeScriptByParams</code>
+ * @param {string} jsCode
+ * @param {array?} args
+ * @return {object}
+ */
+function executeScriptByParams(jsCode, args) { }
+/**
+ * 向目标元素发送文字/模拟按键<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#type</code>
+ * @param {string} target
+ * @param {object} key
+ * @return {WebDriverBinding}
+ */
+function type(target, key) { }
+/**
+ * 查找多个元素<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#find</code>
+ * @param {string} target
+ * @return {WebElementBinding[]}
+ */
+function find(target) { }
+/**
+ * 获取目标元素属性值<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#attr</code>
+ * @param {string} target
+ * @param {string} attr
+ * @return {WebDriverBinding}
+ */
+function attr(target, attr) { }
+/**
+ * 选择下拉框<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#select</code>
+ * @param {string} target
+ * @param {string} label
+ * @param {object} value
+ * @return {WebDriverBinding}
+ */
+function select(target, label, value) { }
+/**
+ * 获取目标元素文本内容<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#text</code>
+ * @param {string} target
+ * @return {string}
+ */
+function text(target) { }
+/**
+ * 等待元素显示（可见）<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementDisplayed</code>
+ * @param {string} target
+ * @param {number?} seconds
+ * @return {WebDriverBinding}
+ */
+function waitForElementDisplayed(target, seconds) { }
+/**
+ * 等待元素隐藏（不可见）<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotDisplayed</code>
+ * @param {string} target
+ * @param {number?} seconds
+ * @return {WebDriverBinding}
+ */
+function waitForElementNotDisplayed(target, seconds) { }
+/**
+ * 通过label选择下拉框<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#selectByLabel</code>
+ * @param {string} target
+ * @param {object} value
+ * @return {WebDriverBinding}
+ */
+function selectByLabel(target, value) { }
+/**
+ * 查找多个元素<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#findList</code>
+ * @param {string[]} targets
+ * @return {WebElementBinding[]}
+ */
+function findList(targets) { }
+/**
+ * 查找元素包含某文字的节点<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#findText</code>
+ * @param {string} tagName
+ * @param {string} text
+ * @param {boolean} fuzzyMatches 是否模糊匹配
+ * @return {WebElementBinding}
+ */
+function findText(tagName, text, fuzzyMatches) { }
+/**
+ * 查找一个元素并点击<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#click</code>
+ * @param {string} target
+ * @return {WebDriverBinding}
+ */
+function click(target) { }
+/**
+ * 获取目标元素可见文本内容<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#displayedText</code>
+ * @param {string} target
+ * @return {string}
+ */
+function displayedText(target) { }
+/**
+ * 向目标元素发送文字/模拟按键<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#sendKeys</code>
+ * @param {string} target
+ * @param {object} key
+ * @return {WebDriverBinding}
+ */
+function sendKeys(target, key) { }
+/**
+ * 查找多个可见元素<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#findDisplayed</code>
+ * @param {string} target
+ * @return {WebElementBinding[]}
+ */
+function findDisplayed(target) { }
+/**
+ * 滚动到目标元素<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#scrollToCenter</code>
+ * @param {string|null} target
+ * @return {WebDriverBinding}
+ */
+function scrollToCenter(target) { }
+/**
+ * 通过value选择下拉框<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#selectByValue</code>
+ * @param {string} target
+ * @param {object} value
+ * @return {WebDriverBinding}
+ */
+function selectByValue(target, value) { }
+/**
+ * 鼠标移动到目标元素<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#mouseOver</code>
+ * @param {string} target
+ * @return {WebDriverBinding}
+ */
+function mouseOver(target) { }
+/**
+ * 查找一个元素<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#findOne</code>
+ * @param {string} target
+ * @return {WebElementBinding}
+ */
+function findOne(target) { }
+/**
+ * 查找一个元素并点击<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#tryClick</code>
+ * @param {string} target
+ * @return {WebDriverBinding}
+ */
+function tryClick(target) { }
+/**
+ * 查找元素包含某文字的节点<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#findTextAll</code>
+ * @param {string} tagName
+ * @param {string} text
+ * @param {boolean} fuzzyMatches 是否模糊匹配
+ * @return {WebElementBinding[]}
+ */
+function findTextAll(tagName, text, fuzzyMatches) { }
+/**
+ * 等待元素出现<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementPresent</code>
+ * @param {string} target
+ * @param {number?} seconds
+ * @return {WebDriverBinding}
+ */
+function waitForElementPresent(target, seconds) { }
+/**
+ * 等待元素消失<br>
+ * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotPresent</code>
+ * @param {string} target
+ * @param {number?} seconds
+ * @return {WebDriverBinding}
+ */
+function waitForElementNotPresent(target, seconds) { }
+
+function WebDriverBinding() {
     /**
-     * 读取文本<br>
-     * <code>cn.veasion.auto.bind.FileBean#readText</code>
-     * @param {string} pathOrUrl
-     * @return {string}
-     */
-    this.readText = function(pathOrUrl) { }
-    /**
-     * 读取文本<br>
-     * <code>cn.veasion.auto.bind.FileBean#readText</code>
-     * @param {string} pathOrUrl
-     * @param {string?} charsetName
-     * @return {string}
-     */
-    this.readText = function(pathOrUrl, charsetName) { }
-    /**
-     * 写文本文件<br>
-     * <code>cn.veasion.auto.bind.FileBean#writeText</code>
-     * @param {string} path
-     * @param {string} context
-     * @param {boolean} append
+     * 打开页面并等待页面加载<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#open</code>
+     * @param {string} url
      * @return void
      */
-    this.writeText = function(path, context, append) { }
+    this.open = function(url) { }
     /**
-     * 写文本文件<br>
-     * <code>cn.veasion.auto.bind.FileBean#writeText</code>
-     * @param {string} path
-     * @param {string} context
-     * @param {boolean} append
-     * @param {string?} charsetName
+     * 等待页面加载<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#waitForPageLoaded</code>
+     * @param {number?} seconds
      * @return void
      */
-    this.writeText = function(path, context, append, charsetName) { }
+    this.waitForPageLoaded = function(seconds) { }
+    /**
+     * 向浏览器驱动执行 js 代码<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#executeScript</code>
+     * @param {string} jsCode
+     * @return {object}
+     */
+    this.executeScript = function(jsCode) { }
+    /**
+     * 在新的窗口中执行函数<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#withNewWindow</code>
+     * @param {Function} fun 函数
+     * @return void
+     */
+    this.withNewWindow = function(fun) { }
+    /**
+     * 截图<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#screenshot</code>
+     * @param {string|null} path
+     * @return {boolean}
+     */
+    this.screenshot = function(path) { }
+    /**
+     * 点击坐标<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#clickPoint</code>
+     * @param {number} x
+     * @param {number} y
+     * @return void
+     */
+    this.clickPoint = function(x, y) { }
+    /**
+     * 下载<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#download</code>
+     * @param {string|null} url 请求url/uri
+     * @param {string?} filePath 文件路径
+     * @return {object}
+     */
+    this.download = function(url, filePath) { }
+    /**
+     * iframe<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#iframe</code>
+     * @param {string} target
+     * @param {Function} fun 函数
+     * @return void
+     */
+    this.iframe = function(target, fun) { }
+    /**
+     * 动作<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#newActions</code>
+     * @return {ActionsBinding}
+     */
+    this.newActions = function() { }
+    /**
+     * 获取当前窗口句柄<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#getWindowHandle</code>
+     * @return {string}
+     */
+    this.getWindowHandle = function() { }
+    /**
+     * 打开并切换到新的窗口<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#openNewWindow</code>
+     * @return {string}
+     */
+    this.openNewWindow = function() { }
+    /**
+     * <br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#toChromeDriver</code>
+     * @return {ChromeDriverBinding}
+     */
+    this.toChromeDriver = function() { }
+    /**
+     * HTTP 请求<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#request</code>
+     * @param {string|null} url 请求url/uri
+     * @param {string?} method 请求方式 POST/GET 默认GET
+     * @param {object?} content 请求body内容
+     * @param {object?} headers 请求头
+     * @return {object}
+     */
+    this.request = function(url, method, content, headers) { }
+    /**
+     * 打开页面不等待<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#openNotWait</code>
+     * @param {string} url
+     * @return void
+     */
+    this.openNotWait = function(url) { }
+    /**
+     * 运行新的脚本<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#runNewScript</code>
+     * @param {string} path
+     * @return void
+     */
+    this.runNewScript = function(path) { }
+    /**
+     * 在新的浏览器驱动中执行脚本<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#runScriptWithNewDriver</code>
+     * @param {object} env
+     * @param {string} path
+     * @param {boolean} async 是否异步，true 异步时返回 null可以通过 env.putSystemVar 来传递数据
+     * @return {EnvironmentBinding}
+     */
+    this.runScriptWithNewDriver = function(env, path, async) { }
+    /**
+     * 切换窗口<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#switchToNextWindow</code>
+     * @param {string?} windowHandle 指定窗口句柄，为 null 则切换为下一个窗口
+     * @return {string}
+     */
+    this.switchToNextWindow = function(windowHandle) { }
+    /**
+     * 向浏览器驱动执行 js 代码<br>
+     * <code>cn.veasion.auto.bind.WebDriverBinding#executeScriptByParams</code>
+     * @param {string} jsCode
+     * @param {array?} args
+     * @return {object}
+     */
+    this.executeScriptByParams = function(jsCode, args) { }
+    /**
+     * 向目标元素发送文字/模拟按键<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#type</code>
+     * @param {string} target
+     * @param {object} key
+     * @return {WebDriverBinding}
+     */
+    this.type = function(target, key) { }
+    /**
+     * 查找多个元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#find</code>
+     * @param {string} target
+     * @return {WebElementBinding[]}
+     */
+    this.find = function(target) { }
+    /**
+     * 获取目标元素属性值<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#attr</code>
+     * @param {string} target
+     * @param {string} attr
+     * @return {WebDriverBinding}
+     */
+    this.attr = function(target, attr) { }
+    /**
+     * 选择下拉框<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#select</code>
+     * @param {string} target
+     * @param {string} label
+     * @param {object} value
+     * @return {WebDriverBinding}
+     */
+    this.select = function(target, label, value) { }
+    /**
+     * 获取目标元素文本内容<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#text</code>
+     * @param {string} target
+     * @return {string}
+     */
+    this.text = function(target) { }
+    /**
+     * 等待元素显示（可见）<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementDisplayed</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {WebDriverBinding}
+     */
+    this.waitForElementDisplayed = function(target, seconds) { }
+    /**
+     * 等待元素隐藏（不可见）<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotDisplayed</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {WebDriverBinding}
+     */
+    this.waitForElementNotDisplayed = function(target, seconds) { }
+    /**
+     * 通过label选择下拉框<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByLabel</code>
+     * @param {string} target
+     * @param {object} value
+     * @return {WebDriverBinding}
+     */
+    this.selectByLabel = function(target, value) { }
+    /**
+     * 查找多个元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findList</code>
+     * @param {string[]} targets
+     * @return {WebElementBinding[]}
+     */
+    this.findList = function(targets) { }
+    /**
+     * 查找元素包含某文字的节点<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findText</code>
+     * @param {string} tagName
+     * @param {string} text
+     * @param {boolean} fuzzyMatches 是否模糊匹配
+     * @return {WebElementBinding}
+     */
+    this.findText = function(tagName, text, fuzzyMatches) { }
+    /**
+     * 查找一个元素并点击<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#click</code>
+     * @param {string} target
+     * @return {WebDriverBinding}
+     */
+    this.click = function(target) { }
+    /**
+     * 获取目标元素可见文本内容<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#displayedText</code>
+     * @param {string} target
+     * @return {string}
+     */
+    this.displayedText = function(target) { }
+    /**
+     * 向目标元素发送文字/模拟按键<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#sendKeys</code>
+     * @param {string} target
+     * @param {object} key
+     * @return {WebDriverBinding}
+     */
+    this.sendKeys = function(target, key) { }
+    /**
+     * 查找多个可见元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findDisplayed</code>
+     * @param {string} target
+     * @return {WebElementBinding[]}
+     */
+    this.findDisplayed = function(target) { }
+    /**
+     * 滚动到目标元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#scrollToCenter</code>
+     * @param {string|null} target
+     * @return {WebDriverBinding}
+     */
+    this.scrollToCenter = function(target) { }
+    /**
+     * 通过value选择下拉框<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#selectByValue</code>
+     * @param {string} target
+     * @param {object} value
+     * @return {WebDriverBinding}
+     */
+    this.selectByValue = function(target, value) { }
+    /**
+     * 鼠标移动到目标元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#mouseOver</code>
+     * @param {string} target
+     * @return {WebDriverBinding}
+     */
+    this.mouseOver = function(target) { }
+    /**
+     * 查找一个元素<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findOne</code>
+     * @param {string} target
+     * @return {WebElementBinding}
+     */
+    this.findOne = function(target) { }
+    /**
+     * 查找一个元素并点击<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#tryClick</code>
+     * @param {string} target
+     * @return {WebDriverBinding}
+     */
+    this.tryClick = function(target) { }
+    /**
+     * 查找元素包含某文字的节点<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#findTextAll</code>
+     * @param {string} tagName
+     * @param {string} text
+     * @param {boolean} fuzzyMatches 是否模糊匹配
+     * @return {WebElementBinding[]}
+     */
+    this.findTextAll = function(tagName, text, fuzzyMatches) { }
+    /**
+     * 等待元素出现<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementPresent</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {WebDriverBinding}
+     */
+    this.waitForElementPresent = function(target, seconds) { }
+    /**
+     * 等待元素消失<br>
+     * <code>cn.veasion.auto.bind.SearchContextBinding#waitForElementNotPresent</code>
+     * @param {string} target
+     * @param {number?} seconds
+     * @return {WebDriverBinding}
+     */
+    this.waitForElementNotPresent = function(target, seconds) { }
 }
 
-const file = new FileBean();
+const driver = new WebDriverBinding();
 

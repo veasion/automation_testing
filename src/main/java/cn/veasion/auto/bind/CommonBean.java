@@ -9,6 +9,7 @@ import cn.veasion.auto.util.AssertException;
 import cn.veasion.auto.util.CalculatorUtils;
 import cn.veasion.auto.util.JavaScriptUtils;
 import cn.veasion.auto.util.JdbcDao;
+import cn.veasion.auto.util.PinyinUtils;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import jdk.nashorn.internal.objects.NativeDate;
 
@@ -142,6 +143,12 @@ public class CommonBean extends AbstractInitializingBean {
             LOGGER.error("断言未通过: {}", msg);
             throw new AssertException(msg);
         }
+    }
+
+    @Api("拼音")
+    @ResultProxy(value = false)
+    public String pinyin(String chinese) {
+        return PinyinUtils.getChineseAllWord(chinese);
     }
 
     @Api("info")

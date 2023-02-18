@@ -11,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.NetworkInterceptor;
-import org.openqa.selenium.devtools.idealized.target.model.SessionID;
 import org.openqa.selenium.remote.http.Contents;
 import org.openqa.selenium.remote.http.HttpRequest;
 import org.openqa.selenium.remote.http.HttpResponse;
@@ -37,6 +36,7 @@ import java.util.stream.Collectors;
 public class ChromeDriverBinding extends WebDriverBinding {
 
     private ChromeDriver chromeDriver;
+    private NetworkInterceptor interceptor;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final Map<Predicate<HttpRequest>, Function<HttpRequest, HttpResponse>> uriHandlers = new LinkedHashMap<>();
 
@@ -58,52 +58,56 @@ public class ChromeDriverBinding extends WebDriverBinding {
 
     @Api
     @ResultProxy(value = false)
-    public synchronized void activateDevTools() {
-        DevTools devTools = chromeDriver.getDevTools();
-        SessionID cdpSession = devTools.getCdpSession();
-        if (cdpSession != null) {
-            try {
-                devTools.clearListeners();
-                devTools.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public synchronized void activateDevTools(@Api.Param(allowNull = true) String windowHandle) {
+        if (JavaScriptUtils.isEmpty(windowHandle)) {
+            windowHandle = null;
         }
-        devTools.createSessionIfThereIsNotOne();
-        NetworkInterceptor interceptor = new NetworkInterceptor(
-                chromeDriver,
-                Route.matching(request -> true)
-                        .to(() ->
-                                request -> {
-                                    List<HttpResponse> list = uriHandlers.entrySet().stream()
-                                            .filter(entry -> {
-                                                try {
-                                                    return entry.getKey().test(request);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                    return false;
-                                                }
-                                            })
-                                            .map(Map.Entry::getValue).map(func -> {
-                                                try {
-                                                    return func.apply(request);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                    return null;
-                                                }
-                                            })
-                                            .filter(Objects::nonNull).collect(Collectors.toList());
-                                    HttpResponse response;
-                                    if (!list.isEmpty()) {
-                                        response = list.get(0);
-                                    } else {
-                                        response = new HttpResponse();
-                                        response.setHeader("Selenium-Interceptor", "Continue");
-                                    }
-                                    return response;
+        DevTools devTools = chromeDriver.getDevTools();
+        devTools.createSessionIfThereIsNotOne(windowHandle);
+        if (interceptor == null) {
+            interceptor = new NetworkInterceptor(
+                    chromeDriver,
+                    Route.matching(request ->
+                            uriHandlers.entrySet().stream().anyMatch(entry -> {
+                                try {
+                                    return entry.getKey().test(request);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    return false;
                                 }
-                        )
-        );
+                            })
+                    ).to(() ->
+                            request -> {
+                                List<HttpResponse> list = uriHandlers.entrySet().stream()
+                                        .filter(entry -> {
+                                            try {
+                                                return entry.getKey().test(request);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                return false;
+                                            }
+                                        })
+                                        .map(Map.Entry::getValue).map(func -> {
+                                            try {
+                                                return func.apply(request);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                return null;
+                                            }
+                                        })
+                                        .filter(Objects::nonNull).collect(Collectors.toList());
+                                HttpResponse response;
+                                if (!list.isEmpty()) {
+                                    response = list.get(0);
+                                } else {
+                                    response = new HttpResponse();
+                                    response.setHeader("Selenium-Interceptor", "Continue");
+                                }
+                                return response;
+                            }
+                    )
+            );
+        }
     }
 
     @Api
@@ -136,6 +140,12 @@ public class ChromeDriverBinding extends WebDriverBinding {
         uriHandlers.put(request -> pathMatcher.match(urlPattern, request.getUri()), requestHandler(fun));
     }
 
+    @Api
+    @ResultProxy(value = false)
+    public void clearAllRequestHandlers() {
+        uriHandlers.clear();
+    }
+
     @SuppressWarnings("unchecked")
     private Function<HttpRequest, HttpResponse> requestHandler(ScriptObjectMirror fun) {
         if (fun == null || !fun.isFunction()) {
@@ -143,7 +153,7 @@ public class ChromeDriverBinding extends WebDriverBinding {
         }
         return request -> {
             Object object = fun.call(null, request);
-            if (object != null) {
+            if (!JavaScriptUtils.isNull(object)) {
                 Map<String, Object> result = (Map<String, Object>) JavaScriptUtils.toJavaObject(object);
                 Map<String, Object> headers = (Map<String, Object>) result.get("headers");
                 Object status = result.get("status");

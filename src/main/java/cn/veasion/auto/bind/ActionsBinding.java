@@ -15,7 +15,7 @@ import java.util.Objects;
  * @date 2020/10/16
  */
 @SuppressWarnings("unused")
-@Api.ClassInfo(desc = "活动")
+@Api.ClassInfo(desc = "动作")
 public class ActionsBinding implements JavaScriptBinding<Actions> {
 
     private Binding<Actions> binding;

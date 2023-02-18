@@ -269,19 +269,6 @@ findOne('id=div-test').saveAsImage('C:\\Users\\user\\Desktop\\test.jpg');
 // 加载图片
 image.loadByUrl('http://xxx.png');
 
-// 查找颜色
-image.findColor(image.load('C:\\Users\\user\\Desktop\\test.jpg'), '#E31716', 4);
-image.findColor(image.load('C:\\Users\\user\\Desktop\\test.jpg'), '#620081', 4, [0, 270, 300, 20]);
-
-// 查找多个颜色
-image.findMultiColors(image.load('C:\\Users\\user\\Desktop\\test.jpg'), '#E51B1B', 4, [
-    [0, 1, '#E51B1B'],
-    [1, 0, '#E51B1B']
-]);
-
-// 查找图片
-image.findImage(image.load('C:\\Users\\user\\Desktop\\test.jpg'), image.load('C:\\Users\\user\\Desktop\\template.png'), 0.9);
-
 // 截图找图并点击
 let img1 = image.loadByScreenshot();
 let img2 = image.loadByElement(findOne('id=sl-player-el-video'));
@@ -292,7 +279,8 @@ img1.show(point.getX(), point.getY());
 img1.show(point.getX(), point.getY(), img2.getWidth(), img2.getHeight());
 
 // 拦截请求并修改，需要激活 dev tools
-toChromeDriver().activateDevTools();
+// 仅在当前tab页生效，新开tab窗口需要再次执行才会生效
+toChromeDriver().activateDevTools(null);
 // 请求拦截处理
 toChromeDriver().addRequestHandler(function(request) {
     // 拦截指定请求

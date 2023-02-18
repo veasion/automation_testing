@@ -24,6 +24,6 @@ function baiduSearch(str) {
     open("https://www.baidu.com");
     sendKeys('id=kw', str);
     click("css=input[value='百度一下']");
-    sleep(500);
     waitForPageLoaded(5);
+    sleep(200);
 }
