@@ -1,10 +1,10 @@
 package cn.veasion.auto.bind;
 
 import cn.veasion.auto.bind.base.AbstractInitializingBean;
+import cn.veasion.auto.util.ImageWrapper;
 import cn.veasion.auto.core.ResultProxy;
-import cn.veasion.auto.opencv.ImageWrapper;
-import cn.veasion.auto.opencv.PointWrapper;
 import cn.veasion.auto.util.Api;
+import cn.veasion.auto.util.PointWrapper;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;

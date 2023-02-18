@@ -6,14 +6,34 @@
 
     <groupId>cn.veasion</groupId>
     <artifactId>automation_testing</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.11</version>
+        </dependency>
+        <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.0.0-beta-1</version>
+            <version>4.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.3.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -61,24 +81,6 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.1</version>
         </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.21</version>
-        </dependency>
-        <!-- opencv -->
-        <dependency>
-            <groupId>org.opencv</groupId>
-            <artifactId>opencv-java</artifactId>
-            <version>4.5.1</version>
-            <!--<scope>system</scope>
-            <systemPath>${basedir}/lib/opencv-java-4.5.1.jar</systemPath>-->
-        </dependency>
     </dependencies>
 
     <build>
@@ -92,29 +94,6 @@
             </resource>
         </resources>
         <plugins>
-            <!-- 先clean把jar弄到本地仓库 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>opencv-binary</id>
-                        <phase>clean</phase>
-                        <configuration>
-                            <file>${basedir}/lib/opencv-java-4.5.1.jar</file>
-                            <repositoryLayout>default</repositoryLayout>
-                            <groupId>org.opencv</groupId>
-                            <artifactId>opencv-java</artifactId>
-                            <version>4.5.1</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -206,11 +185,6 @@
                             <target>
                                 <copy todir="${basedir}/target/automation/">
                                     <fileset dir="${basedir}/src/main/resources">
-                                        <include name="**/*"/>
-                                    </fileset>
-                                </copy>
-                                <copy todir="${basedir}/target/automation/lib/dll">
-                                    <fileset dir="${basedir}/lib/dll">
                                         <include name="**/*"/>
                                     </fileset>
                                 </copy>

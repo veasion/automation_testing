@@ -1,7 +1,7 @@
 @echo off
 ::chcp 65001
-java -DFile.encoding=utf-8 -Djava.library.path=lib/dll -jar automation.jar
-rem java -DFile.encoding=utf-8 -Djava.library.path=lib/dll -jar automation.jar -debug false -file script/crawler.js
+java -DFile.encoding=utf-8 -Djava.library.path=lib/dll -jar automation.jar -debug true -headless false
+rem java -DFile.encoding=utf-8 -Djava.library.path=lib/dll -jar automation.jar -debug false -headless true -file script/crawler.js
 pause
 
 rem 运行自动化

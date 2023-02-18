@@ -5,33 +5,23 @@ import cn.veasion.auto.core.ResultProxy;
 import cn.veasion.auto.util.Api;
 import cn.veasion.auto.util.AutomationException;
 import cn.veasion.auto.util.JavaScriptUtils;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.reflect.TypeToken;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.devtools.Command;
 import org.openqa.selenium.devtools.DevTools;
-import org.openqa.selenium.devtools.idealized.Network;
-import org.openqa.selenium.devtools.idealized.OpaqueKey;
+import org.openqa.selenium.devtools.NetworkInterceptor;
 import org.openqa.selenium.devtools.idealized.target.model.SessionID;
-import org.openqa.selenium.logging.LogEntries;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.remote.http.Contents;
 import org.openqa.selenium.remote.http.HttpRequest;
 import org.openqa.selenium.remote.http.HttpResponse;
+import org.openqa.selenium.remote.http.Route;
 import org.springframework.util.AntPathMatcher;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -47,7 +37,6 @@ import java.util.stream.Collectors;
 public class ChromeDriverBinding extends WebDriverBinding {
 
     private ChromeDriver chromeDriver;
-    private OpaqueKey requestHandlerKey;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final Map<Predicate<HttpRequest>, Function<HttpRequest, HttpResponse>> uriHandlers = new LinkedHashMap<>();
 
@@ -63,6 +52,7 @@ public class ChromeDriverBinding extends WebDriverBinding {
     @Api
     @ResultProxy(value = false)
     public void setUserAgent(String userAgent) {
+        // chromeDriver.getDevTools().getDomains().network().setUserAgent(userAgent);
         executeCdpCommand("Network.setUserAgentOverride", ImmutableMap.of("userAgent", userAgent));
     }
 
@@ -79,82 +69,41 @@ public class ChromeDriverBinding extends WebDriverBinding {
                 e.printStackTrace();
             }
         }
-        devTools.createSession();
-        Network<?, ?> network = devTools.getDomains().network();
-        if (requestHandlerKey != null) {
-            network.removeRequestHandler(requestHandlerKey);
-        }
-        requestHandlerKey = network.addRequestHandler(request -> true, request -> {
-            List<HttpResponse> list = uriHandlers.entrySet().stream()
-                    .filter(entry -> {
-                        try {
-                            return entry.getKey().test(request);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return false;
-                        }
-                    })
-                    .map(Map.Entry::getValue).map(func -> {
-                        try {
-                            return func.apply(request);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull).collect(Collectors.toList());
-            HttpResponse response;
-            if (!list.isEmpty()) {
-                response = list.get(0);
-            } else {
-                response = new HttpResponse();
-                response.setHeader("Selenium-Interceptor", "Continue");
-            }
-            return response;
-        });
-    }
-
-    @Api
-    @ResultProxy(value = false)
-    public List<Object> getAllResponse() {
-        Logs logs = chromeDriver.manage().logs();
-        Set<String> availableLogTypes = logs.getAvailableLogTypes();
-        if (availableLogTypes.contains(LogType.PERFORMANCE)) {
-            LogEntries logEntries = logs.get(LogType.PERFORMANCE);
-            List<Object> list = new ArrayList<>();
-            for (LogEntry entry : logEntries) {
-                JSONObject message = JSON.parseObject(entry.getMessage()).getJSONObject("message");
-                if ("Network.responseReceived".equalsIgnoreCase(message.getString("method"))) {
-                    JSONObject params = message.getJSONObject("params");
-                    // String type = params.getString("type"); // Document Image Script XHR  Font Stylesheet Other
-                    String requestId = params.getString("requestId");
-                    JSONObject response = params.getJSONObject("response");
-                    try {
-                        response.put("responseBody", getResponseBody(requestId));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    list.add(response);
-                }
-            }
-            return list;
-        }
-//        Event<Map<String, Object>> responseReceivedEvent = new Event<>("Network.responseReceived", input -> input.read((new TypeToken<Map<String, Object>>() {
-//        }).getType()));
-//        chromeDriver.getDevTools().addListener(responseReceivedEvent, responseReceived -> {
-//            System.out.println("responseReceived => " + responseReceived);
-//        });
-        return null;
-    }
-
-    @SuppressWarnings("serial")
-    private Map<String, Object> getResponseBody(String requestId) {
-        return chromeDriver.getDevTools().send(new Command<>(
-                "Network.getResponseBody",
-                ImmutableMap.of("requestId", requestId),
-                input -> input.read((new TypeToken<Map<String, Object>>() {
-                }).getType())
-        ));
+        devTools.createSessionIfThereIsNotOne();
+        NetworkInterceptor interceptor = new NetworkInterceptor(
+                chromeDriver,
+                Route.matching(request -> true)
+                        .to(() ->
+                                request -> {
+                                    List<HttpResponse> list = uriHandlers.entrySet().stream()
+                                            .filter(entry -> {
+                                                try {
+                                                    return entry.getKey().test(request);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    return false;
+                                                }
+                                            })
+                                            .map(Map.Entry::getValue).map(func -> {
+                                                try {
+                                                    return func.apply(request);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    return null;
+                                                }
+                                            })
+                                            .filter(Objects::nonNull).collect(Collectors.toList());
+                                    HttpResponse response;
+                                    if (!list.isEmpty()) {
+                                        response = list.get(0);
+                                    } else {
+                                        response = new HttpResponse();
+                                        response.setHeader("Selenium-Interceptor", "Continue");
+                                    }
+                                    return response;
+                                }
+                        )
+        );
     }
 
     @Api

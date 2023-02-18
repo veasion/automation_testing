@@ -1,7 +1,7 @@
 {
   "COMMAND_INTERVAL": 125,
   "TIMEOUT_PAGE_LOAD": 20,
-  "CHROME_DRIVER_PATH": "C:\\data\\auto\\chromedriver.exe",
+  "CHROME_DRIVER_PATH": "auto",
   "FIREFOX_DRIVER_PATH": null,
   "DRIVER_OPTIONS": {
     "arguments": [
@@ -13,11 +13,7 @@
     "experimentalOptions": {
       "excludeSwitches": [
         "enable-automation"
-      ],
-      "perfLoggingPrefs": {
-        "enableNetwork": true,
-        "enablePage": false
-      }
+      ]
     },
     "proxy": {},
     "capability": {
@@ -37,13 +33,6 @@
         "recognize_granularity": "small"
       }
     },
-    "chaojiying": {
-      "user": null,
-      "pass": null,
-      "softid": null,
-      "codetype": "1902"
-    },
-    "default": "baidu",
-    "captcha": "chaojiying"
+    "default": "baidu"
   }
 }

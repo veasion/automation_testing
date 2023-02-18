@@ -20,7 +20,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.touch.TouchActions;
+import org.openqa.selenium.interactions.Actions;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,10 +52,10 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
         Thread.sleep(200);
     }
 
-    @Api(value = "鼠标动作", result = TouchActions.class)
+    @Api(value = "鼠标动作", result = Actions.class)
     @ResultProxy(log = false)
     public Object newTouchActions() {
-        return new TouchActions(binding.getWebDriver());
+        return new Actions(binding.getWebDriver());
     }
 
     @Api("点击坐标")
@@ -63,7 +63,7 @@ public class WebDriverBinding extends SearchContextBinding<WebDriver> implements
     public void clickPoint(@Api.Param(jsType = "number") Object x, @Api.Param(jsType = "number") Object y) {
         int pointX = new BigDecimal(x.toString()).intValue();
         int pointY = new BigDecimal(y.toString()).intValue();
-        new TouchActions(binding.getWebDriver()).moveByOffset(pointX, pointY).click().perform();
+        new Actions(binding.getWebDriver()).moveByOffset(pointX, pointY).click().perform();
     }
 
     @ResultProxy

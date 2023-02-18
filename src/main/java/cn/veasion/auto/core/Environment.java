@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -31,14 +30,14 @@ public class Environment extends HashMap<String, Object> {
 
     public Environment(ArgsCommandOption option) {
         this.option = Objects.requireNonNull(option);
-        boolean isDebug = option.getBoolean("debug", Constants.DEFAULT_DEBUG);
-        setDebug(isDebug || ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("-agentlib:jdwp"));
-        Arrays.asList(Keys.ENTER, Keys.BACK_SPACE,
-                Keys.TAB, Keys.ARROW_UP, Keys.ARROW_DOWN, Keys.ARROW_LEFT, Keys.ARROW_RIGHT,
-                Keys.PAGE_UP, Keys.PAGE_DOWN, Keys.END, Keys.HOME,
-                Keys.SHIFT, Keys.CONTROL, Keys.ALT,
-                Keys.ESCAPE, Keys.F12).forEach(key -> put("KEY_" + key.name(), key.toString())
-        );
+        boolean isDebug = option.getBoolean("debug", false);
+        if (!isDebug) {
+            isDebug = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("-agentlib:jdwp");
+        }
+        setDebug(isDebug);
+        for (Keys key : Keys.values()) {
+            put("KEY_" + key.name(), key.toString());
+        }
         put(Constants.DESKTOP_DIR, javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath());
     }
 

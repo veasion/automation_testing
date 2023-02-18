@@ -6,6 +6,7 @@ import cn.veasion.auto.util.AutomationException;
 import cn.veasion.auto.util.Constants;
 import cn.veasion.auto.util.JavaScriptUtils;
 import com.google.common.collect.ImmutableMap;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -57,13 +58,17 @@ public class WebDriverUtils {
         String firefoxDriverPath = (String) env.get("FIREFOX_DRIVER_PATH");
 
         if (chromeDriverPath != null) {
-            if (!new File(chromeDriverPath).exists()) {
-                throw new AutomationException("CHROME_DRIVER_PATH指向的文件不存在：" + chromeDriverPath);
+            if ("auto".equalsIgnoreCase(chromeDriverPath)) {
+                WebDriverManager.chromedriver().setup();
+            } else {
+                if (!new File(chromeDriverPath).exists()) {
+                    throw new AutomationException("CHROME_DRIVER_PATH指向的文件不存在：" + chromeDriverPath);
+                }
+                System.setProperty("webdriver.chrome.driver", chromeDriverPath);
             }
-            System.setProperty("webdriver.chrome.driver", chromeDriverPath);
             ChromeOptions options = new ChromeOptions();
             if (headless) {
-                options.setHeadless(true);
+                options.addArguments("--headless");
                 options.addArguments("--window-size=1920,1080");
             } else {
                 options.addArguments("--start-maximized");
@@ -103,16 +108,20 @@ public class WebDriverUtils {
             }
             return chromeDriver;
         } else if (firefoxDriverPath != null) {
-            if (!new File(firefoxDriverPath).exists()) {
-                throw new AutomationException("firefoxDriverPath指向的文件不存在：" + firefoxDriverPath);
+            if ("auto".equalsIgnoreCase(firefoxDriverPath)) {
+                WebDriverManager.firefoxdriver().setup();
+            } else {
+                if (!new File(firefoxDriverPath).exists()) {
+                    throw new AutomationException("firefoxDriverPath指向的文件不存在：" + firefoxDriverPath);
+                }
+                System.setProperty("webdriver.gecko.driver", firefoxDriverPath);
             }
-            System.setProperty("webdriver.gecko.driver", firefoxDriverPath);
             FirefoxOptions options = new FirefoxOptions();
             if (!StringUtils.isEmpty(userAgent)) {
                 options.addPreference("general.useragent.override", userAgent);
             }
             if (headless) {
-                options.setHeadless(true);
+                options.addArguments("--headless");
                 options.addArguments("--window-size=1920,1080");
             }
             if (gpuDisable) {
